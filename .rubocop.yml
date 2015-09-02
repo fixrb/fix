@@ -1,0 +1,12 @@
+TrivialAccessors:
+  Enabled: true
+  ExactNameMatch: true
+
+Style/MethodName:
+  Enabled: false
+
+ParameterLists:
+  Max: 11
+
+Metrics/MethodLength:
+  Max: 16

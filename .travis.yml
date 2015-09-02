@@ -1,0 +1,15 @@
+language: ruby
+sudo: false
+cache: bundler
+script: 'bundle exec rake test:coverage --trace'
+before_install:
+  - gem install bundler
+rvm:
+  - 1.9.3
+  - 2.0
+  - 2.1
+  - 2.2
+  - ruby-head
+  - jruby
+  - jruby-head
+  - rbx-2
