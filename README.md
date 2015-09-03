@@ -85,7 +85,7 @@ require 'fix'
 
 Fix.describe @bird do
   on :swims do
-    it { MUST Equal: 'Swoosh...' }
+    it { MUST Eql: 'Swoosh...' }
   end
 
   on :speaks do
@@ -93,7 +93,7 @@ Fix.describe @bird do
   end
 
   on :sings do
-    it { MAY :Equal: '♪... ♫...' }
+    it { MAY Eql: '♪... ♫...' }
   end
 end
 ```
