@@ -55,7 +55,7 @@ While specs behave like **documents** which can be logic-less, their interpretat
 
 ### Complexity
 
-Monkey-patching, magic tricks and friends are not included.  Instead, animated by **authentic** and **unmuted** Ruby objects, unambiguous, understandable and structured specs are encouraged.
+Monkey-patching, [magic tricks and friends](http://blog.arkency.com/2013/06/are-we-abusing-at-exit/) are not included.  Instead, animated by **authentic** and **unmuted** Ruby objects, unambiguous, understandable and structured specs are encouraged.
 
 ## Usage
 
