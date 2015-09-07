@@ -21,7 +21,8 @@ module Fix
     def on(method_name, *args, &block)
       o = On.new(@front_object,
                  results,
-                 *@challenges, Spectus::Challenge.new(method_name, *args))
+                 (@challenges + [Spectus::Challenge.new(method_name, *args)]),
+                 @configuration)
 
       o.instance_eval(&block)
     end

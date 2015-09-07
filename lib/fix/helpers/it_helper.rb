@@ -25,7 +25,7 @@ module Fix
                  f
                end
 
-      print result.to_char
+      print result.to_char if @configuration.fetch(:verbose, true)
       results << result
     end
   end

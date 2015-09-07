@@ -17,13 +17,15 @@ module Fix
   class On
     # Initialize the on class.
     #
-    # @param front_object [BasicObject] The front object of the test.
-    # @param results      [Array]       The list of collected results.
-    # @param challenges   [Array]       The list of challenges to apply.
-    def initialize(front_object, results, *challenges)
-      @front_object = front_object
-      @results      = results
-      @challenges   = challenges
+    # @param front_object   [BasicObject] The front object of the test.
+    # @param results        [Array]       The list of collected results.
+    # @param challenges     [Array]       The list of challenges to apply.
+    # @param configuration  [Hash]        Settings.
+    def initialize(front_object, results, challenges, configuration = {})
+      @front_object   = front_object
+      @results        = results
+      @challenges     = challenges
+      @configuration  = configuration
     end
 
     # @!attribute [r] results

@@ -10,11 +10,15 @@ module Fix
     # Initialize the test class.
     #
     # @param front_object [BasicObject] The front object of the test.
+    # @param options      [Hash]        Some options.
     # @param specs        [Proc]        The specs to test against the object.
-    def initialize(front_object, &specs)
+    def initialize(front_object, options = {}, &specs)
+      configuration = { verbose: true }
+      configuration.update(options)
+
       start_time = Time.now
 
-      g = On.new(front_object, [])
+      g = On.new(front_object, [], [], configuration)
       g.instance_eval(&specs)
 
       @results    = g.results

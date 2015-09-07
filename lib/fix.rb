@@ -13,13 +13,14 @@ module Fix
   #   end
   #
   # @param front_object [BasicObject] The front object.
+  # @param options      [Hash]        Some options.
   # @param specs        [Proc]        The set of specs.
   #
   # @return [ExpectationTarget] The expectation target.
-  def self.describe(front_object, &specs)
-    t = Test.new(front_object, &specs)
+  def self.describe(front_object, options = {}, &specs)
+    t = Test.new(front_object, options, &specs)
 
-    puts "#{t.report}"
+    puts "#{t.report}" if options.fetch(:verbose, true)
     exit t.pass?
   end
 end

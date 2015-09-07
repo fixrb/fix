@@ -3,7 +3,7 @@ require_relative File.join '..', 'lib', 'fix'
 require 'spectus'
 
 begin
-  Fix.describe 4 do
+  Fix.describe 4, verbose: false do
     it { MUST Equal: 42 }
   end
 rescue SystemExit => e
@@ -11,7 +11,7 @@ rescue SystemExit => e
 end
 
 begin
-  Fix.describe 42 do
+  Fix.describe 42, verbose: false do
     it { MUST Equal: 42 }
   end
 rescue SystemExit => e

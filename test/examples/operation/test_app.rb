@@ -4,7 +4,7 @@ require 'spectus'
 
 @app = 1_040
 
-t = Fix::Test.new @app do
+t = Fix::Test.new @app, verbose: false do
   on :+, 1_040 do
     it { MUST Equal: 2_080 }
 

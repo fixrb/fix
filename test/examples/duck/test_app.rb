@@ -7,7 +7,7 @@ require 'spectus'
 
 @bird = Duck.new
 
-t = Fix::Test.new @bird do
+t = Fix::Test.new @bird, verbose: false do
   on :swims do
     it { MUST Eql: 'Swoosh...' }
   end
