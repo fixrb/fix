@@ -19,8 +19,6 @@ module Fix
 
       @results    = g.results
       @total_time = Time.now - start_time
-
-      puts
     end
 
     # @!attribute [r] results

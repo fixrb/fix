@@ -19,9 +19,6 @@ t = Fix::Test.new @app do
 end
 
 Spectus.this { t.report.to_s }.MUST Eql:      \
-  "\n"                                        \
-  "\n"                                        \
-  "\n"                                        \
   "Ran 3 tests in #{t.total_time} seconds\n"  \
   "100% compliant - 0 infos, 0 failures, 0 errors\n"
 
