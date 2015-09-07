@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/fixrb/fix.svg?branch=master)][travis]
 [![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
 [![Inline docs](http://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
+[![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
 
 > Specing framework for Ruby.
 
@@ -144,3 +145,4 @@ See `LICENSE.md` file.
 [gem]: https://rubygems.org/gems/fix
 [travis]: https://travis-ci.org/fixrb/fix
 [inchpages]: http://inch-ci.org/github/fixrb/fix/
+[rubydoc]: http://rubydoc.info/gems/fix/frames
