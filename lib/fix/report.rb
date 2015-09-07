@@ -20,10 +20,18 @@ module Fix
     #
     # @return [String] The report in plain text.
     def to_s
-      maybe_results_banner + total_time_banner + statistics_banner
+      maybe_thematic_break +
+        maybe_alerts_banner +
+        total_time_banner +
+        statistics_banner
     end
 
     private
+
+    # @private
+    def maybe_thematic_break
+      test.results.any? && @test.configuration.fetch(:verbose) ? "\n\n" : ''
+    end
 
     # @private
     def total_time_banner
@@ -36,14 +44,8 @@ module Fix
     end
 
     # @private
-    def maybe_results_banner
-      if alerts.any?
-        "\n" \
-        "\n" \
-        "#{results_banner.join("\n")}\n"
-      else
-        ''
-      end
+    def maybe_alerts_banner
+      alerts.any? ? "#{results_banner.join("\n")}\n" : ''
     end
 
     # @private
@@ -55,11 +57,7 @@ module Fix
 
     # @private
     def maybe_backtrace(result)
-      if result.respond_to?(:backtrace)
-        "    #{result.backtrace.first}\n"
-      else
-        ''
-      end
+      result.respond_to?(:backtrace) ? "    #{result.backtrace.first}\n" : ''
     end
 
     # @private

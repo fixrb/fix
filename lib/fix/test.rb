@@ -13,17 +13,22 @@ module Fix
     # @param options      [Hash]        Some options.
     # @param specs        [Proc]        The specs to test against the object.
     def initialize(front_object, options = {}, &specs)
-      configuration = { verbose: true }
-      configuration.update(options)
+      @configuration = { verbose: true }
+      @configuration.update(options)
 
       start_time = Time.now
 
-      g = On.new(front_object, [], [], configuration)
+      g = On.new(front_object, [], [], @configuration)
       g.instance_eval(&specs)
 
       @results    = g.results
       @total_time = Time.now - start_time
     end
+
+    # @!attribute [r] configuration
+    #
+    # @return [Hash] The settings.
+    attr_reader :configuration
 
     # @!attribute [r] results
     #
