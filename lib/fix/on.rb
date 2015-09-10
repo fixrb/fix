@@ -7,8 +7,6 @@ require_relative 'it'
   require_relative File.join 'helpers', "#{helper}_helper"
 end
 
-require_relative 'sandbox'
-
 module Fix
   # Wraps the target of challenge.
   #

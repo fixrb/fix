@@ -15,9 +15,7 @@ module Fix
     #
     # @return [Array] List of results.
     def it(&spec)
-      i = It.new do
-        Sandbox.new(@front_object, *@challenges).actual
-      end
+      i = It.new(@front_object, *@challenges)
 
       result = begin
                  i.instance_eval(&spec)
