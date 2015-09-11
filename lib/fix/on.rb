@@ -1,5 +1,4 @@
 require 'defi'
-require 'spectus/result/fail'
 
 require_relative 'it'
 
