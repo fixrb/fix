@@ -1,4 +1,4 @@
-require 'spectus/challenge'
+require 'defi'
 require 'spectus/result/fail'
 
 require_relative 'it'
