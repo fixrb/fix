@@ -19,7 +19,7 @@ module Fix
     # @param challenges     [Array]       The list of challenges to apply.
     # @param helpers        [Hash]        The list of helpers.
     # @param configuration  [Hash]        Settings.
-    def initialize(front_object, results, challenges, helpers, configuration = {})
+    def initialize(front_object, results, challenges, helpers, configuration)
       @front_object   = front_object
       @results        = results
       @challenges     = challenges
