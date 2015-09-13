@@ -20,6 +20,7 @@ module Fix
     # Override Ruby's method_missing in order to provide let interface.
     #
     # @api private
+    #
     # @since 0.11.0
     #
     # @raise [NoMethodError] If doesn't respond to the given method.
