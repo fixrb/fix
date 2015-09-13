@@ -12,6 +12,7 @@ require 'spectus'
 
       on(:+, 10) do
         it { MUST_NOT Equal: 3_000 }
+        it { SHOULD Equal: 42 }
       end
     end
   end
@@ -21,8 +22,10 @@ end
 t = Fix::Test.new(@app, verbose: false, &@spec)
 
 Spectus.this { t.report.to_s }.MUST Eql:      \
-  "Ran 3 tests in #{t.total_time} seconds\n"  \
-  "100% compliant - 0 infos, 0 failures, 0 errors\n"
+  "1. Info: Expected 2100 to equal 42.\n"     \
+  "\n"                                        \
+  "Ran 4 tests in #{t.total_time} seconds\n"  \
+  "100% compliant - 1 infos, 0 failures, 0 errors\n"
 
 Spectus.this { t.pass? }.MUST :BeTrue
 Spectus.this { t.fail? }.MUST :BeFalse
@@ -31,8 +34,10 @@ Spectus.this { t.fail? }.MUST :BeFalse
 t = Fix::Test.new(@app, verbose: false, color: true, &@spec)
 
 Spectus.this { t.report.to_s }.MUST Eql:                    \
-  "Ran 3 tests in #{t.total_time} seconds\n"                \
-  "\e[32m100% compliant - 0 infos, 0 failures, 0 errors\n"  \
+  "\e[33m1. Info: Expected 2100 to equal 42.\n"             \
+  "\e[0m\n"                                                 \
+  "Ran 4 tests in #{t.total_time} seconds\n"                \
+  "\e[33m100% compliant - 1 infos, 0 failures, 0 errors\n"  \
   "\e[0m"
 
 Spectus.this { t.pass? }.MUST :BeTrue
