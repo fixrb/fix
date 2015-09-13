@@ -35,7 +35,7 @@ require 'spectus'
 end
 
 # Test without verbose option
-t = Fix::Test.new(@bird, verbose: false, &@spec)
+t = Fix::Test.new(@bird, color: false, verbose: false, &@spec)
 
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')
@@ -54,7 +54,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
 end
 
 # Test with verbose option
-t = Fix::Test.new(@bird, verbose: true, &@spec)
+t = Fix::Test.new(@bird, color: false, verbose: true, &@spec)
 
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')
@@ -75,7 +75,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
 end
 
 # Test with default verbose option
-t = Fix::Test.new(@bird, &@spec)
+t = Fix::Test.new(@bird, color: false, &@spec)
 
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')
@@ -96,7 +96,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
 end
 
 # Test with color option
-t = Fix::Test.new(@bird, color: true, &@spec)
+t = Fix::Test.new(@bird, &@spec)
 
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')

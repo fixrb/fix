@@ -7,7 +7,7 @@ require 'spectus'
   it { MUST Equal: 42 }
 end
 
-t = Fix::Test.new(@app, verbose: false, color: true, &@spec)
+t = Fix::Test.new(@app, verbose: false, &@spec)
 
 Spectus.this { t.report.to_s }.MUST Eql:                  \
   "\e[35m1. Failure: Expected 4 to equal 42.\n"           \

@@ -19,7 +19,7 @@ require 'spectus'
 end
 
 # without color
-t = Fix::Test.new(@app, verbose: false, &@spec)
+t = Fix::Test.new(@app, color: false, verbose: false, &@spec)
 
 Spectus.this { t.report.to_s }.MUST Eql:      \
   "1. Info: Expected 2100 to equal 42.\n"     \
@@ -31,7 +31,7 @@ Spectus.this { t.pass? }.MUST :BeTrue
 Spectus.this { t.fail? }.MUST :BeFalse
 
 # with color
-t = Fix::Test.new(@app, verbose: false, color: true, &@spec)
+t = Fix::Test.new(@app, verbose: false, &@spec)
 
 Spectus.this { t.report.to_s }.MUST Eql:                    \
   "\e[33m1. Info: Expected 2100 to equal 42.\n"             \

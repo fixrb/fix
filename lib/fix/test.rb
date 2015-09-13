@@ -13,7 +13,7 @@ module Fix
     # @param options      [Hash]        Some options.
     # @param specs        [Proc]        The specs to test against the object.
     def initialize(front_object, options = {}, &specs)
-      @configuration = { verbose: true, color: false }
+      @configuration = { verbose: true, color: true }
       @configuration.update(options)
 
       start_time = Time.now

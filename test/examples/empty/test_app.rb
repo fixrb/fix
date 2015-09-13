@@ -4,7 +4,7 @@ require 'spectus'
 
 @app = nil
 
-t = Fix::Test.new @app, color: true do
+t = Fix::Test.new @app do
   # empty
 end
 
