@@ -13,7 +13,7 @@ module Fix
     # @param options      [Hash]        Some options.
     # @param specs        [Proc]        The specs to test against the object.
     def initialize(front_object, options = {}, &specs)
-      @configuration = { verbose: true }
+      @configuration = { verbose: true, color: false }
       @configuration.update(options)
 
       start_time = Time.now
@@ -46,9 +46,9 @@ module Fix
     def statistics
       {
         pass_percent:   pass_percent,
-        total_infos:    results.count { |r| r.to_char == 'I' },
-        total_failures: results.count { |r| r.to_char == 'F' },
-        total_errors:   results.count { |r| r.to_char == 'E' }
+        total_infos:    results.count { |r| r.to_sym.equal?(:info) },
+        total_failures: results.count { |r| r.to_sym.equal?(:failure) },
+        total_errors:   results.count { |r| r.to_sym.equal?(:error) }
       }
     end
 

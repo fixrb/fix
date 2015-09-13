@@ -23,7 +23,10 @@ module Fix
                  f
                end
 
-      print result.to_char if @configuration.fetch(:verbose, true)
+      if @configuration.fetch(:verbose, true)
+        print result.to_char(@configuration.fetch(:color, false))
+      end
+
       results << result
     end
   end

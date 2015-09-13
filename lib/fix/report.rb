@@ -40,7 +40,7 @@ module Fix
 
     # @private
     def alerts
-      test.results.reject { |r| r.to_char == '.' }
+      test.results.reject { |r| r.to_sym.equal?(:success) }
     end
 
     # @private
@@ -51,7 +51,19 @@ module Fix
     # @private
     def results_banner
       alerts.map.with_index(1) do |r, i|
-        "#{i}. #{r.message}\n" + maybe_backtrace(r)
+        s = "#{i}. #{r.message}\n" + maybe_backtrace(r)
+
+        next s unless @test.configuration.fetch(:color)
+
+        if r.to_sym.equal?(:success)
+          "\e[32m#{s}\e[0m"
+        elsif r.to_sym.equal?(:info)
+          "\e[33m#{s}\e[0m"
+        elsif r.to_sym.equal?(:failure)
+          "\e[35m#{s}\e[0m"
+        else
+          "\e[31m#{s}\e[0m"
+        end
       end
     end
 
@@ -62,10 +74,24 @@ module Fix
 
     # @private
     def statistics_banner
-      "#{test.statistics.fetch(:pass_percent)}% compliant - " \
-      "#{test.statistics.fetch(:total_infos)} infos, "        \
-      "#{test.statistics.fetch(:total_failures)} failures, "  \
-      "#{test.statistics.fetch(:total_errors)} errors\n"
+      s = "#{test.statistics.fetch(:pass_percent)}% compliant - " \
+          "#{test.statistics.fetch(:total_infos)} infos, "        \
+          "#{test.statistics.fetch(:total_failures)} failures, "  \
+          "#{test.statistics.fetch(:total_errors)} errors\n"
+
+      return s unless @test.configuration.fetch(:color)
+
+      stats = test.statistics
+
+      if stats.fetch(:total_errors) > 0
+        "\e[31m#{s}\e[0m"
+      elsif stats.fetch(:total_failures) > 0
+        "\e[35m#{s}\e[0m"
+      elsif stats.fetch(:total_infos) > 0
+        "\e[33m#{s}\e[0m"
+      else
+        "\e[32m#{s}\e[0m"
+      end
     end
   end
 end
