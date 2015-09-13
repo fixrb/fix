@@ -55,9 +55,7 @@ module Fix
 
         next s unless @test.configuration.fetch(:color)
 
-        if r.to_sym.equal?(:success)
-          "\e[32m#{s}\e[0m"
-        elsif r.to_sym.equal?(:info)
+        if r.to_sym.equal?(:info)
           "\e[33m#{s}\e[0m"
         elsif r.to_sym.equal?(:failure)
           "\e[35m#{s}\e[0m"
