@@ -18,7 +18,7 @@ module Fix
 
       start_time = Time.now
 
-      g = On.new(front_object, [], [], @configuration)
+      g = On.new(front_object, [], [], {}, @configuration)
       g.instance_eval(&specs)
 
       @results    = g.results

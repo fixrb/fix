@@ -1,14 +1,14 @@
 # A Duck application
 class Duck
   def walks
-    'Klop klop!'
+    'So! Klop klop!'
   end
 
   def swims
-    'Swoosh...'
+    'So! Swoosh...'
   end
 
   def quacks
-    puts 'Quaaaaaack!'
+    puts 'So! Quaaaaaack!'
   end
 end

@@ -7,8 +7,10 @@ require 'spectus'
 
 @bird = Duck.new
 @spec = proc do
+  let(:famous_word) { 'So!' }
+
   on :swims do
-    it { MUST Eql: 'Swoosh...' }
+    it { MUST Eql: "#{famous_word} Swoosh..." }
   end
 
   on :speaks do
@@ -20,7 +22,7 @@ require 'spectus'
   end
 
   on :walks do
-    it { MUST Eql: 'Klop klop klop!' }
+    it { MUST Eql: "#{famous_word} klop!" }
   end
 
   on :quacks do
@@ -41,7 +43,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
   Spectus.this { t.report.to_s }.MUST(Eql:                                    \
     "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n"       \
     "\n"                                                                      \
-    "2. Failure: Expected \"Klop klop!\" to eql \"Klop klop klop!\".\n"       \
+    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"         \
     "    #{t.report.test.results[3].backtrace.first}\n"                       \
     "\n"                                                                      \
     "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n"       \
@@ -62,7 +64,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
     "\n"                                                                      \
     "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n"       \
     "\n"                                                                      \
-    "2. Failure: Expected \"Klop klop!\" to eql \"Klop klop klop!\".\n"       \
+    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"         \
     "    #{t.report.test.results[3].backtrace.first}\n"                       \
     "\n"                                                                      \
     "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n"       \
@@ -83,7 +85,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
     "\n"                                                                      \
     "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n"       \
     "\n"                                                                      \
-    "2. Failure: Expected \"Klop klop!\" to eql \"Klop klop klop!\".\n"       \
+    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"         \
     "    #{t.report.test.results[3].backtrace.first}\n"                       \
     "\n"                                                                      \
     "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n"       \
@@ -104,7 +106,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
     "\n"                                                                      \
     "\e[33m1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n" \
     "\e[0m\n"                                                                 \
-    "\e[35m2. Failure: Expected \"Klop klop!\" to eql \"Klop klop klop!\".\n" \
+    "\e[35m2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"   \
     "    #{t.report.test.results[3].backtrace.first}\n"                       \
     "\e[0m\n"                                                                 \
     "\e[31m3. Error: undefined method `name' for #{@bird} (NoMethodError).\n" \

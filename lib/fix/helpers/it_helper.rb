@@ -15,7 +15,7 @@ module Fix
     #
     # @return [Array] List of results.
     def it(&spec)
-      i = It.new(@front_object, *@challenges)
+      i = It.new(@front_object, @challenges, @helpers.dup)
 
       result = begin
                  i.instance_eval(&spec)
