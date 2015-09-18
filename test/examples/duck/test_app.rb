@@ -50,7 +50,7 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
     "    #{t.report.test.results[-1].backtrace.first}\n"                      \
     "\n"                                                                      \
     "Ran 6 tests in #{t.total_time} seconds\n"                                \
-    "67% compliant - 1 infos, 1 failures, 1 errors\n")
+    '67% compliant - 1 infos, 1 failures, 1 errors')
 end
 
 # Test with verbose option
@@ -59,19 +59,19 @@ t = Fix::Test.new(@bird, color: false, verbose: true, &@spec)
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')
 
-  Spectus.this { t.report.to_s }.MUST(Eql:                                    \
-    "\n"                                                                      \
-    "\n"                                                                      \
-    "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n"       \
-    "\n"                                                                      \
-    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"         \
-    "    #{t.report.test.results[3].backtrace.first}\n"                       \
-    "\n"                                                                      \
-    "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n"       \
-    "    #{t.report.test.results[-1].backtrace.first}\n"                      \
-    "\n"                                                                      \
-    "Ran 6 tests in #{t.total_time} seconds\n"                                \
-    "67% compliant - 1 infos, 1 failures, 1 errors\n")
+  Spectus.this { t.report.to_s }.MUST(Eql:                              \
+    "\n"                                                                \
+    "\n"                                                                \
+    "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n" \
+    "\n"                                                                \
+    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"   \
+    "    #{t.report.test.results[3].backtrace.first}\n"                 \
+    "\n"                                                                \
+    "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n" \
+    "    #{t.report.test.results[-1].backtrace.first}\n"                \
+    "\n"                                                                \
+    "Ran 6 tests in #{t.total_time} seconds\n"                          \
+    '67% compliant - 1 infos, 1 failures, 1 errors')
 end
 
 # Test with default verbose option
@@ -80,19 +80,19 @@ t = Fix::Test.new(@bird, color: false, &@spec)
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
    defined?(RUBY_VERSION) && RUBY_VERSION.start_with?('2.')
 
-  Spectus.this { t.report.to_s }.MUST(Eql:                                    \
-    "\n"                                                                      \
-    "\n"                                                                      \
-    "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n"       \
-    "\n"                                                                      \
-    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"         \
-    "    #{t.report.test.results[3].backtrace.first}\n"                       \
-    "\n"                                                                      \
-    "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n"       \
-    "    #{t.report.test.results[-1].backtrace.first}\n"                      \
-    "\n"                                                                      \
-    "Ran 6 tests in #{t.total_time} seconds\n"                                \
-    "67% compliant - 1 infos, 1 failures, 1 errors\n")
+  Spectus.this { t.report.to_s }.MUST(Eql:                              \
+    "\n"                                                                \
+    "\n"                                                                \
+    "1. Info: undefined method `sings' for #{@bird} (NoMethodError).\n" \
+    "\n"                                                                \
+    "2. Failure: Expected \"So! Klop klop!\" to eql \"So! klop!\".\n"   \
+    "    #{t.report.test.results[3].backtrace.first}\n"                 \
+    "\n"                                                                \
+    "3. Error: undefined method `name' for #{@bird} (NoMethodError).\n" \
+    "    #{t.report.test.results[-1].backtrace.first}\n"                \
+    "\n"                                                                \
+    "Ran 6 tests in #{t.total_time} seconds\n"                          \
+    '67% compliant - 1 infos, 1 failures, 1 errors')
 end
 
 # Test with color option
@@ -113,6 +113,5 @@ if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ruby' &&
     "    #{t.report.test.results[-1].backtrace.first}\n"                      \
     "\e[0m\n"                                                                 \
     "Ran 6 tests in #{t.total_time} seconds\n"                                \
-    "\e[31m67% compliant - 1 infos, 1 failures, 1 errors\n"                   \
-    "\e[0m")
+    "\e[31m67% compliant - 1 infos, 1 failures, 1 errors\e[0m")
 end

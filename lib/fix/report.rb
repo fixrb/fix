@@ -75,7 +75,7 @@ module Fix
       s = "#{test.statistics.fetch(:pass_percent)}% compliant - " \
           "#{test.statistics.fetch(:total_infos)} infos, "        \
           "#{test.statistics.fetch(:total_failures)} failures, "  \
-          "#{test.statistics.fetch(:total_errors)} errors\n"
+          "#{test.statistics.fetch(:total_errors)} errors"
 
       return s unless @test.configuration.fetch(:color)
 
