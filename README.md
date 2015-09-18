@@ -1,5 +1,7 @@
 # Fix
 
+[![Join the chat at https://gitter.im/fixrb/fix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/fixrb/fix.svg?branch=master)][travis]
 [![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
 [![Inline docs](http://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
