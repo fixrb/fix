@@ -13,17 +13,14 @@ module Fix
 
     # @!attribute [r] test
     #
-    # @return [Test] The result.
+    # @return [Test] The results of the test.
     attr_reader :test
 
     # The report in plain text.
     #
     # @return [String] The report in plain text.
     def to_s
-      maybe_thematic_break +
-        maybe_alerts_banner +
-        total_time_banner +
-        statistics_banner
+      maybe_thematic_break + maybe_alerts + total_time + statistics
     end
 
     private
@@ -34,7 +31,7 @@ module Fix
     end
 
     # @private
-    def total_time_banner
+    def total_time
       "Ran #{test.results.length} tests in #{test.total_time} seconds\n"
     end
 
@@ -44,24 +41,27 @@ module Fix
     end
 
     # @private
-    def maybe_alerts_banner
-      alerts.any? ? "#{results_banner.join("\n")}\n" : ''
+    def maybe_alerts
+      alerts.any? ? "#{results.join("\n")}\n" : ''
     end
 
     # @private
-    def results_banner
+    def results
       alerts.map.with_index(1) do |r, i|
-        s = "#{i}. #{r.message}\n" + maybe_backtrace(r)
+        maybe_results_color("#{i}. #{r.message}\n" + maybe_backtrace(r), r)
+      end
+    end
 
-        next s unless @test.configuration.fetch(:color)
+    # @private
+    def maybe_results_color(string, result)
+      return string unless @test.configuration.fetch(:color)
 
-        if r.to_sym.equal?(:info)
-          "\e[33m#{s}\e[0m"
-        elsif r.to_sym.equal?(:failure)
-          "\e[35m#{s}\e[0m"
-        else
-          "\e[31m#{s}\e[0m"
-        end
+      if result.to_sym.equal?(:info)
+        "\e[#{info_color}m#{string}\e[0m"
+      elsif result.to_sym.equal?(:failure)
+        "\e[#{failure_color}m#{string}\e[0m"
+      else
+        "\e[#{error_color}m#{string}\e[0m"
       end
     end
 
@@ -71,25 +71,53 @@ module Fix
     end
 
     # @private
-    def statistics_banner
-      s = "#{test.statistics.fetch(:pass_percent)}% compliant - " \
-          "#{test.statistics.fetch(:total_infos)} infos, "        \
-          "#{test.statistics.fetch(:total_failures)} failures, "  \
-          "#{test.statistics.fetch(:total_errors)} errors"
-
-      return s unless @test.configuration.fetch(:color)
-
-      stats = test.statistics
-
-      if stats.fetch(:total_errors) > 0
-        "\e[31m#{s}\e[0m"
-      elsif stats.fetch(:total_failures) > 0
-        "\e[35m#{s}\e[0m"
-      elsif stats.fetch(:total_infos) > 0
-        "\e[33m#{s}\e[0m"
+    def statistics
+      if @test.configuration.fetch(:color)
+        statistics_color(statistics_text, test.statistics)
       else
-        "\e[32m#{s}\e[0m"
+        statistics_text
       end
+    end
+
+    # @private
+    def statistics_text
+      "#{test.statistics.fetch(:pass_percent)}% compliant - " \
+      "#{test.statistics.fetch(:total_infos)} infos, "        \
+      "#{test.statistics.fetch(:total_failures)} failures, "  \
+      "#{test.statistics.fetch(:total_errors)} errors\n"
+    end
+
+    # @private
+    def statistics_color(string, stats)
+      if stats.fetch(:total_errors) > 0
+        "\e[#{error_color}m#{string}\e[0m"
+      elsif stats.fetch(:total_failures) > 0
+        "\e[#{failure_color}m#{string}\e[0m"
+      elsif stats.fetch(:total_infos) > 0
+        "\e[#{info_color}m#{string}\e[0m"
+      else
+        "\e[#{success_color}m#{string}\e[0m"
+      end
+    end
+
+    # @private
+    def error_color
+      31
+    end
+
+    # @private
+    def failure_color
+      35
+    end
+
+    # @private
+    def info_color
+      33
+    end
+
+    # @private
+    def success_color
+      32
     end
   end
 end

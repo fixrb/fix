@@ -49,7 +49,7 @@ And then execute:
 
 ### Minimalist
 
-With 148 lines of **simple code** built on top of [Spectus expectation library](https://github.com/fixrb/spectus), facilities such as benchmarking and mocking are not supported.  __Fix__ offers however a **consistent** syntax to focus your BDD.
+With 179 lines of **simple code** built on top of [Spectus expectation library](https://github.com/fixrb/spectus), facilities such as benchmarking and mocking are not supported.  __Fix__ offers however a **consistent** syntax to focus your BDD.
 
 ### Resistant
 

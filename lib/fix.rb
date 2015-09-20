@@ -20,7 +20,7 @@ module Fix
   def self.describe(front_object, options = {}, &specs)
     t = Test.new(front_object, options, &specs)
 
-    puts "#{t.report}" if options.fetch(:verbose, true)
+    print "#{t.report}" if options.fetch(:verbose, true)
     exit t.pass?
   end
 end
