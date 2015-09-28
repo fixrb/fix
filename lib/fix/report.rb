@@ -56,13 +56,8 @@ module Fix
     def maybe_results_color(string, result)
       return string unless @test.configuration.fetch(:color)
 
-      if result.to_sym.equal?(:info)
-        "\e[#{info_color}m#{string}\e[0m"
-      elsif result.to_sym.equal?(:failure)
-        "\e[#{failure_color}m#{string}\e[0m"
-      else
-        "\e[#{error_color}m#{string}\e[0m"
-      end
+      color = send("#{result.to_sym}_color")
+      "\e[#{color}m#{string}\e[0m"
     end
 
     # @private
