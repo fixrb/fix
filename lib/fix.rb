@@ -16,7 +16,7 @@ module Fix
   # @param options      [Hash]        Some options.
   # @param specs        [Proc]        The set of specs.
   #
-  # @return [ExpectationTarget] The expectation target.
+  # @raise [SystemExit] The result of the test.
   def self.describe(front_object, options = {}, &specs)
     t = Test.new(front_object, options, &specs)
 
