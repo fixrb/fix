@@ -47,17 +47,21 @@ And then execute:
 
 ## Philosophy
 
-### Minimalist
+### Simple, stupid
 
-With 179 lines of **simple code** built on top of [Spectus expectation library](https://github.com/fixrb/spectus), facilities such as benchmarking and mocking are not supported.  __Fix__ offers however a **consistent** syntax to focus your BDD.
+With 174 LOC built on top of [Spectus expectation library](https://github.com/fixrb/spectus), facilities such as benchmarking and mocking are not supported.  __Fix__ offers however a **consistent** DSL to focus your BDD.
 
-### Resistant
+### True specifications
 
 While specs behave like **documents** which can be logic-less, their interpretation should not be questioned regardless of the version of __Fix__, preventing from software erosion.  Also, Fix specs are compliant with **[RFC 2119](http://tools.ietf.org/html/rfc2119)**.
 
-### Complexity
+### Low code complexity
 
 Monkey-patching, [magic tricks and friends](http://blog.arkency.com/2013/06/are-we-abusing-at-exit/) are not included.  Instead, animated by **authentic** and **unmuted** Ruby objects, unambiguous, understandable and structured specs are encouraged.
+
+### Test in isolation
+
+Rather than a _random order_ option to help finding bugs somewhere (and sometimes luck), __Fix__ prevents from **side effects** by running each test inside a distinct **sub-process**.  As it behaves like a function, no matter how many times you call it, the build status remains the same.
 
 ## Usage
 
