@@ -20,14 +20,14 @@ module Fix
     #
     # @return [String] The report in plain text.
     def to_s
-      maybe_thematic_break + maybe_alerts + total_time + statistics
+      [maybe_thematic_break, maybe_alerts, total_time, statistics].join
     end
 
     private
 
     # @private
     def maybe_thematic_break
-      test.results.any? && @test.configuration.fetch(:verbose) ? "\n\n" : ''
+      test.results.any? && test.configuration.fetch(:verbose) ? "\n\n" : ''
     end
 
     # @private
@@ -54,7 +54,7 @@ module Fix
 
     # @private
     def maybe_results_color(string, result)
-      return string unless @test.configuration.fetch(:color)
+      return string unless test.configuration.fetch(:color)
 
       color = send("#{result.to_sym}_color")
       "\e[#{color}m#{string}\e[0m"
@@ -67,7 +67,7 @@ module Fix
 
     # @private
     def statistics
-      if @test.configuration.fetch(:color)
+      if test.configuration.fetch(:color)
         statistics_color(statistics_text, test.statistics)
       else
         statistics_text

@@ -17,7 +17,14 @@ module Fix
       @helpers    = helpers
     end
 
-    # Override Ruby's method_missing in order to provide let interface.
+    # @!attribute [r] helpers
+    #
+    # @return [Hash] The list of helpers.
+    attr_reader :helpers
+
+    private
+
+    # Override Ruby's method_missing in order to provide `On#let` interface.
     #
     # @api private
     #
@@ -25,7 +32,7 @@ module Fix
     #
     # @raise [NoMethodError] If doesn't respond to the given method.
     def method_missing(name, *args, &block)
-      @helpers.key?(name) ? @helpers.fetch(name).call : super
+      helpers.key?(name) ? helpers.fetch(name).call : super
     end
   end
 end

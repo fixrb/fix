@@ -1,5 +1,3 @@
-require_relative File.join 'fix', 'test'
-
 # Namespace for the Fix framework.
 #
 # @api public
@@ -24,3 +22,5 @@ module Fix
     exit t.pass?
   end
 end
+
+require_relative File.join 'fix', 'test'

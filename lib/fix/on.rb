@@ -1,6 +1,3 @@
-require_relative 'it'
-require 'defi'
-
 module Fix
   # Wraps the target of challenge.
   #
@@ -9,7 +6,7 @@ module Fix
   class On
     # Initialize the on class.
     #
-    # @param front_object   [BasicObject] The front object of the test.
+    # @param front_object   [#object_id]  The front object of the test.
     # @param results        [Array]       The list of collected results.
     # @param challenges     [Array]       The list of challenges to apply.
     # @param helpers        [Hash]        The list of helpers.
@@ -22,10 +19,30 @@ module Fix
       @configuration  = configuration
     end
 
+    # @!attribute [r] front_object
+    #
+    # @return [#object_id] The front object of the test.
+    attr_reader :front_object
+
     # @!attribute [r] results
     #
-    # @return [Array] The results.
+    # @return [Array] The list of collected results.
     attr_reader :results
+
+    # @!attribute [r] challenges
+    #
+    # @return [Array] The list of challenges to apply.
+    attr_reader :challenges
+
+    # @!attribute [r] helpers
+    #
+    # @return [Hash] The list of helpers.
+    attr_reader :helpers
+
+    # @!attribute [r] configuration
+    #
+    # @return [Hash] Settings.
+    attr_reader :configuration
 
     # Add it method to the DSL.
     #
@@ -38,7 +55,7 @@ module Fix
     #
     # @return [Array] List of results.
     def it(&spec)
-      i = It.new(@front_object, @challenges, @helpers.dup)
+      i = It.new(front_object, challenges, helpers.dup)
 
       result = begin
                  i.instance_eval(&spec)
@@ -46,8 +63,8 @@ module Fix
                  f
                end
 
-      if @configuration.fetch(:verbose, true)
-        print result.to_char(@configuration.fetch(:color, false))
+      if configuration.fetch(:verbose, true)
+        print result.to_char(configuration.fetch(:color, false))
       end
 
       results << result
@@ -68,11 +85,11 @@ module Fix
     #
     # @return [Array] List of results.
     def on(method_name, *args, &block)
-      o = On.new(@front_object,
+      o = On.new(front_object,
                  results,
-                 (@challenges + [Defi.send(method_name, *args)]),
-                 @helpers.dup,
-                 @configuration)
+                 (challenges + [Defi.send(method_name, *args)]),
+                 helpers.dup,
+                 configuration)
 
       o.instance_eval(&block)
     end
@@ -87,9 +104,12 @@ module Fix
     # @param method_name [Symbol] The identifier of a method.
     # @param block       [Proc]   A spec to compare against the computed value.
     #
-    # @return [BasicObject] List of results.
+    # @return [#object_id] List of results.
     def let(method_name, &block)
-      @helpers.update(method_name => block)
+      helpers.update(method_name => block)
     end
   end
 end
+
+require_relative 'it'
+require 'defi'

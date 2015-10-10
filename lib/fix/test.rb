@@ -1,6 +1,3 @@
-require_relative 'on'
-require_relative 'report'
-
 module Fix
   # Wraps the target of the specs document.
   #
@@ -85,3 +82,6 @@ module Fix
     end
   end
 end
+
+require_relative 'on'
+require_relative 'report'
