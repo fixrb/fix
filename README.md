@@ -61,7 +61,7 @@ Monkey-patching, [magic tricks and friends](http://blog.arkency.com/2013/06/are-
 
 ### Test in isolation
 
-Rather than a _random order_ option to help finding bugs somewhere (and sometimes luck), __Fix__ prevents from **side effects** by running each test inside a distinct **sub-process**.  As it behaves like a function, no matter how many times you call it, the build status remains the same.
+Rather than a _random order_ option to help finding bugs somewhere (and sometimes luck), __Fix__ prevents from **side effects** by running each context inside a distinct **sub-process**.  As it behaves like a function, no matter how many times you call it, the build status remains the same.
 
 ## Usage
 

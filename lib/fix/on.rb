@@ -1,3 +1,6 @@
+require 'aw'
+require 'defi'
+
 module Fix
   # Wraps the target of challenge.
   #
@@ -94,6 +97,28 @@ module Fix
       o.instance_eval(&block)
     end
 
+    # Add context method to the DSL, to build an isolated scope.
+    #
+    # @api public
+    #
+    # @example Context when logged in.
+    #   context 'when logged in' do
+    #     it { MUST Equal: 200 }
+    #   end
+    #
+    # @param block [Proc] A block of specs to test in isolation.
+    #
+    # @return [Array] List of results.
+    def context(*, &block)
+      o = On.new(front_object,
+                 results,
+                 challenges,
+                 helpers.dup,
+                 configuration)
+
+      Aw.fork! { o.instance_eval(&block) }
+    end
+
     # @api public
     #
     # @example Let's define the answer to the Ultimate Question of Life, the
@@ -112,4 +137,3 @@ module Fix
 end
 
 require_relative 'it'
-require 'defi'
