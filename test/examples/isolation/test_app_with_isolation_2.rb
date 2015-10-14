@@ -1,3 +1,8 @@
+unless Process.respond_to?(:fork)
+  warn 'Info: fork is not implemented on the current platform.'
+  exit
+end
+
 require_relative File.join '..', '..', 'support', 'coverage'
 require_relative File.join '..', '..', '..', 'lib', 'fix'
 require 'spectus'
