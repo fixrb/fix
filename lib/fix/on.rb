@@ -9,23 +9,23 @@ module Fix
   class On
     # Initialize the on class.
     #
-    # @param front_object   [#object_id]  The front object of the test.
+    # @param described      [#object_id]  The front object of the test.
     # @param results        [Array]       The list of collected results.
     # @param challenges     [Array]       The list of challenges to apply.
     # @param helpers        [Hash]        The list of helpers.
     # @param configuration  [Hash]        Settings.
-    def initialize(front_object, results, challenges, helpers, configuration)
-      @front_object   = front_object
+    def initialize(described, results, challenges, helpers, configuration)
+      @described      = described
       @results        = results
       @challenges     = challenges
       @helpers        = helpers
       @configuration  = configuration
     end
 
-    # @!attribute [r] front_object
+    # @!attribute [r] described
     #
     # @return [#object_id] The front object of the test.
-    attr_reader :front_object
+    attr_reader :described
 
     # @!attribute [r] results
     #
@@ -58,7 +58,7 @@ module Fix
     #
     # @return [Array] List of results.
     def it(&spec)
-      i = It.new(front_object, challenges, helpers.dup)
+      i = It.new(described, challenges, helpers.dup)
 
       result = begin
                  i.instance_eval(&spec)
@@ -88,7 +88,7 @@ module Fix
     #
     # @return [Array] List of results.
     def on(method_name, *args, &block)
-      o = On.new(front_object,
+      o = On.new(described,
                  results,
                  (challenges + [Defi.send(method_name, *args)]),
                  helpers.dup,
@@ -110,7 +110,7 @@ module Fix
     #
     # @return [Array] List of results.
     def context(*, &block)
-      o = On.new(front_object,
+      o = On.new(described,
                  results,
                  challenges,
                  helpers.dup,
