@@ -111,12 +111,12 @@ module Fix
     # @return [Array] List of results.
     def context(*, &block)
       o = On.new(described,
-                 results,
+                 [],
                  challenges,
                  helpers.dup,
                  configuration)
 
-      Aw.fork! { o.instance_eval(&block) }
+      results.concat Aw.fork! { o.instance_eval(&block) }
     end
 
     # @api public

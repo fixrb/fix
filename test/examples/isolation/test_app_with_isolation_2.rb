@@ -23,4 +23,8 @@ end
 
 t = Fix::Test.new(@greeting, color: false, verbose: false, &@spec)
 
+Spectus.this { t.report.to_s }.MUST Eql:      \
+  "Ran 2 tests in #{t.total_time} seconds\n"  \
+  "100% compliant - 0 infos, 0 failures, 0 errors\n"
+
 Spectus.this { t.pass? }.MUST :BeTrue

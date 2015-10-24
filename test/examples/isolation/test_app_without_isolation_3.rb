@@ -6,8 +6,10 @@ require 'spectus'
 
 @spec = proc do
   on :gsub!, 'world', 'Alice' do
-    it { MUST Eql: 'Hello, Alice!' }
-    it { MUST Eql: 'Hello, Alice!' }
+    context do
+      it { MUST Eql: 'Hello, Alice!' }
+      it { MUST Eql: 'Hello, Alice!' }
+    end
   end
 end
 

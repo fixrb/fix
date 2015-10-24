@@ -16,4 +16,11 @@ end
 
 t = Fix::Test.new(@greeting, color: false, verbose: false, &@spec)
 
+Spectus.this { t.report.to_s }.MUST Eql:                \
+  "1. Failure: Expected nil to eql \"Hello, Bob!\".\n"  \
+  "    #{t.report.test.results[1].backtrace.first}\n"   \
+  "\n"                                                  \
+  "Ran 2 tests in #{t.total_time} seconds\n"            \
+  "50% compliant - 0 infos, 1 failures, 0 errors\n"
+
 Spectus.this { t.pass? }.MUST :BeFalse
