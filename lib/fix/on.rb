@@ -57,7 +57,7 @@ module Fix
     # @param spec [Proc] A spec to compare against the computed actual value.
     #
     # @return [Array] List of results.
-    def it(&spec)
+    def it(*, &spec)
       i = It.new(described, challenges, helpers.dup)
 
       result = begin

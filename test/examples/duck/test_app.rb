@@ -18,7 +18,9 @@ require 'spectus'
   end
 
   on :sings do
-    it { MAY(Eql: '♪... ♫...') }
+    it 'May sings' do
+      MAY(Eql: '♪... ♫...')
+    end
   end
 
   on :walks do
