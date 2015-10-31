@@ -95,15 +95,15 @@ require 'fix'
 
 Fix.describe @bird do
   on :swims do
-    it { MUST Eql: 'Swoosh...' }
+    it { MUST eql 'Swoosh...' }
   end
 
   on :speaks do
-    it { MUST RaiseException: NoMethodError }
+    it { MUST raise_exception NoMethodError }
   end
 
   on :sings do
-    it { MAY Eql: '♪... ♫...' }
+    it { MAY eql '♪... ♫...' }
   end
 end
 ```

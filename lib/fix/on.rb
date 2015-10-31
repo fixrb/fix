@@ -52,7 +52,7 @@ module Fix
     # @api public
     #
     # @example It must eql "FOO"
-    #   it { MUST Equal: 'FOO' }
+    #   it { MUST equal 'FOO' }
     #
     # @param spec [Proc] A spec to compare against the computed actual value.
     #
@@ -79,7 +79,7 @@ module Fix
     #
     # @example On +2, it must equal 44.
     #   on(:+, 2) do
-    #     it { MUST Equal: 44 }
+    #     it { MUST equal 44 }
     #   end
     #
     # @param method_name [Symbol] The identifier of a method.
@@ -103,7 +103,7 @@ module Fix
     #
     # @example Context when logged in.
     #   context 'when logged in' do
-    #     it { MUST Equal: 200 }
+    #     it { MUST equal 200 }
     #   end
     #
     # @param block [Proc] A block of specs to test in isolation.

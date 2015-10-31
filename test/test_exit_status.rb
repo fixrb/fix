@@ -2,18 +2,20 @@ require_relative File.join 'support', 'coverage'
 require_relative File.join '..', 'lib', 'fix'
 require 'spectus'
 
+include Spectus
+
 begin
   Fix.describe 4, verbose: false do
-    it { MUST Equal: 42 }
+    it { MUST equal 42 }
   end
 rescue SystemExit => e
-  Spectus.this { e.success? }.MUST :BeFalse
+  it { e.success? }.MUST be_false
 end
 
 begin
   Fix.describe 42, verbose: false do
-    it { MUST Equal: 42 }
+    it { MUST equal 42 }
   end
 rescue SystemExit => e
-  Spectus.this { e.success? }.MUST :BeTrue
+  it { e.success? }.MUST be_true
 end

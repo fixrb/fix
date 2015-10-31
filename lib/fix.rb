@@ -7,7 +7,7 @@ module Fix
   #
   # @example 42 must be equal to 42
   #   describe(42) do
-  #     it { MUST Equal: 42 }
+  #     it { MUST equal 42 }
   #   end
   #
   # @param front_object [BasicObject] The front object.

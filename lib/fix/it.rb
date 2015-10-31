@@ -1,4 +1,5 @@
 require 'spectus/expectation_target'
+require 'spectus/matchers'
 
 module Fix
   # Wraps the target of an expectation.
@@ -6,6 +7,8 @@ module Fix
   # @api private
   #
   class It < Spectus::ExpectationTarget
+    include ::Spectus::Matchers
+
     # Create a new expection target
     #
     # @param subject    [BasicObject] The front object.
