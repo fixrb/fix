@@ -152,3 +152,9 @@ See `LICENSE.md` file.
 [inchpages]: http://inch-ci.org/github/fixrb/fix/
 [rubydoc]: http://rubydoc.info/gems/fix/frames
 [gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+
+***
+
+This project is sponsored by:
+
+[![Sashite](http://www.sashite.com/assets/img/sashite.png)](http://www.sashite.com/)
