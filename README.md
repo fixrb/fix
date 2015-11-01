@@ -43,7 +43,7 @@ And then execute:
 
 ## Let's get started!
 
-[![asciicast](https://asciinema.org/a/25963.png)](https://asciinema.org/a/25963)
+[![asciicast](https://asciinema.org/a/29098.png)](https://asciinema.org/a/29098)
 
 ## Philosophy
 
