@@ -25,6 +25,17 @@ module Fix
     # @return [Hash] The list of helpers.
     attr_reader :helpers
 
+    # Verify the expectation.
+    #
+    # @param spec [Proc] A spec to compare against the computed actual value.
+    #
+    # @return [::Spectus::Result::Pass, ::Spectus::Result::Fail] Pass or fail.
+    def verify(&spec)
+      instance_eval(&spec)
+    rescue ::Spectus::Result::Fail => f
+      f
+    end
+
     private
 
     # Override Ruby's method_missing in order to provide `On#let` interface.
