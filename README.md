@@ -1,6 +1,7 @@
 # Fix
 
 [![Build Status](https://travis-ci.org/fixrb/fix.svg?branch=master)][travis]
+[![Code Climate](https://codeclimate.com/github/fixrb/fix/badges/gpa.svg)][codeclimate]
 [![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
 [![Inline docs](http://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
 [![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
@@ -149,7 +150,8 @@ See `LICENSE.md` file.
 
 [gem]: https://rubygems.org/gems/fix
 [travis]: https://travis-ci.org/fixrb/fix
-[inchpages]: http://inch-ci.org/github/fixrb/fix/
+[codeclimate]: https://codeclimate.com/github/fixrb/fix
+[inchpages]: http://inch-ci.org/github/fixrb/fix
 [rubydoc]: http://rubydoc.info/gems/fix/frames
 [gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 
