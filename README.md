@@ -1,5 +1,7 @@
 # Fix
 
+[![Join the chat at https://gitter.im/fixrb/fix](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/fixrb/fix.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/fix/badges/gpa.svg)][codeclimate]
 [![Dependency Status](https://gemnasium.com/fixrb/fix.svg)][gemnasium]
