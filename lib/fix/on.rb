@@ -112,7 +112,7 @@ module Fix
                  helpers.dup,
                  configuration)
 
-      results.concat Aw.fork! { o.instance_eval(&block) }
+      results.concat(Aw.fork! { o.instance_eval(&block) })
     end
   end
 end
