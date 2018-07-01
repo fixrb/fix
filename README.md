@@ -12,7 +12,7 @@
 
 ## Contact
 
-* Home page: http://fixrb.org/
+* Home page: https://fixrb.org/
 * Bugs/issues: https://github.com/fixrb/fix/issues
 * Support: https://stackoverflow.com/questions/tagged/fixrb
 
