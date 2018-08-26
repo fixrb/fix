@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spectus/expectation_target'
 require 'spectus/matchers'
 

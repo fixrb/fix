@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fix
   # The class that is responsible for reporting the result of the test.
   #
@@ -84,11 +86,11 @@ module Fix
 
     # @private
     def statistics_color(string, stats)
-      if stats.fetch(:total_errors) > 0
+      if stats.fetch(:total_errors).positive?
         "\e[#{error_color}m#{string}\e[0m"
-      elsif stats.fetch(:total_failures) > 0
+      elsif stats.fetch(:total_failures).positive?
         "\e[#{failure_color}m#{string}\e[0m"
-      elsif stats.fetch(:total_infos) > 0
+      elsif stats.fetch(:total_infos).positive?
         "\e[#{info_color}m#{string}\e[0m"
       else
         "\e[#{success_color}m#{string}\e[0m"

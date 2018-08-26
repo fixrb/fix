@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 unless Process.respond_to?(:fork)
   warn 'Info: fork is not implemented on the current platform.'
   exit

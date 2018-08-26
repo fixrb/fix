@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fix
   # Wraps the target of the specs document.
   #

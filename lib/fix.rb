@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Namespace for the Fix framework.
 #
 # @api public
