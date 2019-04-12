@@ -16,7 +16,7 @@ module Fix
     # @param subject    [BasicObject] The front object.
     # @param challenges [Array]       The list of challenges.
     # @param helpers    [Hash]        The list of helpers.
-    def initialize(subject, *challenges, **helpers)
+    def initialize(subject, challenges, helpers)
       @subject    = subject
       @challenges = challenges
 

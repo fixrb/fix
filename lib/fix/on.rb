@@ -60,7 +60,7 @@ module Fix
     #
     # @return [Array] List of results.
     def it(*, &spec)
-      i = It.new(described, *challenges, **helpers)
+      i = It.new(described, challenges, helpers)
 
       result = i.verify(&spec)
 
