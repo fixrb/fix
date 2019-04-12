@@ -17,10 +17,10 @@ module Fix
   # @param specs        [Proc]        The set of specs.
   #
   # @raise [SystemExit] The result of the test.
-  def self.describe(front_object, options = {}, &specs)
-    t = Test.new(front_object, options, &specs)
+  def self.describe(front_object, verbose: true, **options, &specs)
+    t = Test.new(front_object, verbose: verbose, **options, &specs)
 
-    print t.report.to_s if options.fetch(:verbose, true)
+    print t.report.to_s if verbose
     exit t.pass?
   end
 end

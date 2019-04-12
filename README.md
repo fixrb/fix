@@ -15,24 +15,9 @@
 * Bugs/issues: https://github.com/fixrb/fix/issues
 * Support: https://stackoverflow.com/questions/tagged/fixrb
 
-## Rubies
-
-* [MRI](https://www.ruby-lang.org/)
-* [Rubinius](http://rubini.us/)
-* [JRuby](http://jruby.org/)
-
 ## Installation
 
-__Fix__ is cryptographically signed.
-
-To be sure the gem you install hasn't been tampered with, add my public key (if you haven't already) as a trusted certificate:
-
-    $ gem cert --add <(curl -Ls https://raw.github.com/fixrb/fix/master/certs/gem-fixrb-public_cert.pem)
-    $ gem install fix -P HighSecurity
-
-The `HighSecurity` trust profile will verify all gems.  All of __Fix__'s dependencies are signed.
-
-Or add this line to your application's Gemfile:
+Add this line to your application's Gemfile:
 
 ```ruby
 gem 'fix'
@@ -41,6 +26,10 @@ gem 'fix'
 And then execute:
 
     $ bundle
+
+Or install it yourself as:
+
+    $ gem install fix
 
 ## Let's get started!
 
@@ -160,4 +149,4 @@ See `LICENSE.md` file.
 
 This project is sponsored by:
 
-[![Sashite](http://sashite.com/img/sashite.png)](http://sashite.com/)
+[![Sashite](https://sashite.com/img/sashite.png)](https://sashite.com/)
