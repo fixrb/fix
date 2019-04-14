@@ -11,7 +11,7 @@
 
 ## Contact
 
-* Home page: https://fixrb.org/
+* Home page: https://fixrb.dev/
 * Bugs/issues: https://github.com/fixrb/fix/issues
 * Support: https://stackoverflow.com/questions/tagged/fixrb
 
