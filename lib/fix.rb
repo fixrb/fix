@@ -25,4 +25,4 @@ module Fix
   end
 end
 
-require_relative File.join 'fix', 'test'
+require_relative File.join('fix', 'test')

@@ -18,12 +18,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'aw',                     '~> 0.1.6'
   spec.add_dependency 'defi',                   '~> 1.1.5'
-  spec.add_dependency 'spectus',                '~> 3.0.8'
+  spec.add_dependency 'spectus',                '~> 3.0.9'
 
   spec.add_development_dependency 'bundler',              '~> 2.0'
-  spec.add_development_dependency 'rake',                 '~> 12.3'
-  spec.add_development_dependency 'rubocop',              '~> 0.67'
-  spec.add_development_dependency 'rubocop-performance',  '~> 1.1'
-  spec.add_development_dependency 'simplecov',            '~> 0.16'
+  spec.add_development_dependency 'rake',                 '~> 13.0'
+  spec.add_development_dependency 'rubocop',              '~> 0.75'
+  spec.add_development_dependency 'rubocop-performance',  '~> 1.5'
+  spec.add_development_dependency 'simplecov',            '~> 0.17'
   spec.add_development_dependency 'yard',                 '~> 0.9'
 end

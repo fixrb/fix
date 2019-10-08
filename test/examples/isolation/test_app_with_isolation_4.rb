@@ -5,8 +5,8 @@ unless Process.respond_to?(:fork)
   exit
 end
 
-require_relative File.join '..', '..', 'support', 'coverage'
-require_relative File.join '..', '..', '..', 'lib', 'fix'
+require_relative File.join('..', '..', 'support', 'coverage')
+require_relative File.join('..', '..', '..', 'lib', 'fix')
 require 'spectus'
 
 include Spectus

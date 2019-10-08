@@ -17,13 +17,13 @@ module Fix
         color: color
       )
 
-      start_time = Time.now
+      start_time = ::Time.now
 
       g = On.new(front_object, [], [], {}, @configuration)
       g.instance_eval(&specs)
 
       @results    = g.results
-      @total_time = Time.now - start_time
+      @total_time = ::Time.now - start_time
     end
 
     # @!attribute [r] configuration

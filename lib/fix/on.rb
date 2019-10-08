@@ -88,7 +88,7 @@ module Fix
     def on(method_name, *args, &block)
       o = On.new(described,
                  results,
-                 (challenges + [Defi.send(method_name, *args)]),
+                 (challenges + [::Defi.send(method_name, *args)]),
                  helpers.dup,
                  configuration)
 
@@ -131,7 +131,7 @@ module Fix
                  helpers.dup,
                  configuration)
 
-      results.concat(Aw.fork! { o.instance_eval(&block) })
+      results.concat(::Aw.fork! { o.instance_eval(&block) })
     end
   end
 end

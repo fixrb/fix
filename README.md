@@ -149,4 +149,4 @@ See `LICENSE.md` file.
 
 This project is sponsored by:
 
-[![Sashite](https://sashite.com/img/sashite.png)](https://sashite.com/)
+[![Sashite](https://pbs.twimg.com/profile_images/618485028322975744/PZ9qPuI__400x400.png)](https://sashite.com/)

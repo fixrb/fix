@@ -8,7 +8,7 @@ module Fix
   #
   # @api private
   #
-  class It < Spectus::ExpectationTarget
+  class It < ::Spectus::ExpectationTarget
     include ::Spectus::Matchers
 
     # Create a new expection target
