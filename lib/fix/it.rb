@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spectus/expectation_target'
-require 'spectus/matchers'
+require 'matchi/helper'
 
 module Fix
   # Wraps the target of an expectation.
@@ -9,7 +9,7 @@ module Fix
   # @api private
   #
   class It < ::Spectus::ExpectationTarget
-    include ::Spectus::Matchers
+    include ::Matchi::Helper
 
     # Create a new expection target
     #

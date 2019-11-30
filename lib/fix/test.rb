@@ -64,7 +64,7 @@ module Fix
     #
     # @return [Boolean] Return true if the test pass.
     def pass?
-      results.all?(&:result?)
+      results.all?(&:pass?)
     end
 
     # @return [Boolean] Return false if the test fail.
@@ -80,7 +80,7 @@ module Fix
     def pass_percent
       return 100 if results.empty?
 
-      (results.count(&:result?) / results.length.to_f * 100).round
+      (results.count(&:pass?) / results.length.to_f * 100).round
     end
   end
 end

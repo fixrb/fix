@@ -65,6 +65,8 @@ module Fix
     # @private
     def maybe_backtrace(result)
       result.respond_to?(:backtrace) ? "    #{result.backtrace.first}\n" : ''
+    rescue NoMethodError
+      ''
     end
 
     # @private
