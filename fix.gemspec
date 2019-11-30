@@ -3,7 +3,7 @@
 Gem::Specification.new do |spec|
   spec.name                   = 'fix'
   spec.version                = File.read('VERSION.semver').chomp
-  spec.authors                = 'Cyril Kato'
+  spec.author                 = 'Cyril Kato'
   spec.email                  = 'contact@cyril.email'
   spec.summary                = 'Specing framework.'
   spec.description            = 'Specing framework for Ruby.'
