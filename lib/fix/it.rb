@@ -13,29 +13,22 @@ module Fix
 
     # Create a new expection target
     #
-    # @param subject    [BasicObject] The front object.
-    # @param challenges [Array]       The list of challenges.
-    # @param helpers    [Hash]        The list of helpers.
-    def initialize(subject, challenges, helpers)
-      @subject    = subject
-      @challenges = challenges
+    # @param callable [#call] The object to test.
+    def initialize(callable, **lets)
+      raise unless callable.respond_to?(:call)
 
-      helpers.each do |method_name, method_block|
-        define_singleton_method(method_name) do
-          method_block.call
-        end
-      end
+      @callable = callable
+      @lets     = lets
     end
 
-    # Verify the expectation.
-    #
-    # @param spec [Proc] A spec to compare against the computed actual value.
-    #
-    # @return [::Spectus::Result::Pass, ::Spectus::Result::Fail] Pass or fail.
-    def verify(&spec)
-      instance_eval(&spec)
-    rescue ::Spectus::Result::Fail => e
-      e
+    private
+
+    def method_missing(name, *args, &block)
+      @lets.fetch(name) { super }
+    end
+
+    def respond_to_missing?(name, include_private = false)
+      @lets.key?(name) || super
     end
   end
 end
