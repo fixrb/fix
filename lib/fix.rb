@@ -2,8 +2,6 @@
 
 # Namespace for the Fix framework.
 #
-# @api public
-#
 module Fix
   # Specs are built with this method.
   #
@@ -17,12 +15,11 @@ module Fix
   # @param specs        [Proc]        The set of specs.
   #
   # @raise [SystemExit] The result of the test.
-  def self.describe(front_object, verbose: true, **options, &specs)
-    t = Test.new(front_object, verbose: verbose, **options, &specs)
-
-    print t.report.to_s if verbose
-    exit t.pass?
+  def self.describe(front_object, **lets, &block)
+    c = Context.new(front_object, ::Defi.send(:itself), **lets)
+    c.instance_eval(&block)
   end
 end
 
-require_relative File.join('fix', 'test')
+require_relative 'kernel'
+require_relative File.join('fix', 'context')

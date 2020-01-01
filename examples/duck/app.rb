@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
-# A Duck application
 class Duck
   def walks
-    'So! Klop klop!'
+    'Klop klop!'
   end
 
   def swims
-    'So! Swoosh...'
+    'Swoosh...'
   end
 
   def quacks
-    puts 'So! Quaaaaaack!'
+    puts 'Quaaaaaack!'
   end
 end

@@ -1,0 +1,55 @@
+# frozen_string_literal: true
+
+require 'simplecov'
+require_relative '../../lib/fix'
+
+Fix('foo') do
+  on :+, 'bar' do
+    it { SHOULD eql 'foobar' }
+  end
+end
+
+Fix('foo') do
+  on :ddd, 'bar' do
+    it { MAY eql 'foobar' }
+
+    on :dddd, 'bar' do
+      it { MAY eql 'foobar' }
+
+      on :dd, 'bar' do
+        it { MAY eql 'foobar' }
+
+        on :d, 'bar' do
+          it { MAY eql 'foobar' }
+        end
+      end
+    end
+  end
+end
+
+Fix('foo') do
+  on :+, '1' do
+    before do
+      puts "Let's start!"
+    end
+
+    it { SHOULD eql 'foobar' }
+
+    on :+, '1' do
+      it { SHOULD eql 'foobar' }
+
+      on :+, '1' do
+        it { SHOULD eql 'foobar' }
+
+        on :+, '1' do
+          before { warn 'starting!' }
+          it { SHOULD eql 'foobar' }
+        end
+
+        on :+, '1' do
+          it { SHOULD eql 'foobar once again' }
+        end
+      end
+    end
+  end
+end
