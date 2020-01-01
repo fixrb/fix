@@ -5,9 +5,6 @@ require 'matchi/helper'
 
 module Fix
   # Wraps the target of an expectation.
-  #
-  # @api private
-  #
   class It < ::Spectus::ExpectationTarget
     include ::Matchi::Helper
 

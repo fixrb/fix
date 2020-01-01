@@ -5,9 +5,6 @@ require 'defi'
 
 module Fix
   # Wraps the target of challenge.
-  #
-  # @api private
-  #
   class Context
     RESERVED_KEYWORDS = %i[
       alias
@@ -50,7 +47,7 @@ module Fix
       when
       while
       yield
-    ]
+    ].freeze
 
     attr_reader :callable
 
@@ -96,19 +93,20 @@ module Fix
 
     # Verify the expectation.
     #
-    # @param spec [Proc] A spec to compare against the computed actual value.
+    # @param block [Proc] A spec to compare against the computed actual value.
     #
     # @return [::Spectus::Result::Pass, ::Spectus::Result::Fail] Pass or fail.
     def it(_message = nil, &block)
+      print "#{block.source_location.join(':')}: "
       i = It.new(callable, **@lets)
       @before_hooks.each { |hook| i.instance_eval(&hook) }
       result = i.instance_eval(&block)
+      puts result.colored_string
     rescue ::Spectus::Result::Fail => result
-      exit false
+      abort result.colored_string
     ensure
       @after_hooks.each { |hook| i.instance_eval(&hook) }
       raise ExpectationResultNotFoundError unless result.is_a?(::Spectus::Result::Common)
-      puts "#{block.source_location.join(':')}: " + result.color("#{result}")
     end
 
     def on(name, *args, **options, &block)

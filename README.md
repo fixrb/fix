@@ -1,26 +1,20 @@
 # Fix
 
-[![Build Status](https://travis-ci.org/fixrb/fix.svg?branch=master)][travis]
+[![Build Status](https://api.travis-ci.org/fixrb/fix.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/fixrb/fix/badges/gpa.svg)][codeclimate]
 [![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
-[![Inline docs](http://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
-[![Documentation](http://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
+[![Inline docs](https://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
+[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
 
 > Specing framework for Ruby.
-
-## Contact
-
-* Home page: https://fixrb.dev/
-* Bugs/issues: https://github.com/fixrb/fix/issues
-* Support: https://stackoverflow.com/questions/tagged/fixrb
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix'
+gem 'fix', '>= 1.0.0.beta1'
 ```
 
 And then execute:
@@ -29,7 +23,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install fix
+    $ gem install fix --pre
 
 ## Let's get started!
 
@@ -51,14 +45,14 @@ Monkey-patching, [magic tricks and friends](http://blog.arkency.com/2013/06/are-
 
 ### Test in isolation
 
-Rather than a _random order_ option to help finding bugs somewhere (and sometimes luck), __Fix__ prevents from **side effects** by running each context inside a distinct **sub-process**.  As it behaves like a function, no matter how many times you call it, the build status remains the same.
+Rather than a _random order_ option to help finding bugs somewhere (and sometimes luck), __Fix__ provides a protection against **side effects** by allowing to run contexts inside **sub-process**.  As it behaves like a function, no matter how many times you call it, the build status remains the same.
 
 ## Usage
 
 Given this app:
 
 ```ruby
-# duck.rb
+# examples/duck/app.rb
 class Duck
   def walks
     'Klop klop!'
@@ -77,13 +71,13 @@ end
 When you run this:
 
 ```ruby
-# duck_spec.rb
-require_relative 'duck'
-require 'fix'
+# examples/duck/fix.rb
+require_relative 'app'
+require_relative '../../lib/fix'
 
 @bird = Duck.new
 
-Fix.describe @bird do
+Fix(@bird) do
   on :swims do
     it { MUST eql 'Swoosh...' }
   end
@@ -100,53 +94,48 @@ end
 
 Then the output should look like this:
 
-    $ ruby duck_spec.rb
-    ..I
+```sh
+ruby examples/duck/fix.rb
+```
 
-    1. Info: undefined method `sings' for #<Duck:0x007fb60383b740> (NoMethodError).
+```txt
+examples/duck/fix.rb:8: Success: expected to eql "Swoosh...".
+examples/duck/fix.rb:12: Success: undefined method `speaks' for #<Duck:0x00007fe3be868ea0>.
+examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00007fe3be868ea0>.
+```
 
-    Ran 3 tests in 0.00038 seconds
-    100% compliant - 1 infos, 0 failures, 0 errors
+## Contact
 
-## Security
+* Home page: https://fixrb.dev/
+* Bugs/issues: https://github.com/fixrb/fix/issues
+* Support: https://stackoverflow.com/questions/tagged/fixrb
 
-As a basic form of security __Fix__ provides a set of SHA512 checksums for
-every Gem release.  These checksums can be found in the `checksum/` directory.
-Although these checksums do not prevent malicious users from tampering with a
-built Gem they can be used for basic integrity verification purposes.
+## Rubies
 
-The checksum of a file can be checked using the `sha512sum` command.  For
-example:
-
-    $ sha512sum pkg/fix-0.1.0.gem
-    d12d7d9c2a4fdfe075cbb7a141fa5f2195175891e4098c7e1a28c8bca655ab44fb9d67b6a2e3991d0f852026c5e4537fdf7e314575c68d1c80b3a4b1eb1c041f  pkg/fix-0.1.0.gem
+* [MRI](https://www.ruby-lang.org/)
+* [Rubinius](https://rubinius.com/)
+* [JRuby](https://www.jruby.org/)
 
 ## Versioning
 
 __Fix__ follows [Semantic Versioning 2.0](http://semver.org/).
 
-## Contributing
-
-1. [Fork it](https://github.com/fixrb/fix/fork)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
 ## License
 
-See `LICENSE.md` file.
-
-[gem]: https://rubygems.org/gems/fix
-[travis]: https://travis-ci.org/fixrb/fix
-[codeclimate]: https://codeclimate.com/github/fixrb/fix
-[gemnasium]: https://gemnasium.com/fixrb/fix
-[inchpages]: http://inch-ci.org/github/fixrb/fix
-[rubydoc]: http://rubydoc.info/gems/fix/frames
-[gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ***
 
-This project is sponsored by:
+<p>
+  This project is sponsored by:<br />
+  <a href="https://sashite.com/"><img
+    src="https://github.com/fixrb/fix/raw/master/img/sashite.png"
+    alt="Sashite" /></a>
+</p>
 
-[![Sashite](https://pbs.twimg.com/profile_images/618485028322975744/PZ9qPuI__400x400.png)](https://sashite.com/)
+[travis]: https://travis-ci.org/fixrb/fix
+[codeclimate]: https://codeclimate.com/github/fixrb/fix
+[gem]: https://rubygems.org/gems/fix
+[inchpages]: http://inch-ci.org/github/fixrb/fix
+[rubydoc]: http://rubydoc.info/gems/fix/frames
+[gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge

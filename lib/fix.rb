@@ -2,8 +2,6 @@
 
 # Namespace for the Fix framework.
 #
-# @api public
-#
 module Fix
   # Specs are built with this method.
   #
