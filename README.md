@@ -85,7 +85,7 @@ examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00
 ## Contact
 
 * Home page: https://fixrb.dev/
-* Source code: https://github.com/fixrb/fix/issues
+* Source code: https://github.com/fixrb/fix
 
 ## Versioning
 
