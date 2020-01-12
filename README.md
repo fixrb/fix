@@ -14,7 +14,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix', '>= 1.0.0.beta1'
+gem 'fix', '>= 1.0.0.beta2'
 ```
 
 And then execute:
@@ -85,18 +85,11 @@ examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00
 ## Contact
 
 * Home page: https://fixrb.dev/
-* Bugs/issues: https://github.com/fixrb/fix/issues
-* Support: https://stackoverflow.com/questions/tagged/fixrb
-
-## Rubies
-
-* [MRI](https://www.ruby-lang.org/)
-* [Rubinius](https://rubinius.com/)
-* [JRuby](https://www.jruby.org/)
+* Source code: https://github.com/fixrb/fix/issues
 
 ## Versioning
 
-__Fix__ follows [Semantic Versioning 2.0](http://semver.org/).
+__Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
@@ -114,6 +107,6 @@ The gem is available as open source under the terms of the [MIT License](https:/
 [travis]: https://travis-ci.org/fixrb/fix
 [codeclimate]: https://codeclimate.com/github/fixrb/fix
 [gem]: https://rubygems.org/gems/fix
-[inchpages]: http://inch-ci.org/github/fixrb/fix
-[rubydoc]: http://rubydoc.info/gems/fix/frames
+[inchpages]: https://inch-ci.org/github/fixrb/fix
+[rubydoc]: https://rubydoc.info/gems/fix/frames
 [gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge

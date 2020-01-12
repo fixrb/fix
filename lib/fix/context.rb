@@ -69,7 +69,7 @@ module Fix
 
     def let(name, &block)
       raise ::TypeError, "expected a Symbol, got #{name.class}" unless name.is_a?(::Symbol)
-      raise ::NameError, "wrong method name `#{name}'" unless name.match?(/\A[a-z][a-z0-9_]+[?!]?\z/)
+      raise ::NameError, "wrong method name `#{name}'" unless name.match(/\A[a-z][a-z0-9_]+[?!]?\z/)
       raise ::NameError, "reserved keyword name `#{name}'" if RESERVED_KEYWORDS.include?(name)
       raise ::NameError, "reserved method name `#{name}'" if respond_to?(name, true) && !@lets.key?(name)
 
@@ -81,7 +81,7 @@ module Fix
 
     def let!(name, &block)
       raise ::TypeError, "expected a Symbol, got #{name.class}" unless name.is_a?(::Symbol)
-      raise ::NameError, "wrong method name `#{name}'" unless name.match?(/\A[a-z][a-z0-9_]+[?!]?\z/)
+      raise ::NameError, "wrong method name `#{name}'" unless name.match(/\A[a-z][a-z0-9_]+[?!]?\z/)
       raise ::NameError, "reserved keyword name `#{name}'" if RESERVED_KEYWORDS.include?(name)
       raise ::NameError, "reserved method name `#{name}'" if respond_to?(name, true) && !@lets.key?(name)
 

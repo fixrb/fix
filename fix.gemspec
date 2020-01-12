@@ -10,16 +10,16 @@ Gem::Specification.new do |spec|
   spec.homepage               = 'https://fixrb.dev/'
   spec.metadata               = { 'source_code_uri' => 'https://github.com/fixrb/fix' }
   spec.license                = 'MIT'
-  spec.required_ruby_version  = Gem::Requirement.new('>= 2.7.0')
+  spec.required_ruby_version  = Gem::Requirement.new('>= 2.3.0')
 
   spec.files = Dir['LICENSE.md', 'README.md', 'lib/**/*']
 
-  spec.add_dependency 'defi',     '~> 2.0.3'
-  spec.add_dependency 'spectus',  '~> 3.1.1'
+  spec.add_dependency 'defi',     '~> 2.0.4'
+  spec.add_dependency 'spectus',  '~> 3.1.2'
 
   spec.add_development_dependency 'bundler',              '~> 2.1'
   spec.add_development_dependency 'rake',                 '~> 13.0'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop',              '~> 0.79'
   spec.add_development_dependency 'rubocop-performance'
   spec.add_development_dependency 'simplecov',            '~> 0.17'
   spec.add_development_dependency 'yard',                 '~> 0.9'
