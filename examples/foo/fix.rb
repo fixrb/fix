@@ -3,6 +3,14 @@
 require 'simplecov'
 require_relative '../../lib/fix'
 
+Fix do
+  on :to_s do
+    on :+, 'foo' do
+      it { MUST eql 'foo' }
+    end
+  end
+end
+
 Fix('foo') do
   on :+, 'bar' do
     it { SHOULD eql 'foobar' }

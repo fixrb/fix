@@ -106,7 +106,7 @@ module Fix
       abort result.colored_string
     ensure
       @after_hooks.each { |hook| i.instance_eval(&hook) }
-      raise ExpectationResultNotFoundError unless result.is_a?(::Spectus::Result::Common)
+      raise ExpectationResultNotFoundError, result.class.inspect unless result.is_a?(::Spectus::Result::Common)
     end
 
     def on(name, *args, **options, &block)

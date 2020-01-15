@@ -14,7 +14,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix', '>= 1.0.0.beta2'
+gem 'fix', '>= 1.0.0.beta3'
 ```
 
 And then execute:
