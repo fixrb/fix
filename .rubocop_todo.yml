@@ -25,12 +25,12 @@ Metrics/AbcSize:
 # Configuration parameters: CountComments, ExcludedMethods.
 # ExcludedMethods: refine
 Metrics/BlockLength:
-  Max: 88
+  Max: 93
 
 # Offense count: 1
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 112
+  Max: 123
 
 # Offense count: 2
 Metrics/CyclomaticComplexity:
@@ -87,7 +87,7 @@ Style/SymbolLiteral:
   Exclude:
     - 'examples/-42/fix.rb'
 
-# Offense count: 14
+# Offense count: 15
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https

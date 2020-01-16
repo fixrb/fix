@@ -109,6 +109,19 @@ module Fix
       raise ExpectationResultNotFoundError, result.class.inspect unless result.is_a?(::Spectus::Result::Common)
     end
 
+    def its(name, *args, **options, &block)
+      if callable.raised?
+        actual    = callable
+        challenge = ::Defi.send(:call)
+      else
+        actual    = callable.object
+        challenge = ::Defi.send(name, *args, **options)
+      end
+
+      o = Context.new(actual, challenge, @before_hooks.length, *@before_hooks + @after_hooks, **@lets)
+      o.it(&block)
+    end
+
     def on(name, *args, **options, &block)
       if callable.raised?
         actual    = callable

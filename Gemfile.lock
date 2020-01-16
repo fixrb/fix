@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fix (1.0.0.beta3)
+    fix (1.0.0.beta4)
       defi (~> 2.0.4)
       spectus (~> 3.1.2)
 
@@ -39,7 +39,7 @@ GEM
     spectus (3.1.2)
       defi (~> 2.0.3)
       matchi (~> 2.0.0)
-    unicode-display_width (1.6.0)
+    unicode-display_width (1.6.1)
     yard (0.9.24)
 
 PLATFORMS

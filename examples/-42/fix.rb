@@ -4,14 +4,23 @@ require 'simplecov'
 require_relative '../../lib/fix'
 
 Fix(-42) do
+  its(:abs) { MUST equal(42) }
+  its(:next) { MUST equal(-41) }
+
   on :-, 1 do
+    its(:abs) { MUST equal(43) }
+    its(:next) { MUST equal(-42) }
+
     it { MUST equal(-43) }
 
     on :-, 1 do
       it { MUST equal(-44) }
 
       with zero: 0 do
+        its(:boom) { MAY equal 9 }
+
         let(:trois) { 3 + zero }
+
         on :-, trois do
           it { MUST equal(-47) }
         end
