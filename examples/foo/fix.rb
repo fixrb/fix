@@ -4,6 +4,17 @@ require 'simplecov'
 require_relative '../../lib/fix'
 
 Fix do
+  # let(:let) { 4 }
+
+  on :to_s do
+    let(:r) { 'foo'}
+    on :+, 'foo' do
+      it { MUST eql r }
+    end
+  end
+end
+
+Fix do
   on :to_s do
     on :+, 'foo' do
       it { MUST eql 'foo' }

@@ -1,11 +1,10 @@
 # Fix
 
-[![Build Status](https://api.travis-ci.org/fixrb/fix.svg?branch=master)][travis]
-[![Code Climate](https://codeclimate.com/github/fixrb/fix/badges/gpa.svg)][codeclimate]
-[![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
-[![Inline docs](https://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
-[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
+[![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/releases)
+[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/fix/main)
+[![CI](https://github.com/fixrb/fix/workflows/CI/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Aci+branch%3Amain)
+[![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
+[![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
 > Specing framework for Ruby.
 
@@ -50,12 +49,10 @@ When you run this:
 
 ```ruby
 # examples/duck/fix.rb
-require_relative 'app'
-require_relative '../../lib/fix'
 
-@bird = Duck.new
+relative 'fix'
 
-Fix(@bird) do
+fix = Fix do
   on :swims do
     it { MUST eql 'Swoosh...' }
   end
@@ -68,6 +65,12 @@ Fix(@bird) do
     it { MAY eql '♪... ♫...' }
   end
 end
+
+require_relative 'app'
+
+bird = Duck.new
+fix.call(bird)
+
 ```
 
 Then the output should look like this:
@@ -103,10 +106,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
     src="https://github.com/fixrb/fix/raw/master/img/sashite.png"
     alt="Sashite" /></a>
 </p>
-
-[travis]: https://travis-ci.org/fixrb/fix
-[codeclimate]: https://codeclimate.com/github/fixrb/fix
-[gem]: https://rubygems.org/gems/fix
-[inchpages]: https://inch-ci.org/github/fixrb/fix
-[rubydoc]: https://rubydoc.info/gems/fix/frames
-[gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge

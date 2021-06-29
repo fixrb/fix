@@ -17,10 +17,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'defi',     '~> 2.0.4'
   spec.add_dependency 'spectus',  '~> 3.1.2'
 
-  spec.add_development_dependency 'bundler',              '~> 2.1'
+  spec.add_development_dependency 'bundler',              '~> 2.2'
   spec.add_development_dependency 'rake',                 '~> 13.0'
-  spec.add_development_dependency 'rubocop',              '~> 0.79'
+  spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-performance'
-  spec.add_development_dependency 'simplecov',            '~> 0.17'
+  spec.add_development_dependency 'rubocop-rake'
+  spec.add_development_dependency 'rubocop-thread_safety'
+
+
+  spec.add_development_dependency 'simplecov',            '~> 0.21'
   spec.add_development_dependency 'yard',                 '~> 0.9'
 end
