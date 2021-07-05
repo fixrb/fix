@@ -27,7 +27,7 @@ Or install it yourself as:
 
     $ gem install fix --pre
 
-## Example
+## Usage
 
 Given this app:
 
@@ -88,10 +88,16 @@ examples/duck/fix.rb:12: Success: undefined method `speaks' for #<Duck:0x00007fe
 examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00007fe3be868ea0>.
 ```
 
+## Test suite
+
+__Fix__'s specifications are self-[fixed](https://github.com/fixrb/fix/blob/main/fix/) and self-[tested](https://github.com/fixrb/fix/blob/main/test/).
+
 ## Contact
 
 * Home page: https://fixrb.dev/
 * Source code: https://github.com/fixrb/fix
+* API Doc: [https://rubydoc.info/gems/fix](https://rubydoc.info/gems/fix)
+* Twitter: [https://twitter.com/fixrb](https://twitter.com/fixrb)
 
 ## Versioning
 
@@ -99,7 +105,7 @@ __Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The [gem](https://rubygems.org/gems/fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
 
 ***
 
