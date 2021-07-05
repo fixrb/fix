@@ -9,6 +9,8 @@
 
 > Specing framework for Ruby.
 
+![Fix](https://github.com/fixrb/fix/raw/main/img/fix.svg)
+
 ## Installation
 
 Add this line to your application's Gemfile:
