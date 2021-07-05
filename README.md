@@ -13,7 +13,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix', '>= 1.0.0.beta4'
+gem "fix", ">= 1.0.0.beta4"
 ```
 
 And then execute:
@@ -32,15 +32,15 @@ Given this app:
 # examples/duck/app.rb
 class Duck
   def walks
-    'Klop klop!'
+    "Klop klop!"
   end
 
   def swims
-    'Swoosh...'
+    "Swoosh..."
   end
 
   def quacks
-    puts 'Quaaaaaack!'
+    puts "Quaaaaaack!"
   end
 end
 ```
@@ -50,11 +50,11 @@ When you run this:
 ```ruby
 # examples/duck/fix.rb
 
-relative 'fix'
+relative "fix"
 
 fix = Fix do
   on :swims do
-    it { MUST eql 'Swoosh...' }
+    it { MUST eql "Swoosh..." }
   end
 
   on :speaks do
@@ -62,11 +62,11 @@ fix = Fix do
   end
 
   on :sings do
-    it { MAY eql '♪... ♫...' }
+    it { MAY eql "♪... ♫..." }
   end
 end
 
-require_relative 'app'
+require_relative "app"
 
 bird = Duck.new
 fix.call(bird)

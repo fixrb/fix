@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'simplecov'
-require_relative '../../lib/fix'
+require "simplecov"
+require_relative "../../lib/fix"
 
 Fix(-42) do
   its(:abs) { MUST equal(42) }
@@ -28,7 +28,7 @@ Fix(-42) do
     end
   end
 
-  let(:foo) { 'FOO' }
+  let(:foo) { "FOO" }
 
   it { MUST equal(-42) }
   it { MUST equal(-42) }
@@ -44,7 +44,7 @@ Fix(-42) do
         it { MUST equal 2 }
       end
 
-      it { MUST eql '42' }
+      it { MUST eql "42" }
     end
 
     let(:nb_21) { 21 }
@@ -63,11 +63,11 @@ Fix(-42) do
   it { MUST equal(-42) }
 
   let(:number1) { 40 }
-  let(:'number1') { number1 + 2 }
+  let(:number1) { number1 + 2 }
 
   let(:zero) { 0 }
 
-  let(:foo?) { 'FOO!' }
+  let(:foo?) { "FOO!" }
 
   it { MUST_NOT equal number1 }
   it { MUST_NOT equal number1 }
@@ -80,7 +80,7 @@ Fix(-42) do
   end
 
   with number2: number1 + 1 + zero do
-    it { MUST equal(-number2.next + zero + (2)) }
+    it { MUST equal(-number2.next + zero + 2) }
 
     # let's redefine the number1
     let(:number1) { 1 }

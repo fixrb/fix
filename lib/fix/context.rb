@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'aw'
-require 'defi'
+require "aw"
+require "defi"
 
 module Fix
   # Wraps the target of challenge.
@@ -55,7 +55,7 @@ module Fix
       @subject      = subject
       @callable     = challenge.to(subject)
       @before_hooks = hooks[0, before_hooks_counter]
-      @after_hooks  = hooks[before_hooks_counter..-1]
+      @after_hooks  = hooks[before_hooks_counter..]
       @lets         = lets
     end
 
@@ -67,27 +67,29 @@ module Fix
       @after_hooks << block
     end
 
-    def let(name, &block)
+    def let(name)
       raise ::TypeError, "expected a Symbol, got #{name.class}" unless name.is_a?(::Symbol)
-      raise ::NameError, "wrong method name `#{name}'" unless name.match(/\A[a-z][a-z0-9_]+[?!]?\z/)
+      raise ::NameError, "wrong method name `#{name}'" unless /\A[a-z][a-z0-9_]+[?!]?\z/.match?(name)
       raise ::NameError, "reserved keyword name `#{name}'" if RESERVED_KEYWORDS.include?(name)
       raise ::NameError, "reserved method name `#{name}'" if respond_to?(name, true) && !@lets.key?(name)
 
-      @lets.update(name => block.call)
+      @lets.update(name => yield)
     rescue ::SystemExit => e
       raise SuspiciousSuccessError, "attempt `#{name}' to bypass the tests" if e.success?
+
       raise e
     end
 
-    def let!(name, &block)
+    def let!(name)
       raise ::TypeError, "expected a Symbol, got #{name.class}" unless name.is_a?(::Symbol)
-      raise ::NameError, "wrong method name `#{name}'" unless name.match(/\A[a-z][a-z0-9_]+[?!]?\z/)
+      raise ::NameError, "wrong method name `#{name}'" unless /\A[a-z][a-z0-9_]+[?!]?\z/.match?(name)
       raise ::NameError, "reserved keyword name `#{name}'" if RESERVED_KEYWORDS.include?(name)
       raise ::NameError, "reserved method name `#{name}'" if respond_to?(name, true) && !@lets.key?(name)
 
-      @lets.update(name => ::Aw.fork! { block.call })
+      @lets.update(name => ::Aw.fork!(&block))
     rescue ::SystemExit => e
       raise SuspiciousSuccessError, "attempt `#{name}' to bypass the tests" if e.success?
+
       raise e
     end
 
@@ -102,8 +104,8 @@ module Fix
       @before_hooks.each { |hook| i.instance_eval(&hook) }
       result = i.instance_eval(&block)
       puts result.colored_string
-    rescue ::Spectus::Result::Fail => result
-      abort result.colored_string
+    rescue ::Spectus::Result::Fail => e
+      abort e.colored_string
     ensure
       @after_hooks.each { |hook| i.instance_eval(&hook) }
       raise ExpectationResultNotFoundError, result.class.inspect unless result.is_a?(::Spectus::Result::Common)
@@ -155,6 +157,6 @@ module Fix
   end
 end
 
-require_relative 'it'
-require_relative 'expectation_result_not_found_error'
-require_relative 'suspicious_success_error'
+require_relative "it"
+require_relative "expectation_result_not_found_error"
+require_relative "suspicious_success_error"

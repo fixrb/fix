@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'spec'
+require_relative "spec"
 
 module Fix
   # Public interface.

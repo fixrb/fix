@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative File.join('fix', 'dsl')
+require_relative File.join("fix", "dsl")
 
 # The Kernel module.
 module Kernel

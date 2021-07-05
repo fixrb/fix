@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'simplecov'
-require_relative 'app'
-require_relative '../../lib/fix'
+require "simplecov"
+require_relative "app"
+require_relative "../../lib/fix"
 
 bird = Duck.new
 
 Fix(bird) do
   on :swims do
-    it { MUST eql 'Swoosh...' }
+    it { MUST eql "Swoosh..." }
   end
 
   on :speaks do
@@ -16,6 +16,6 @@ Fix(bird) do
   end
 
   on :sings do
-    it { MAY eql '♪... ♫...' }
+    it { MAY eql "♪... ♫..." }
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'spectus/expectation_target'
-require 'matchi/helper'
+require "spectus/expectation_target"
+require "matchi/helper"
 
 module Fix
   # Wraps the target of an expectation.
