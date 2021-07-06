@@ -11,6 +11,8 @@
 
 ![Fix](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
 
+Picture based on a [photo](https://unsplash.com/photos/ZExR8_-V2kM) by [Jeremy Bishop](https://unsplash.com/photos/KFIjzXYg1RM) on [Unsplash](https://unsplash.com/).
+
 ## Installation
 
 Add this line to your application's Gemfile:
