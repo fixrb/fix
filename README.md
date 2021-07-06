@@ -114,6 +114,6 @@ The [gem](https://rubygems.org/gems/fix) is available as open source under the t
 <p>
   This project is sponsored by:<br />
   <a href="https://sashite.com/"><img
-    src="https://github.com/fixrb/fix/raw/master/img/sashite.png"
+    src="https://github.com/fixrb/fix/raw/main/img/sashite.png"
     alt="Sashite" /></a>
 </p>
