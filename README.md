@@ -99,7 +99,7 @@ __Fix__'s specifications are self-[fixed](https://github.com/fixrb/fix/blob/main
 * Home page: https://fixrb.dev/
 * Source code: https://github.com/fixrb/fix
 * API Doc: [https://rubydoc.info/gems/fix](https://rubydoc.info/gems/fix)
-* Twitter: [https://twitter.com/fixrb](https://twitter.com/fixrb)
+* Twitter: [https://twitter.com/fix\_rb](https://twitter.com/fix\_rb)
 
 ## Versioning
 
