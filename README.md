@@ -1,20 +1,22 @@
 # Fix
 
-[![Build Status](https://api.travis-ci.org/fixrb/fix.svg?branch=master)][travis]
-[![Code Climate](https://codeclimate.com/github/fixrb/fix/badges/gpa.svg)][codeclimate]
-[![Gem Version](https://badge.fury.io/rb/fix.svg)][gem]
-[![Inline docs](https://inch-ci.org/github/fixrb/fix.svg?branch=master)][inchpages]
-[![Documentation](https://img.shields.io/:yard-docs-38c800.svg)][rubydoc]
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
+[![Home](https://img.shields.io/badge/Home-fixrb.dev-00af8b)](https://fixrb.dev/)
+[![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/releases)
+[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/fix/main)
+[![CI](https://github.com/fixrb/fix/workflows/CI/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Aci+branch%3Amain)
+[![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
+[![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
 > Specing framework for Ruby.
+
+![Fix](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'fix', '>= 1.0.0.beta4'
+gem "fix", ">= 1.0.0.beta4"
 ```
 
 And then execute:
@@ -25,7 +27,7 @@ Or install it yourself as:
 
     $ gem install fix --pre
 
-## Example
+## Usage
 
 Given this app:
 
@@ -33,15 +35,15 @@ Given this app:
 # examples/duck/app.rb
 class Duck
   def walks
-    'Klop klop!'
+    "Klop klop!"
   end
 
   def swims
-    'Swoosh...'
+    "Swoosh..."
   end
 
   def quacks
-    puts 'Quaaaaaack!'
+    puts "Quaaaaaack!"
   end
 end
 ```
@@ -50,14 +52,12 @@ When you run this:
 
 ```ruby
 # examples/duck/fix.rb
-require_relative 'app'
-require_relative '../../lib/fix'
 
-@bird = Duck.new
+relative "fix"
 
-Fix(@bird) do
+fix = Fix do
   on :swims do
-    it { MUST eql 'Swoosh...' }
+    it { MUST eql "Swoosh..." }
   end
 
   on :speaks do
@@ -65,9 +65,15 @@ Fix(@bird) do
   end
 
   on :sings do
-    it { MAY eql '♪... ♫...' }
+    it { MAY eql "♪... ♫..." }
   end
 end
+
+require_relative "app"
+
+bird = Duck.new
+fix.call(bird)
+
 ```
 
 Then the output should look like this:
@@ -82,10 +88,16 @@ examples/duck/fix.rb:12: Success: undefined method `speaks' for #<Duck:0x00007fe
 examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00007fe3be868ea0>.
 ```
 
+## Test suite
+
+__Fix__'s specifications are self-[fixed](https://github.com/fixrb/fix/blob/main/fix/) and self-[tested](https://github.com/fixrb/fix/blob/main/test/).
+
 ## Contact
 
 * Home page: https://fixrb.dev/
 * Source code: https://github.com/fixrb/fix
+* API Doc: [https://rubydoc.info/gems/fix](https://rubydoc.info/gems/fix)
+* Twitter: [https://twitter.com/fixrb](https://twitter.com/fixrb)
 
 ## Versioning
 
@@ -93,7 +105,7 @@ __Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The [gem](https://rubygems.org/gems/fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
 
 ***
 
@@ -103,10 +115,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
     src="https://github.com/fixrb/fix/raw/master/img/sashite.png"
     alt="Sashite" /></a>
 </p>
-
-[travis]: https://travis-ci.org/fixrb/fix
-[codeclimate]: https://codeclimate.com/github/fixrb/fix
-[gem]: https://rubygems.org/gems/fix
-[inchpages]: https://inch-ci.org/github/fixrb/fix
-[rubydoc]: https://rubydoc.info/gems/fix/frames
-[gitter]: https://gitter.im/fixrb/fix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge

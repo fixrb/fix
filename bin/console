@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'fix'
-require 'irb'
+require "bundler/setup"
+require "fix"
+require "irb"
 
 IRB.start

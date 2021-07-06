@@ -1,5 +1,5 @@
-SimpleCov.command_name 'Fix'
+# frozen_string_literal: true
 
-SimpleCov.start do
-  add_filter "/examples/duck/app.rb"
-end
+SimpleCov.command_name "Fix"
+
+SimpleCov.start
