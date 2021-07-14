@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-require "simplecov"
-require_relative "app"
-require_relative "../../lib/fix"
+require_relative File.join("..", "..", "lib", "fix")
 
-bird = Duck.new
-
-Fix(bird) do
+Fix :Duck do
   on :swims do
     it { MUST eql "Swoosh..." }
   end
