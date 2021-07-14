@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require_relative "lib/fix"
 
 require "byebug"
 
-d = Fix :MyTest do
+Fix :MyTest do
   it { MUST eql "#{foo}FOO" }
 
   let(:foo) { "FOO" }
@@ -14,7 +16,5 @@ d = Fix :MyTest do
 
   it { MUST eql "FOOFOO" }
 end
-
-# d.call("FOOFOO")
 
 Fix[:MyTest].call("FOOFOO")

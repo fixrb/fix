@@ -34,9 +34,9 @@ Fix :MagicNumber do
 
   on :abs do
     let(:zero) { 0 }
-    let(:nb_42) { 42 - zero }
+    let(:nb42) { 42 - zero }
 
-    it { MUST equal nb_42 }
+    it { MUST equal nb42 }
 
     on :to_s do
       on :length do
@@ -46,7 +46,7 @@ Fix :MagicNumber do
       it { MUST eql "42" }
     end
 
-    let(:nb_21) { 21 }
+    let(:nb21) { 21 }
   end
 
   it { MUST equal(-42) }
