@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require "simplecov"
-require_relative "../../lib/fix"
+require_relative File.join("..", "..", "lib", "fix")
 
-Fix(-42) do
+Fix :MagicNumber do
   its(:abs) { MUST equal(42) }
   its(:next) { MUST equal(-41) }
 
@@ -51,19 +50,10 @@ Fix(-42) do
   end
 
   it { MUST equal(-42) }
-
-  before do
-    puts "BIG MESSAGE!!!!"
-  end
-
-  after do
-    puts "END"
-  end
-
   it { MUST equal(-42) }
 
   let(:number1) { 40 }
-  let(:number1) { number1 + 2 }
+  # let(:number1) { number1 + 2 }
 
   let(:zero) { 0 }
 
@@ -87,14 +77,14 @@ Fix(-42) do
 
     it { MUST_NOT equal number1 }
 
-    it "verifies foo? == 'FOO!'" do
+    it do
       MUST_NOT eql foo?
     end
 
     # let's redefine the number2
     let(:number2) { 2 }
 
-    it "verifies number2 == 2" do
+    it do
       MUST_NOT eql number2.next
     end
   end

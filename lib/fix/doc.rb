@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Fix
-  # Set of specifications.
-  module Spec
+  # Module for storing spec documents.
+  module Doc
   end
 end

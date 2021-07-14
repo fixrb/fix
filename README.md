@@ -7,29 +7,29 @@
 [![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
-> Specing framework for Ruby.
-
-![Fix](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
-
-Picture based on a [photo](https://unsplash.com/photos/ZExR8_-V2kM) by [Jeremy Bishop](https://unsplash.com/photos/KFIjzXYg1RM) on [Unsplash](https://unsplash.com/).
+![Fix specing framework for Ruby](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta4"
+gem "fix", ">= 1.0.0.beta5"
 ```
 
 And then execute:
 
-    $ bundle
+```sh
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install fix --pre
+```sh
+gem install fix --pre
+```
 
-## Usage
+## Example
 
 Given this app:
 
@@ -50,14 +50,14 @@ class Duck
 end
 ```
 
-When you run this:
+And this fixed behavior:
 
 ```ruby
 # examples/duck/fix.rb
 
 relative "fix"
 
-fix = Fix do
+Fix :Duck do
   on :swims do
     it { MUST eql "Swoosh..." }
   end
@@ -70,34 +70,40 @@ fix = Fix do
     it { MAY eql "♪... ♫..." }
   end
 end
+```
+
+When I run this test:
+
+```ruby
+# examples/duck/test.rb
 
 require_relative "app"
+require_relative "fix"
 
-bird = Duck.new
-fix.call(bird)
-
+Fix[:Duck].call(Duck.new)
 ```
-
-Then the output should look like this:
 
 ```sh
-ruby examples/duck/fix.rb
+ruby examples/duck/test.rb
 ```
 
+I should see this output:
+
 ```txt
-examples/duck/fix.rb:8: Success: expected to eql "Swoosh...".
-examples/duck/fix.rb:12: Success: undefined method `speaks' for #<Duck:0x00007fe3be868ea0>.
-examples/duck/fix.rb:16: NoMethodError: undefined method `sings' for #<Duck:0x00007fe3be868ea0>.
+Test #<Duck:0x00007fc5289bcf68> against Duck:
+- NoMethodError: undefined method `sings' for #<Duck:0x00007fc5289bcf68>.
+- Success: expected to eql "Swoosh...".
+- Success: undefined method `speaks' for #<Duck:0x00007fc5289bcf68>.
 ```
 
 ## Test suite
 
-__Fix__'s specifications are self-[fixed](https://github.com/fixrb/fix/blob/main/fix/) and self-[tested](https://github.com/fixrb/fix/blob/main/test/).
+__Fix__'s specifications are [fixed here](https://github.com/fixrb/fix/blob/main/fix/) and can be tested against __Fix__'s codebase executing [test/](https://github.com/fixrb/fix/blob/main/test/)'s files.
 
 ## Contact
 
-* Home page: https://fixrb.dev/
-* Source code: https://github.com/fixrb/fix
+* Home page: [https://fixrb.dev/](https://fixrb.dev/)
+* Source code: [https://github.com/fixrb/fix](https://github.com/fixrb/fix)
 * API Doc: [https://rubydoc.info/gems/fix](https://rubydoc.info/gems/fix)
 * Twitter: [https://twitter.com/fix\_rb](https://twitter.com/fix\_rb)
 
