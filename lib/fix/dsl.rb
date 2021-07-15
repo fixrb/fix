@@ -39,7 +39,7 @@ module Fix
     #
     # @api public
     def self.let(name, &block)
-      private_class_method define_singleton_method(name, &block)
+      private define_method(name, &block)
     end
 
     def self.with(**kwargs, &block)
@@ -153,16 +153,6 @@ module Fix
           end
         end
       end
-    end
-
-    def method_missing(method_name, *args, &block)
-      self.class.send(method_name)
-    rescue ::NoMethodError
-      super
-    end
-
-    def respond_to_missing?(method_name, include_private = false)
-      self.class.respond_to?(method_name) || super
     end
   end
 end

@@ -18,9 +18,7 @@ Fix :MagicNumber do
       with zero: 0 do
         its(:boom) { MAY equal 9 }
 
-        let(:trois) { 3 + zero }
-
-        on :-, trois do
+        on :-, 3 do
           it { MUST equal(-47) }
         end
       end
@@ -69,7 +67,7 @@ Fix :MagicNumber do
     it { MAY equal(-42) }
   end
 
-  with number2: number1 + 1 + zero do
+  with number2: 41 do
     it { MUST equal(-number2.next + zero + 2) }
 
     # let's redefine the number1
