@@ -14,6 +14,4 @@ end
 RuboCop::RakeTask.new
 YARD::Rake::YardocTask.new
 
-Dir["tasks/**/*.rake"].each { |t| load t }
-
 task default: %i[rubocop:auto_correct test yard]

@@ -7,6 +7,8 @@
 [![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
+⚠️ This project is still in the experimental phase. May be used at your own risk.
+
 ![Fix specing framework for Ruby](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
 
 ## Installation
@@ -14,7 +16,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta5"
+gem "fix", ">= 1.0.0.beta6"
 ```
 
 And then execute:
@@ -58,16 +60,18 @@ And this fixed behavior:
 relative "fix"
 
 Fix :Duck do
+  it MUST be_an_instance_of :Duck
+
   on :swims do
-    it { MUST eql "Swoosh..." }
+    it MUST eql "Swoosh..."
   end
 
   on :speaks do
-    it { MUST raise_exception NoMethodError }
+    it MUST raise_exception NoMethodError
   end
 
   on :sings do
-    it { MAY eql "♪... ♫..." }
+    it MAY eql "♪... ♫..."
   end
 end
 ```
@@ -80,7 +84,7 @@ When I run this test:
 require_relative "app"
 require_relative "fix"
 
-Fix[:Duck].call(Duck.new)
+Fix[:Duck].test { Duck.new }
 ```
 
 ```sh
@@ -90,15 +94,14 @@ ruby examples/duck/test.rb
 I should see this output:
 
 ```txt
-Test #<Duck:0x00007fc5289bcf68> against Duck:
-- NoMethodError: undefined method `sings' for #<Duck:0x00007fc5289bcf68>.
-- Success: expected to eql "Swoosh...".
-- Success: undefined method `speaks' for #<Duck:0x00007fc5289bcf68>.
+NoMethodError: undefined method `sings' for #<Duck:0x00007fc5289bcf68>.
+Success: expected to eql "Swoosh...".
+Success: undefined method `speaks' for #<Duck:0x00007fc5289bcf68>.
 ```
 
 ## Test suite
 
-__Fix__'s specifications are [fixed here](https://github.com/fixrb/fix/blob/main/fix/) and can be tested against __Fix__'s codebase executing [test/](https://github.com/fixrb/fix/blob/main/test/)'s files.
+__Fix__'s specifications will be [fixed here](https://github.com/fixrb/fix/blob/main/fix/) and will be tested against __Fix__'s codebase executing [test/*](https://github.com/fixrb/fix/blob/main/test/)'s files.
 
 ## Contact
 

@@ -2,4 +2,4 @@
 
 require_relative "fix"
 
-Fix[:MagicNumber].call(-42)
+Fix[:MagicNumber].test { -42 }

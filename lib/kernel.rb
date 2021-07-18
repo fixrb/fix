@@ -19,12 +19,14 @@ module Kernel
   # @return [Class] The specification document.
   #
   # rubocop:disable Naming/MethodName
-  def Fix(name, &block)
+  def Fix(name = nil, &block)
     klass = ::Class.new(::Fix::Dsl)
-    klass.const_set(:SPECS, [klass])
+    klass.const_set(:CONTEXTS, [klass])
     klass.instance_eval(&block)
-    ::Fix::Doc.const_set(name, klass)
-    ::Fix::Test.new(name)
+
+    ::Fix::Doc.const_set(name, klass) unless name.nil?
+
+    ::Fix::Test.new(*klass.const_get(:CONTEXTS))
   end
   # rubocop:enable Naming/MethodName
 end

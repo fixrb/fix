@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative File.join("fix", "doc")
 require_relative File.join("fix", "test")
 
 require_relative "kernel"
@@ -18,6 +19,6 @@ module Fix
   #
   # @return [::Fix::Dsl] The specification document.
   def self.[](name)
-    Test.new(name)
+    Test.new(*Doc.const_get(name).const_get(:CONTEXTS))
   end
 end

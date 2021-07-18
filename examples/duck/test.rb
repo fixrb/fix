@@ -3,4 +3,4 @@
 require_relative "app"
 require_relative "fix"
 
-Fix[:Duck].call(Duck.new)
+Fix[:Duck].test { Duck.new }
