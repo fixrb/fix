@@ -8,10 +8,14 @@ require_relative File.join("fix", "test")
 module Kernel
   # Specifications are built with this method.
   #
-  # @example Fix 42 such as it must be equal to 42.
+  # @example Require an answer equal to 42.
+  #   # The spec
   #   Fix :Answer do
-  #     it { MUST equal 42 }
+  #     it MUST equal 42
   #   end
+  #
+  #   # The test
+  #   Fix[:Answer].test { 42 }
   #
   # @param name   [String, Symbol]  The name of the specification document.
   # @param block  [Proc]            The specifications.
