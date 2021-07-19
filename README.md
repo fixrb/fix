@@ -101,9 +101,10 @@ ruby examples/duck/test.rb
 I should see this output:
 
 ```txt
-NoMethodError: undefined method `sings' for #<Duck:0x00007fc5289bcf68>.
+Success: expected #<Duck:0x00007fc55b3c6388> to be an instance of Duck.
 Success: expected to eql "Swoosh...".
-Success: undefined method `speaks' for #<Duck:0x00007fc5289bcf68>.
+Success: undefined method `speaks' for #<Duck:0x00007fc55b3c46f0>.
+NoMethodError: undefined method `sings' for #<Duck:0x00007fc558aab6d8>.
 ```
 
 ## Test suite
