@@ -4,7 +4,7 @@ PATH
     fix (1.0.0.beta6)
       defi (~> 2.0.5)
       matchi (~> 2.2.0)
-      spectus (~> 4.0.0)
+      spectus (~> 4.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -53,10 +53,10 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.3)
-    spectus (4.0.0)
+    spectus (4.0.1)
       expresenter (~> 1.3.0)
-      test_tube (~> 2.0.0)
-    test_tube (2.0.0)
+      test_tube (~> 2.1.0)
+    test_tube (2.1.0)
       defi (~> 2.0.5)
     unicode-display_width (2.0.0)
     yard (0.9.26)

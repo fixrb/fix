@@ -14,14 +14,14 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     "bug_tracker_uri"   => "https://github.com/fixrb/fix/issues",
-    "documentation_uri" => "https://rubydoc.info/gems/r_spec-clone",
+    "documentation_uri" => "https://rubydoc.info/gems/fix",
     "source_code_uri"   => "https://github.com/fixrb/fix",
     "wiki_uri"          => "https://github.com/fixrb/fix/wiki"
   }
 
   spec.add_dependency "defi",     "~> 2.0.5"
   spec.add_dependency "matchi",   "~> 2.2.0"
-  spec.add_dependency "spectus",  "~> 4.0.0"
+  spec.add_dependency "spectus",  "~> 4.0.1"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
