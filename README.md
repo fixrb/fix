@@ -11,6 +11,13 @@
 
 ![Fix specing framework for Ruby](https://github.com/fixrb/fix/raw/main/img/fix.jpg)
 
+## Project goals
+
+* Extract specs from the tests.
+* Look like English documents.
+* Be minimalist and easy to hack.
+* Run tests quickly.
+
 ## Installation
 
 Add this line to your application's Gemfile:
