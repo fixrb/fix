@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.description            = spec.summary
   spec.homepage               = "https://fixrb.dev/"
   spec.license                = "MIT"
-  spec.required_ruby_version  = Gem::Requirement.new(">= 2.7.0")
+  spec.required_ruby_version  = ::Gem::Requirement.new(">= 2.7.0")
   spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*"]
 
   spec.metadata = {
@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
   }
 
   spec.add_dependency "defi",     "~> 2.0.5"
-  spec.add_dependency "matchi",   "~> 2.2.0"
-  spec.add_dependency "spectus",  "~> 4.0.1"
+  spec.add_dependency "matchi",   "~> 3.1.1"
+  spec.add_dependency "spectus",  "~> 4.0.2"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

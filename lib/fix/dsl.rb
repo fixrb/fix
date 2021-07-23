@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 require "defi"
-require "matchi/helper"
 require "spectus"
 
+require_relative "matcher"
 require_relative "test"
 
 module Fix
   # Abstract class for handling the domain-specific language.
   class Dsl
-    include ::Matchi::Helper
+    extend Matcher
 
     # Sets a user-defined property.
     #
@@ -143,16 +143,6 @@ module Fix
 
     def initialize(&subject)
       @subject = ::Defi::Value.new(&subject)
-    end
-
-    ::Matchi::Matcher.constants.each do |matcher_const|
-      next if matcher_const.equal?(:Base)
-
-      matcher_klass = ::Matchi::Matcher.const_get(matcher_const)
-
-      define_singleton_method(matcher_klass.to_sym) do |*args|
-        matcher_klass.new(*args)
-      end
     end
 
     ::Spectus.methods(false).each do |method_name|

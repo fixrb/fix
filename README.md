@@ -67,9 +67,10 @@ And this fixed behavior:
 relative "fix"
 
 Fix :Duck do
-  it MUST be_an_instance_of :Duck
+  it SHOULD be_an_instance_of :Duck
 
   on :swims do
+    it MUST be_an_instance_of :String
     it MUST eql "Swoosh..."
   end
 
