@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
 require "defi"
-require "spectus"
 
 require_relative "matcher"
+require_relative "requirement"
 require_relative "test"
 
 module Fix
   # Abstract class for handling the domain-specific language.
   class Dsl
     extend Matcher
+    extend Requirement
 
     # Sets a user-defined property.
     #
@@ -143,12 +144,6 @@ module Fix
 
     def initialize(&subject)
       @subject = ::Defi::Value.new(&subject)
-    end
-
-    ::Spectus.methods(false).each do |method_name|
-      define_singleton_method(method_name.upcase) do |matcher|
-        ::Spectus.public_send(method_name, matcher)
-      end
     end
   end
 end
