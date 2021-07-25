@@ -42,6 +42,22 @@ module Fix
 
     alias equal be
 
+    # Comparisons matcher
+    #
+    # @example
+    #   matcher = be_within(1).of(41)
+    #   matcher.matches? { 42 } # => true
+    #   matcher.matches? { 43 } # => false
+    #
+    # @param delta [Numeric] A numeric value.
+    #
+    # @return [#matches?] A comparison matcher.
+    #
+    # @api public
+    def be_within(delta)
+      ::Matchi::BeWithin.new(delta)
+    end
+
     # Regular expressions matcher
     #
     # @example

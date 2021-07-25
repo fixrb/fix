@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   }
 
   spec.add_dependency "defi",     "~> 2.0.5"
-  spec.add_dependency "matchi",   "~> 3.1.1"
+  spec.add_dependency "matchi",   "~> 3.2.0"
   spec.add_dependency "spectus",  "~> 4.0.2"
 
   spec.add_development_dependency "bundler"

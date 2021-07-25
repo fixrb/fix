@@ -3,7 +3,7 @@ PATH
   specs:
     fix (1.0.0.beta6)
       defi (~> 2.0.5)
-      matchi (~> 3.1.1)
+      matchi (~> 3.2.0)
       spectus (~> 4.0.2)
 
 GEM
@@ -15,7 +15,7 @@ GEM
       aw (~> 0.1.12)
     docile (1.4.0)
     expresenter (1.4.0)
-    matchi (3.1.1)
+    matchi (3.2.0)
     parallel (1.20.1)
     parser (3.0.2.0)
       ast (~> 2.4.1)
