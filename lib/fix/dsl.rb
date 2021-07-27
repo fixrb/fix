@@ -4,10 +4,11 @@ require "defi"
 
 require_relative "matcher"
 require_relative "requirement"
-require_relative "test"
 
 module Fix
   # Abstract class for handling the domain-specific language.
+  #
+  # @api private
   class Dsl
     extend Matcher
     extend Requirement
@@ -39,7 +40,7 @@ module Fix
     #
     #   Fix do
     #     with :password, "secret" do
-    #       it MUST equal true
+    #       it MUST be true
     #     end
     #   end
     #
@@ -77,16 +78,8 @@ module Fix
       const_set("Child#{block.object_id}", klass)
 
       klass.define_singleton_method(:challenges) do
-        super() + [::Defi.send(method_name, *args, **kwargs)]
-      end
-
-      def klass.initialize
-        if subject.raised?
-          subject
-        else
-          challenge = ::Defi.send(method_name, *args, **kwargs)
-          challenge.to(subject.call)
-        end
+        challenge = ::Defi.send(method_name, *args, **kwargs)
+        super() + [challenge]
       end
 
       klass.instance_eval(&block)
@@ -98,52 +91,23 @@ module Fix
     # @example
     #   require "fix"
     #
-    #   Fix { it MUST equal 42 }
+    #   Fix { it MUST be 42 }
     #
     # @api public
     def self.it(requirement)
-      define_method("test_#{requirement.object_id}") { requirement }
+      location = caller_locations(1, 1).fetch(0)
+      location = [location.path, location.lineno].join(":")
+
+      define_method("test_#{requirement.object_id}") do
+        [location, requirement, self.class.challenges]
+      end
     end
 
-    # @todo Move this method inside "fix-its" gem.
-    def self.its(method_name, requirement)
-      klass = ::Class.new(self)
-      klass.const_get(:CONTEXTS) << klass
-
-      const_set("Child#{requirement.object_id}", klass)
-
-      klass.define_singleton_method(:challenges) do
-        super() + [::Defi.send(method_name)]
-      end
-
-      def klass.initialize
-        if subject.raised?
-          subject
-        else
-          challenge = ::Defi.send(method_name, *args, **kwargs)
-          challenge.to(subject.call)
-        end
-      end
-
-      klass.it(requirement)
-    end
-
+    # The list of challenges to be addressed to the object to be tested.
+    #
+    # @return [Array<Defi::Challenge>] A list of challenges.
     def self.challenges
       []
-    end
-
-    def self.test(&subject)
-      Test.new(self).test(&subject)
-    end
-
-    private_class_method :challenges
-
-    private
-
-    attr_reader :subject
-
-    def initialize(&subject)
-      @subject = ::Defi::Value.new(&subject)
     end
   end
 end

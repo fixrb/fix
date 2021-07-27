@@ -2,10 +2,12 @@
 
 require_relative File.join("fix", "doc")
 require_relative File.join("fix", "dsl")
-require_relative File.join("fix", "test")
+require_relative File.join("fix", "set")
 
 # The Kernel module.
 module Kernel
+  # rubocop:disable Naming/MethodName
+
   # Specifications are built with this method.
   #
   # @example Require an answer equal to 42.
@@ -14,23 +16,21 @@ module Kernel
   #     it MUST equal 42
   #   end
   #
-  #   # The test
+  #   # A test
   #   Fix[:Answer].test { 42 }
   #
   # @param name   [String, Symbol]  The name of the specification document.
   # @param block  [Proc]            The specifications.
   #
-  # @return [Class] The specification document.
+  # @return [#test] The collection of specifications.
   #
-  # rubocop:disable Naming/MethodName
+  # @api public
   def Fix(name = nil, &block)
     klass = ::Class.new(::Fix::Dsl)
     klass.const_set(:CONTEXTS, [klass])
     klass.instance_eval(&block)
-
     ::Fix::Doc.const_set(name, klass) unless name.nil?
-
-    ::Fix::Test.new(*klass.const_get(:CONTEXTS))
+    ::Fix::Set.new(*klass.const_get(:CONTEXTS))
   end
   # rubocop:enable Naming/MethodName
 end

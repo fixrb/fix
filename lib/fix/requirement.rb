@@ -6,6 +6,8 @@ require "spectus/requirement/required"
 
 module Fix
   # Collection of expectation matchers.
+  #
+  # @api private
   module Requirement
     # rubocop:disable Naming/MethodName
 

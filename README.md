@@ -23,7 +23,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta6"
+gem "fix", ">= 1.0.0.beta7"
 ```
 
 And then execute:
@@ -107,10 +107,6 @@ Success: expected to eql "Swoosh...".
 Success: undefined method `speaks' for #<Duck:0x00007fc55b3c46f0>.
 NoMethodError: undefined method `sings' for #<Duck:0x00007fc558aab6d8>.
 ```
-
-## Test suite
-
-__Fix__'s specifications will be [fixed here](https://github.com/fixrb/fix/blob/main/fix/) and will be tested against __Fix__'s codebase executing [test/*](https://github.com/fixrb/fix/blob/main/test/)'s files.
 
 ## Contact
 

@@ -3,21 +3,13 @@
 require_relative File.join("..", "..", "lib", "fix")
 
 Fix :MagicNumber do
-  its :abs, MUST(equal(42))
-  its :next, MUST(equal(-41))
-
   on :-, 1 do
-    its :abs, MUST(equal(43))
-    its :next, MUST(equal(-42))
-
     it MUST equal(-43)
 
     on :-, 1 do
       it MUST equal(-44)
 
       with zero: 0 do
-        its :boom, MAY(equal(9))
-
         on :-, 3 do
           it MUST equal(-47)
         end
@@ -52,8 +44,6 @@ Fix :MagicNumber do
 
   number1 = 40
   # let(:number1) { number1 + 2 }
-
-  zero = 0
 
   foo = "FOO!"
 

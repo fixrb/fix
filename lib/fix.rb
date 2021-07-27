@@ -1,24 +1,22 @@
 # frozen_string_literal: true
 
-require_relative File.join("fix", "doc")
-require_relative File.join("fix", "test")
+require_relative File.join("fix", "set")
 
 require_relative "kernel"
 
 # Namespace for the Fix framework.
+#
+# @api public
 module Fix
   # Test a built specification.
   #
   # @example Run _Answer_ specification against `42`.
-  #   Fix[:Answer].call(42)
-  #
-  # @example Test _Answer_ specification against `42`.
-  #   Fix[:Answer].matches? { 42 }
+  #   Fix[:Answer].test(42)
   #
   # @param name [String, Symbol] The name of the specification document.
   #
-  # @return [::Fix::Dsl] The specification document.
+  # @return [::Fix::Test] The specification document.
   def self.[](name)
-    Test.new(*Doc.const_get(name).const_get(:CONTEXTS))
+    ::Fix::Set.load(name)
   end
 end

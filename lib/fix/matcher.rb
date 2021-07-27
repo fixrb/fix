@@ -4,6 +4,8 @@ require "matchi"
 
 module Fix
   # Collection of expectation matchers.
+  #
+  # @api private
   module Matcher
     # Equivalence matcher
     #
