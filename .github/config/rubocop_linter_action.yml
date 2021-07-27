@@ -2,7 +2,6 @@ versions:
   - rubocop-md
   - rubocop-performance
   - rubocop-rake
-  - rubocop-rspec
   - rubocop-thread_safety
 
 rubocop_fail_level: warning

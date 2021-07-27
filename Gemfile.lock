@@ -41,9 +41,6 @@ GEM
       rubocop-ast (>= 0.4.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (2.4.0)
-      rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
     rubocop-thread_safety (0.4.2)
       rubocop (>= 0.53.0)
     ruby-progressbar (1.11.0)
@@ -71,7 +68,6 @@ DEPENDENCIES
   rubocop-md
   rubocop-performance
   rubocop-rake
-  rubocop-rspec
   rubocop-thread_safety
   simplecov
   yard

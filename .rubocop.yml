@@ -9,7 +9,6 @@ require:
   - rubocop-performance
   - rubocop-md
   - rubocop-rake
-  - rubocop-rspec
   - rubocop-thread_safety
 
 Style/StringLiterals:
@@ -46,10 +45,3 @@ Naming/FileName:
 Style/ClassAndModuleChildren:
   Exclude:
     - README.md
-
-RSpec/NestedGroups:
-  Max: 5
-
-RSpec/FilePath:
-  Exclude:
-    - benchmark/**/*
