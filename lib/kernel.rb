@@ -19,7 +19,7 @@ module Kernel
   #   # A test
   #   Fix[:Answer].test { 42 }
   #
-  # @param name   [String, Symbol]  The name of the specification document.
+  # @param name   [String, Symbol]  The constant name of the specifications.
   # @param block  [Proc]            The specifications.
   #
   # @return [#test] The collection of specifications.

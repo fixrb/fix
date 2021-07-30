@@ -205,5 +205,37 @@ module Fix
     def satisfy(&expected)
       ::Matchi::Satisfy.new(&expected)
     end
+
+    private
+
+    # Predicate matcher, or default method missing behavior.
+    #
+    # @example Empty predicate matcher
+    #   matcher = be_empty
+    #   matcher.matches? { [] } # => true
+    #   matcher.matches? { [4] } # => false
+    def method_missing(name, *args, **kwargs, &block)
+      return super unless predicate_matcher_name?(name)
+
+      ::Matchi::Predicate.new(name, *args, **kwargs, &block)
+    end
+
+    # :nocov:
+
+    # Hook method to return whether the obj can respond to id method or not.
+    def respond_to_missing?(name, include_private = false)
+      predicate_matcher_name?(name) || super
+    end
+
+    # :nocov:
+
+    # Predicate matcher name detector.
+    #
+    # @param name [Array, Symbol] The name of a potential predicate matcher.
+    #
+    # @return [Boolean] Indicates if it is a predicate matcher name or not.
+    def predicate_matcher_name?(name)
+      name.start_with?("be_", "have_") && !name.end_with?("!", "?")
+    end
   end
 end

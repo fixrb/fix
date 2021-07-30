@@ -15,7 +15,7 @@
 
 * Extract specs from the tests.
 * Look like English documents.
-* Be minimalist and easy to hack.
+* Be minimalist and easy to use.
 * Run tests quickly.
 
 ## Installation
@@ -23,7 +23,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta6"
+gem "fix", ">= 1.0.0.beta8"
 ```
 
 And then execute:
@@ -40,31 +40,12 @@ gem install fix --pre
 
 ## Example
 
-Given this app:
-
-```ruby
-# examples/duck/app.rb
-class Duck
-  def walks
-    "Klop klop!"
-  end
-
-  def swims
-    "Swoosh..."
-  end
-
-  def quacks
-    puts "Quaaaaaack!"
-  end
-end
-```
-
-And this fixed behavior:
+Given these specifications:
 
 ```ruby
 # examples/duck/fix.rb
 
-relative "fix"
+require "fix"
 
 Fix :Duck do
   it SHOULD be_an_instance_of :Duck
@@ -84,7 +65,26 @@ Fix :Duck do
 end
 ```
 
-When I run this test:
+When we load this `Duck` application:
+
+```ruby
+# examples/duck/app.rb
+class Duck
+  def walks
+    "Klop klop!"
+  end
+
+  def swims
+    "Swoosh..."
+  end
+
+  def quacks
+    puts "Quaaaaaack!"
+  end
+end
+```
+
+And we run this test:
 
 ```ruby
 # examples/duck/test.rb
@@ -99,18 +99,15 @@ Fix[:Duck].test { Duck.new }
 ruby examples/duck/test.rb
 ```
 
-I should see this output:
+We should see this output:
 
 ```txt
-Success: expected #<Duck:0x00007fc55b3c6388> to be an instance of Duck.
-Success: expected to eql "Swoosh...".
-Success: undefined method `speaks' for #<Duck:0x00007fc55b3c46f0>.
-NoMethodError: undefined method `sings' for #<Duck:0x00007fc558aab6d8>.
+(irb):3 Success: expected #<Duck:0x00007fb2fa208708> to be an instance of Duck.
+(irb):7 Success: expected to eq "Swoosh...".
+(irb):15 NoMethodError: undefined method `sings' for #<Duck:0x00007fb2fd8371d0>.
+(irb):6 Success: expected "Swoosh..." to be an instance of String.
+(irb):11 Success: undefined method `speaks' for #<Duck:0x00007fb2fcc79258>.
 ```
-
-## Test suite
-
-__Fix__'s specifications will be [fixed here](https://github.com/fixrb/fix/blob/main/fix/) and will be tested against __Fix__'s codebase executing [test/*](https://github.com/fixrb/fix/blob/main/test/)'s files.
 
 ## Contact
 

@@ -32,7 +32,7 @@ module Fix
     # @return [Array] A list of specifications.
     attr_reader :specs
 
-    # @param name [String, Symbol] The name of the specification document.
+    # @param name [String, Symbol] The constant name of the specifications.
     #
     # @api public
     def self.load(name)
@@ -47,7 +47,7 @@ module Fix
 
     # @param subject [Proc] The block of code to be tested.
     #
-    # @raise [::SystemExit] The result of the test.
+    # @raise [::SystemExit] The test set failed!
     #
     # @api public
     def test(log_level: 5, &subject)
@@ -61,18 +61,13 @@ module Fix
         report!(location, result, log_level: log_level)
       end
 
-      exit!
+      passed? || ::Kernel.exit(false)
     end
 
     private
 
     def randomize!
       specs.shuffle!
-    end
-
-    # @raise [::SystemExit] The result of the test.
-    def exit!
-      ::Kernel.exit(passed?)
     end
 
     def failed!

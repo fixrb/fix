@@ -13,7 +13,7 @@ module Fix
   # @example Run _Answer_ specification against `42`.
   #   Fix[:Answer].test(42)
   #
-  # @param name [String, Symbol] The name of the specification document.
+  # @param name [String, Symbol] The constant name of the specifications.
   #
   # @return [::Fix::Test] The specification document.
   def self.[](name)

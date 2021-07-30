@@ -5,7 +5,7 @@ module Fix
   #
   # @api private
   module Doc
-    # @param name [String, Symbol] The name of the specification document.
+    # @param name [String, Symbol] The constant name of the specifications.
     def self.fetch(name)
       const_get("#{name}::CONTEXTS")
     end
