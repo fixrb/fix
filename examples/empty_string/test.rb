@@ -2,4 +2,4 @@
 
 require_relative "fix"
 
-Fix["EmptyString"].test { "" }
+Fix["EmptyString"].against { "" }

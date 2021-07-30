@@ -3,6 +3,6 @@
 require_relative "app"
 require_relative "fix"
 
-Fix[:Duck].test do
+Fix[:Duck].against do
   Duck.new(name)
 end

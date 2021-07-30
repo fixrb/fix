@@ -50,7 +50,7 @@ module Fix
     # @raise [::SystemExit] The test set failed!
     #
     # @api public
-    def test(log_level: 5, &subject)
+    def against(log_level: 5, &subject)
       randomize!
 
       specs.each do |environment, location, requirement, challenges|

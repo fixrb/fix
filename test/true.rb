@@ -2,4 +2,4 @@
 
 require_relative File.join("..", "fix", "true")
 
-Fix[:True].test { true && boolean }
+Fix[:True].against { true && boolean }

@@ -11,7 +11,7 @@ module Fix
   # Test a built specification.
   #
   # @example Run _Answer_ specification against `42`.
-  #   Fix[:Answer].test(42)
+  #   Fix[:Answer].against(42)
   #
   # @param name [String, Symbol] The constant name of the specifications.
   #

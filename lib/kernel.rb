@@ -17,12 +17,12 @@ module Kernel
   #   end
   #
   #   # A test
-  #   Fix[:Answer].test { 42 }
+  #   Fix[:Answer].against { 42 }
   #
   # @param name   [String, Symbol]  The constant name of the specifications.
   # @param block  [Proc]            The specifications.
   #
-  # @return [#test] The collection of specifications.
+  # @return [#against] The collection of specifications.
   #
   # @api public
   def Fix(name = nil, &block)
