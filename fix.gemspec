@@ -19,9 +19,9 @@ Gem::Specification.new do |spec|
     "wiki_uri"          => "https://github.com/fixrb/fix/wiki"
   }
 
-  spec.add_dependency "defi",     "~> 2.0.5"
+  spec.add_dependency "defi",     "~> 2.0.6"
   spec.add_dependency "matchi",   "~> 3.3.0"
-  spec.add_dependency "spectus",  "~> 4.0.2"
+  spec.add_dependency "spectus",  "~> 4.0.3"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
