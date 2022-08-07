@@ -9,14 +9,16 @@ Gem::Specification.new do |spec|
   spec.description            = spec.summary
   spec.homepage               = "https://fixrb.dev/"
   spec.license                = "MIT"
-  spec.required_ruby_version  = ::Gem::Requirement.new(">= 2.7.0")
   spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*"]
 
+  spec.required_ruby_version = ">= 2.7.0"
+
   spec.metadata = {
-    "bug_tracker_uri"   => "https://github.com/fixrb/fix/issues",
-    "documentation_uri" => "https://rubydoc.info/gems/fix",
-    "source_code_uri"   => "https://github.com/fixrb/fix",
-    "wiki_uri"          => "https://github.com/fixrb/fix/wiki"
+    "bug_tracker_uri"       => "https://github.com/fixrb/fix/issues",
+    "documentation_uri"     => "https://rubydoc.info/gems/fix",
+    "source_code_uri"       => "https://github.com/fixrb/fix",
+    "wiki_uri"              => "https://github.com/fixrb/fix/wiki",
+    "rubygems_mfa_required" => "true"
   }
 
   spec.add_dependency "defi",     "~> 2.0.6"
