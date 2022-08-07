@@ -1,9 +1,9 @@
 # Fix
 
 [![Home](https://img.shields.io/badge/Home-fixrb.dev-00af8b)](https://fixrb.dev/)
-[![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/releases)
+[![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/tags)
 [![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/fix/main)
-[![CI](https://github.com/fixrb/fix/workflows/CI/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Aci+branch%3Amain)
+[![Ruby](https://github.com/fixrb/fix/workflows/Ruby/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Aruby+branch%3Amain)
 [![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
@@ -13,10 +13,10 @@
 
 ## Project goals
 
-* Extract specs from the tests.
-* Look like English documents.
-* Be minimalist and easy to use.
-* Run tests quickly.
+* Separate specifications and examples.
+* Make specifications documents without logic.
+* Provide a rich semantic language.
+* Run each test unitarily and quickly.
 
 ## Installation
 
@@ -111,10 +111,10 @@ We should see this output:
 
 ## Contact
 
-* Home page: [https://fixrb.dev/](https://fixrb.dev/)
-* Source code: [https://github.com/fixrb/fix](https://github.com/fixrb/fix)
-* API Doc: [https://rubydoc.info/gems/fix](https://rubydoc.info/gems/fix)
-* Twitter: [https://twitter.com/fix\_rb](https://twitter.com/fix\_rb)
+* Home page: <https://fixrb.dev/>
+* Source code: <https://github.com/fixrb/fix>
+* API Doc: <https://rubydoc.info/gems/fix>
+* Twitter: <https://twitter.com/fix_rb>
 
 ## Versioning
 
@@ -126,9 +126,7 @@ The [gem](https://rubygems.org/gems/fix) is available as open source under the t
 
 ***
 
-<p>
-  This project is sponsored by:<br />
-  <a href="https://sashite.com/"><img
-    src="https://github.com/fixrb/fix/raw/main/img/sashite.png"
-    alt="Sashite" /></a>
-</p>
+This project is sponsored by [Sashité](https://github.com/sashite/):
+
+![Sashité logo](https://github.com/fixrb/fix/raw/main/img/sponsor/dark/en/sashite.png#gh-dark-mode-only "Sashité")
+![Sashité logo](https://github.com/fixrb/fix/raw/main/img/sponsor/light/en/sashite.png#gh-light-mode-only "Sashité")
