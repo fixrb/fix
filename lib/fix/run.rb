@@ -33,7 +33,7 @@ module Fix
     # @return [::Expresenter::Pass] A passed spec instance.
     #
     # @see https://github.com/fixrb/expresenter
-    def against(&subject)
+    def test(&subject)
       requirement.call { actual_value(&subject) }
     rescue ::Expresenter::Fail => e
       e

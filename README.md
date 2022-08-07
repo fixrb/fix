@@ -92,7 +92,7 @@ And we run this test:
 require_relative "app"
 require_relative "fix"
 
-Fix[:Duck].against { Duck.new }
+Fix[:Duck].test { Duck.new }
 ```
 
 ```sh

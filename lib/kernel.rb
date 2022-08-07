@@ -17,12 +17,12 @@ module Kernel
   #   end
   #
   #   # A test
-  #   Fix[:Answer].against { 42 }
+  #   Fix[:Answer].test { 42 }
   #
   # @param name   [String, Symbol]  The constant name of the specifications.
   # @param block  [Proc]            The specifications.
   #
-  # @return [#against] The collection of specifications.
+  # @return [#test] The collection of specifications.
   #
   # @api public
   def Fix(name = nil, &block)
@@ -32,5 +32,6 @@ module Kernel
     ::Fix::Doc.const_set(name, klass) unless name.nil?
     ::Fix::Set.new(*klass.const_get(:CONTEXTS))
   end
+
   # rubocop:enable Naming/MethodName
 end
