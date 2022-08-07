@@ -3,15 +3,24 @@ AllCops:
   TargetRubyVersion: 2.7
 
   Exclude:
-    - spec/**/*.rb
+    - '**/*.md'
+    - '**/*.markdown'
+    - 'benchmark/**/*'
+    - 'spec/**/*'
+    - 'vendor/**/*'
 
 require:
-  - rubocop-performance
   - rubocop-md
+  - rubocop-performance
   - rubocop-rake
   - rubocop-thread_safety
 
 Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
   EnforcedStyle: double_quotes
 
 # We do not need to support Ruby 1.9, so this is good to use.
