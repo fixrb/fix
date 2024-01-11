@@ -75,7 +75,7 @@ module Fix
       klass = ::Class.new(self)
       klass.const_get(:CONTEXTS) << klass
 
-      const_set("Child#{block.object_id}", klass)
+      const_set(:"Child#{block.object_id}", klass)
 
       klass.define_singleton_method(:challenges) do
         challenge = ::Defi.send(method_name, *args, **kwargs)
@@ -98,7 +98,7 @@ module Fix
       location = caller_locations(1, 1).fetch(0)
       location = [location.path, location.lineno].join(":")
 
-      define_method("test_#{requirement.object_id}") do
+      define_method(:"test_#{requirement.object_id}") do
         [location, requirement, self.class.challenges]
       end
     end

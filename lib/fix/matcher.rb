@@ -181,14 +181,12 @@ module Fix
     #
     # @param object [#object_id]  An object.
     # @param method [Symbol]      The name of a method.
-    # @param args   [Array]       A list of arguments.
-    # @param kwargs [Hash]        A list of keyword arguments.
     #
     # @return [#matches?] A change matcher.
     #
     # @api public
-    def change(object, method, *args, **kwargs, &block)
-      ::Matchi::Change.new(object, method, *args, **kwargs, &block)
+    def change(object, method, ...)
+      ::Matchi::Change.new(object, method, ...)
     end
 
     # Satisfy matcher
@@ -214,10 +212,10 @@ module Fix
     #   matcher = be_empty
     #   matcher.matches? { [] } # => true
     #   matcher.matches? { [4] } # => false
-    def method_missing(name, *args, **kwargs, &block)
+    def method_missing(name, ...)
       return super unless predicate_matcher_name?(name)
 
-      ::Matchi::Predicate.new(name, *args, **kwargs, &block)
+      ::Matchi::Predicate.new(name, ...)
     end
 
     # :nocov:

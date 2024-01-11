@@ -7,32 +7,30 @@
 [![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
-⚠️ This project is still in the experimental phase. May be used at your own risk.
+![Fix specing framework for Ruby](https://fixrb.dev/fix.webp "Fix")
 
-![Fix specing framework for Ruby](https://fixrb.dev/fix.webp)
+## Project Goals
 
-## Project goals
-
-* Separate specifications and examples.
-* Make specifications documents without logic.
-* Provide a rich semantic language.
-* Run each test unitarily and quickly.
+- **Distinguish Specifications from Examples**: Clear separation between what is expected (specifications) and how it's demonstrated (examples).
+- **Logic-Free Specification Documents**: Create specifications that are straightforward and free of complex logic, focusing purely on defining expected behaviors.
+- **Nuanced Semantic Language in Specifications**: Utilize a rich, nuanced semantic language, similar to that in RFC 2119, employing keywords like MUST, SHOULD, and MAY to define different levels of requirement in specifications.
+- **Fast and Individual Test Execution**: Enable quick execution of tests on an individual basis, providing immediate feedback on compliance with specifications.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add to your Gemfile:
 
 ```ruby
 gem "fix", ">= 1.0.0.beta8"
 ```
 
-And then execute:
+Then execute:
 
 ```sh
 bundle
 ```
 
-Or install it yourself as:
+Or install it yourself:
 
 ```sh
 gem install fix --pre
@@ -40,7 +38,7 @@ gem install fix --pre
 
 ## Example
 
-Given these specifications:
+Specifications for a `Duck` class:
 
 ```ruby
 # examples/duck/fix.rb
@@ -65,10 +63,11 @@ Fix :Duck do
 end
 ```
 
-When we load this `Duck` application:
+Implementing the `Duck` class:
 
 ```ruby
 # examples/duck/app.rb
+
 class Duck
   def walks
     "Klop klop!"
@@ -84,7 +83,7 @@ class Duck
 end
 ```
 
-And we run this test:
+Running the test:
 
 ```ruby
 # examples/duck/test.rb
@@ -95,11 +94,13 @@ require_relative "fix"
 Fix[:Duck].test { Duck.new }
 ```
 
+Execute:
+
 ```sh
 ruby examples/duck/test.rb
 ```
 
-We should see this output:
+Expected output:
 
 ```txt
 (irb):3 Success: expected #<Duck:0x00007fb2fa208708> to be an instance of Duck.
@@ -111,22 +112,22 @@ We should see this output:
 
 ## Contact
 
-* Home page: <https://fixrb.dev/>
-* Source code: <https://github.com/fixrb/fix>
-* API Doc: <https://rubydoc.info/gems/fix>
-* Twitter: <https://twitter.com/fix_rb>
+- [Home page](https://fixrb.dev/)
+- [Source code](https://github.com/fixrb/fix)
+- [API Documentation](https://rubydoc.info/gems/fix)
+- [Twitter](https://twitter.com/fix_rb)
 
 ## Versioning
 
-__Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
+Fix follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-The [gem](https://rubygems.org/gems/fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
+Available under the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
 
-***
+## Sponsorship
 
-This project is sponsored by [Sashité](https://github.com/sashite/):
+Sponsored by [Sashité](https://github.com/sashite/):
 
-![Sashité logo](https://github.com/fixrb/fix/raw/main/img/sponsor/dark/en/sashite.png#gh-dark-mode-only "Sashité")
-![Sashité logo](https://github.com/fixrb/fix/raw/main/img/sponsor/light/en/sashite.png#gh-light-mode-only "Sashité")
+![Sashité logo - Dark Mode](https://github.com/fixrb/fix/raw/main/img/sponsor/dark/en/sashite.png#gh-dark-mode-only "Sashité")
+![Sashité logo - Light Mode](https://github.com/fixrb/fix/raw/main/img/sponsor/light/en/sashite.png#gh-light-mode-only "Sashité")

@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.license                = "MIT"
   spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*"]
 
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata = {
     "bug_tracker_uri"       => "https://github.com/fixrb/fix/issues",
@@ -24,13 +24,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "defi",     "~> 2.0.6"
   spec.add_dependency "matchi",   "~> 3.3.0"
   spec.add_dependency "spectus",  "~> 4.0.3"
-
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rubocop-md"
-  spec.add_development_dependency "rubocop-performance"
-  spec.add_development_dependency "rubocop-rake"
-  spec.add_development_dependency "rubocop-thread_safety"
-  spec.add_development_dependency "simplecov"
-  spec.add_development_dependency "yard"
 end

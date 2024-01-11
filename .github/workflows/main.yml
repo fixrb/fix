@@ -1,11 +1,5 @@
 name: Ruby
-
-on:
-  push:
-    branches:
-      - main
-
-  pull_request:
+on: [push]
 
 jobs:
   build:
@@ -14,13 +8,14 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - 2.7
           - 3.0
           - 3.1
+          - 3.2
+          - 3.3
           - head
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:

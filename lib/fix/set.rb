@@ -86,7 +86,7 @@ module Fix
     end
 
     def report?(result, log_level:)
-      LOG_LEVELS[1..log_level].any? { |name| result.public_send("#{name}?") }
+      LOG_LEVELS[1..log_level].any? { |name| result.public_send(:"#{name}?") }
     end
   end
 end
