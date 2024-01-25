@@ -39,7 +39,7 @@ module Fix
     #   require "fix"
     #
     #   Fix do
-    #     with :password, "secret" do
+    #     with password: "secret" do
     #       it MUST be true
     #     end
     #   end
