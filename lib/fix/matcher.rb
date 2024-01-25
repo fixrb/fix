@@ -200,8 +200,8 @@ module Fix
     # @return [#matches?] A satisfy matcher.
     #
     # @api public
-    def satisfy(&expected)
-      ::Matchi::Satisfy.new(&expected)
+    def satisfy(&)
+      ::Matchi::Satisfy.new(&)
     end
 
     private

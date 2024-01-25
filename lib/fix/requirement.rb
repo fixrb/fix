@@ -20,22 +20,7 @@ module Fix
     #
     # @api public
     def MUST(matcher)
-      ::Spectus::Requirement::Required.new(
-        isolate: false,
-        negate:  false,
-        matcher: matcher
-      )
-    end
-
-    # @see MUST
-    #
-    # @api public
-    def MUST!(matcher)
-      ::Spectus::Requirement::Required.new(
-        isolate: true,
-        negate:  false,
-        matcher: matcher
-      )
+      ::Spectus::Requirement::Required.new(negate: false, matcher:)
     end
 
     # This method mean that the definition is an absolute prohibition of the specification.
@@ -46,22 +31,7 @@ module Fix
     #
     # @api public
     def MUST_NOT(matcher)
-      ::Spectus::Requirement::Required.new(
-        isolate: false,
-        negate:  true,
-        matcher: matcher
-      )
-    end
-
-    # @see MUST_NOT
-    #
-    # @api public
-    def MUST_NOT!(matcher)
-      ::Spectus::Requirement::Required.new(
-        isolate: true,
-        negate:  true,
-        matcher: matcher
-      )
+      ::Spectus::Requirement::Required.new(negate: true, matcher:)
     end
 
     # This method mean that there may exist valid reasons in particular
@@ -74,22 +44,7 @@ module Fix
     #
     # @api public
     def SHOULD(matcher)
-      ::Spectus::Requirement::Recommended.new(
-        isolate: false,
-        negate:  false,
-        matcher: matcher
-      )
-    end
-
-    # @see SHOULD
-    #
-    # @api public
-    def SHOULD!(matcher)
-      ::Spectus::Requirement::Recommended.new(
-        isolate: true,
-        negate:  false,
-        matcher: matcher
-      )
+      ::Spectus::Requirement::Recommended.new(negate: false, matcher:)
     end
 
     # This method mean that there may exist valid reasons in particular
@@ -104,22 +59,7 @@ module Fix
     #
     # @api public
     def SHOULD_NOT(matcher)
-      ::Spectus::Requirement::Recommended.new(
-        isolate: false,
-        negate:  true,
-        matcher: matcher
-      )
-    end
-
-    # @see SHOULD_NOT
-    #
-    # @api public
-    def SHOULD_NOT!(matcher)
-      ::Spectus::Requirement::Recommended.new(
-        isolate: true,
-        negate:  true,
-        matcher: matcher
-      )
+      ::Spectus::Requirement::Recommended.new(negate: true, matcher:)
     end
 
     # This method mean that an item is truly optional.
@@ -139,22 +79,7 @@ module Fix
     #
     # @api public
     def MAY(matcher)
-      ::Spectus::Requirement::Optional.new(
-        isolate: false,
-        negate:  false,
-        matcher: matcher
-      )
-    end
-
-    # @see MAY
-    #
-    # @api public
-    def MAY!(matcher)
-      ::Spectus::Requirement::Optional.new(
-        isolate: true,
-        negate:  false,
-        matcher: matcher
-      )
+      ::Spectus::Requirement::Optional.new(negate: false, matcher:)
     end
 
     # rubocop:enable Naming/MethodName

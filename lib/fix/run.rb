@@ -13,12 +13,12 @@ module Fix
     # @return [::Spectus::Requirement::Base] An expectation.
     attr_reader :requirement
 
-    # @return [Array<::Defi::Challenge>] A list of challenges.
+    # @return [Array<::Defi::Method>] A list of challenges.
     attr_reader :challenges
 
     # @param environment  [::Fix::Dsl]                    A context instance.
     # @param requirement  [::Spectus::Requirement::Base]  An expectation.
-    # @param challenges   [Array<::Defi::Challenge>]      A list of challenges.
+    # @param challenges   [Array<::Defi::Method>]         A list of challenges.
     def initialize(environment, requirement, *challenges)
       @environment = environment
       @requirement = requirement

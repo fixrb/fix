@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "defi"
+require "defi/method"
 
 require_relative "matcher"
 require_relative "requirement"
@@ -28,8 +28,8 @@ module Fix
     # @return [Symbol] A private method that define the block content.
     #
     # @api public
-    def self.let(name, &block)
-      private define_method(name, &block)
+    def self.let(name, &)
+      private define_method(name, &)
     end
 
     # Defines an example group with user-defined properties that describes a
@@ -48,11 +48,11 @@ module Fix
     # @param block [Proc] The block to define the specs.
     #
     # @api public
-    def self.with(**kwargs, &block)
+    def self.with(**kwargs, &)
       klass = ::Class.new(self)
       klass.const_get(:CONTEXTS) << klass
       kwargs.each { |name, value| klass.let(name) { value } }
-      klass.instance_eval(&block)
+      klass.instance_eval(&)
       klass
     end
 
@@ -78,7 +78,7 @@ module Fix
       const_set(:"Child#{block.object_id}", klass)
 
       klass.define_singleton_method(:challenges) do
-        challenge = ::Defi.send(method_name, *args, **kwargs)
+        challenge = ::Defi::Method.new(method_name, *args, **kwargs)
         super() + [challenge]
       end
 
@@ -105,7 +105,7 @@ module Fix
 
     # The list of challenges to be addressed to the object to be tested.
     #
-    # @return [Array<Defi::Challenge>] A list of challenges.
+    # @return [Array<Defi::Method>] A list of challenges.
     def self.challenges
       []
     end

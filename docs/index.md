@@ -21,13 +21,13 @@
 Add to your Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta8"
+gem "fix", ">= 1.0.0.beta9"
 ```
 
 Then execute:
 
 ```sh
-bundle
+bundle install
 ```
 
 Or install it yourself:
@@ -119,15 +119,17 @@ Expected output:
 
 ## Versioning
 
-Fix follows [Semantic Versioning 2.0](https://semver.org/).
+__Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 ## License
 
-Available under the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
+The [gem](https://rubygems.org/gems/fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
 
-## Sponsorship
+---
 
-Sponsored by [Sashité](https://github.com/sashite/):
-
-![Sashité logo - Dark Mode](https://github.com/fixrb/fix/raw/main/img/sponsor/dark/en/sashite.png#gh-dark-mode-only "Sashité")
-![Sashité logo - Light Mode](https://github.com/fixrb/fix/raw/main/img/sponsor/light/en/sashite.png#gh-light-mode-only "Sashité")
+<p>
+  This project is sponsored by:<br />
+  <a href="https://sashite.com/"><img
+    src="https://github.com/fixrb/fix/raw/main/img/sashite.png"
+    alt="Sashité" /></a>
+</p>

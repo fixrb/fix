@@ -25,10 +25,10 @@ module Kernel
   # @return [#test] The collection of specifications.
   #
   # @api public
-  def Fix(name = nil, &block)
+  def Fix(name = nil, &)
     klass = ::Class.new(::Fix::Dsl)
     klass.const_set(:CONTEXTS, [klass])
-    klass.instance_eval(&block)
+    klass.instance_eval(&)
     ::Fix::Doc.const_set(name, klass) unless name.nil?
     ::Fix::Set.new(*klass.const_get(:CONTEXTS))
   end

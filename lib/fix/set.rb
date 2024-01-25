@@ -58,7 +58,7 @@ module Fix
         result = runner.test(&subject)
 
         failed! if result.failed?
-        report!(location, result, log_level: log_level)
+        report!(location, result, log_level:)
       end
 
       passed? || ::Kernel.exit(false)
@@ -80,7 +80,7 @@ module Fix
     end
 
     def report!(path, result, log_level:)
-      return unless report?(result, log_level: log_level)
+      return unless report?(result, log_level:)
 
       puts "#{path} #{result.colored_string}"
     end
