@@ -60,7 +60,7 @@ GEM
     test_tube (3.0.0)
       defi (~> 3.0.0)
     unicode-display_width (2.5.0)
-    yard (0.9.34)
+    yard (0.9.35)
 
 PLATFORMS
   ruby
