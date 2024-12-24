@@ -22,8 +22,9 @@ module Fix
     #     let(:name) { "Bob" }
     #   end
     #
-    # @param name   [String, Symbol] The name of the property.
-    # @param block  [Proc] The content of the method to define.
+    # @param name [String, Symbol] The name of the property.
+    # @yield The block that defines the property's value
+    # @yieldreturn [Object] The value to be returned by the property
     #
     # @return [Symbol] A private method that define the block content.
     #
@@ -45,7 +46,8 @@ module Fix
     #   end
     #
     # @param kwargs [Hash] The list of propreties.
-    # @param block [Proc] The block to define the specs.
+    # @yield The block that defines the specs for this context
+    # @yieldreturn [void]
     #
     # @api public
     def self.with(**kwargs, &)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "English"
+
 require_relative "doc"
 require_relative "run"
 
@@ -8,85 +10,58 @@ module Fix
   #
   # @api private
   class Set
-    # The type of result.
-    #
-    # Passed expectations can be classified as:
-    #
-    #  * `success`
-    #  * `warning`
-    #  * `info`
-    #
-    # Failed expectations can be classified as:
-    #
-    #  * `failure`
-    #  * `error`
-    LOG_LEVELS = %w[
-      none
-      error
-      failure
-      warning
-      info
-      success
-    ].freeze
-
     # @return [Array] A list of specifications.
     attr_reader :specs
 
+    # Load specifications from a constant name.
+    #
     # @param name [String, Symbol] The constant name of the specifications.
+    # @return [Set] A new Set instance containing the loaded specifications.
     #
     # @api public
     def self.load(name)
       new(*Doc.fetch(name))
     end
 
+    # Initialize a new Set with given contexts.
+    #
     # @param contexts [Array<::Fix::Dsl>] The list of contexts document.
     def initialize(*contexts)
-      @specs  = Doc.specs(*contexts)
-      @passed = true
+      @specs = Doc.specs(*contexts).shuffle
     end
 
-    # @param subject [Proc] The block of code to be tested.
+    # Run the test suite against the provided subject.
     #
+    # @yield The block of code to be tested
+    # @yieldreturn [Object] The result of the code being tested
+    # @return [Boolean] true if all tests pass, exits with false otherwise
     # @raise [::SystemExit] The test set failed!
     #
     # @api public
-    def test(log_level: 5, &subject)
-      randomize!
-
-      specs.each do |environment, location, requirement, challenges|
-        runner = Run.new(environment, requirement, *challenges)
-        result = runner.test(&subject)
-
-        failed! if result.failed?
-        report!(location, result, log_level:)
-      end
-
-      passed? || ::Kernel.exit(false)
+    def test(&)
+      suite_passed?(&) || ::Kernel.exit(false)
     end
 
     private
 
-    def randomize!
-      specs.shuffle!
+    def suite_passed?(&subject)
+      specs.all? { |spec| run_spec(*spec, &subject) }
     end
 
-    def failed!
-      @passed = false
+    def run_spec(env, location, requirement, challenges, &subject)
+      ::Process.fork { lab(env, location, requirement, challenges, &subject) }
+      ::Process.wait
+      $CHILD_STATUS.success?
     end
 
-    # @return [Boolean] The test set passed or failed.
-    def passed?
-      @passed
+    def lab(env, location, requirement, challenges, &)
+      result = Run.new(env, requirement, *challenges).test(&)
+      report!(location, result)
+      ::Kernel.exit(result.passed?)
     end
 
-    def report!(path, result, log_level:)
-      return unless report?(result, log_level:)
-
+    def report!(path, result)
       puts "#{path} #{result.colored_string}"
-    end
-
-    def report?(result, log_level:)
-      LOG_LEVELS[1..log_level].any? { |name| result.public_send(:"#{name}?") }
     end
   end
 end

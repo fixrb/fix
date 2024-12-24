@@ -195,7 +195,9 @@ module Fix
     #   matcher = satisfy { |value| value == 42 }
     #   matcher.matches? { 42 } # => true
     #
-    # @param expected [Proc] A block of code.
+    # @yield [value] A block that defines the satisfaction criteria
+    # @yieldparam value The value to test
+    # @yieldreturn [Boolean] true if the value satisfies the criteria
     #
     # @return [#matches?] A satisfy matcher.
     #

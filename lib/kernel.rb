@@ -19,8 +19,9 @@ module Kernel
   #   # A test
   #   Fix[:Answer].test { 42 }
   #
-  # @param name   [String, Symbol]  The constant name of the specifications.
-  # @param block  [Proc]            The specifications.
+  # @param name [String, Symbol] The constant name of the specifications.
+  # @yield The specifications block that defines the test requirements
+  # @yieldreturn [void]
   #
   # @return [#test] The collection of specifications.
   #

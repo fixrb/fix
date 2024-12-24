@@ -21,7 +21,7 @@
 Add to your Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta9"
+gem "fix", ">= 1.0.0.beta10"
 ```
 
 Then execute:
