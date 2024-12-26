@@ -1,1 +1,13 @@
-theme: jekyll-theme-hacker
+title: Fix specing framework
+author:
+  name: Cyril Kato
+description: >
+  A modern Ruby testing framework that emphasizes clear separation between specifications and examples. Unlike traditional testing frameworks, Fix focuses on creating pure specification documents that define expected behaviors without mixing in implementation details.
+remote_theme: jekyll/minima
+plugins:
+  - jekyll-remote-theme
+minima:
+  skin: auto
+  social_links:
+    - { platform: github,     user_url: "https://github.com/fixrb/fix" }
+    - { platform: x,          user_url: "https://x.com/fix_rb" }

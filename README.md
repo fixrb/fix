@@ -1,4 +1,4 @@
-# Fix
+# Fix Framework
 
 [![Home](https://img.shields.io/badge/Home-fixrb.dev-00af8b)](https://fixrb.dev/)
 [![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/tags)
@@ -7,14 +7,9 @@
 [![RuboCop](https://github.com/fixrb/fix/workflows/RuboCop/badge.svg?branch=main)](https://github.com/fixrb/fix/actions?query=workflow%3Arubocop+branch%3Amain)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
-![Secure specing framework for Ruby](https://fixrb.dev/fix.webp "Fix")
+## Introduction
 
-## Project Goals
-
-- **Distinguish Specifications from Examples**: Clear separation between what is expected (specifications) and how it's demonstrated (examples).
-- **Logic-Free Specification Documents**: Create specifications that are straightforward and free of complex logic, focusing purely on defining expected behaviors.
-- **Nuanced Semantic Language in Specifications**: Utilize a rich, nuanced semantic language, similar to that in RFC 2119, employing keywords like MUST, SHOULD, and MAY to define different levels of requirement in specifications.
-- **Fast and Individual Test Execution**: Enable quick execution of tests on an individual basis, providing immediate feedback on compliance with specifications.
+Fix is a modern Ruby testing framework that emphasizes clear separation between specifications and examples. Unlike traditional testing frameworks, Fix focuses on creating pure specification documents that define expected behaviors without mixing in implementation details.
 
 ## Installation
 
@@ -36,7 +31,80 @@ Or install it yourself:
 gem install fix --pre
 ```
 
-## Getting Started
+## Core Principles
+
+- **Specifications vs Examples**: Fix makes a clear distinction between specifications (what is expected) and examples (how it's demonstrated). This separation leads to cleaner, more maintainable test suites.
+
+- **Logic-Free Specifications**: Your specification documents remain pure and focused on defining behaviors, without getting cluttered by implementation logic.
+
+- **Rich Semantic Language**: Following RFC 2119 conventions, Fix uses precise language with keywords like MUST, SHOULD, and MAY to clearly define different requirement levels in specifications.
+
+- **Fast Individual Testing**: Tests execute quickly and independently, providing rapid feedback on specification compliance.
+
+## Framework Features
+
+### Property Definition with `let`
+
+Define reusable properties across your specifications:
+
+```ruby
+Fix do
+  let(:name) { "Bob" }
+  let(:age) { 42 }
+
+  it MUST eq name
+end
+```
+
+### Context Creation with `with`
+
+Test behavior under different conditions:
+
+```ruby
+Fix do
+  with name: "Alice", role: "admin" do
+    it MUST be_allowed
+  end
+
+  with name: "Bob", role: "guest" do
+    it MUST_NOT be_allowed
+  end
+end
+```
+
+### Method Testing with `on`
+
+Test how objects respond to specific messages:
+
+```ruby
+Fix do
+  on :upcase do
+    it MUST eq "HELLO"
+  end
+
+  on :+, 2 do
+    it MUST eq 42
+  end
+end
+```
+
+### Requirement Levels
+
+Fix provides three levels of requirements, each with clear semantic meaning:
+
+- **MUST/MUST_NOT**: Absolute requirements or prohibitions
+- **SHOULD/SHOULD_NOT**: Recommended practices with valid exceptions
+- **MAY**: Optional features
+
+```ruby
+Fix do
+  it MUST be_valid           # Required
+  it SHOULD be_optimized     # Recommended
+  it MAY include_metadata    # Optional
+end
+```
+
+## Quick Start
 
 Create your first test file:
 
@@ -57,121 +125,13 @@ Run it:
 ruby first_test.rb
 ```
 
-This simple example introduces the basic concepts:
+## Real-World Examples
 
-- `Fix` creates a new specification
-- `it MUST` defines a required expectation
-- `eq` is a matcher that checks for equality
-- `test { }` runs the test with the actual value
+Fix is designed to work with real-world applications of any complexity. Here are some examples demonstrating how Fix can be used in different scenarios:
 
-See the Duck example below for a more complete usage.
+### Example 1: User Account Management
 
-## DSL Methods
-
-Fix provides a Domain Specific Language (DSL) to write clear and expressive specifications. Here's a complete overview of all available DSL methods:
-
-### `let`
-
-Defines a user-defined property that can be reused across specifications:
-
-```ruby
-Fix do
-  let(:name) { "Bob" }
-  let(:age) { 42 }
-
-  it MUST eq name       # References the name property
-
-  on :grow do
-    it MUST eq age + 1  # Properties can be used in calculations
-  end
-end
-```
-
-### `with`
-
-Creates a context with specific properties, allowing you to test behavior under different conditions:
-
-```ruby
-Fix do
-  # Single property context
-  with name: "Alice" do
-    it MUST eq "Alice"
-  end
-
-  # Multiple properties
-  with name: "Bob", age: 42 do
-    it MUST include "Bob"
-    it SHOULD be_positive
-  end
-
-  # Nested contexts
-  with user: "admin" do
-    with permission: "write" do
-      it MUST be_allowed
-    end
-  end
-end
-```
-
-### `on`
-
-Defines an example group around a method call, testing how an object responds to specific messages:
-
-```ruby
-Fix do
-  # Simple method call
-  on :upcase do
-    it MUST eq "HELLO"
-  end
-
-  # Method with arguments
-  on :+, 2 do
-    it MUST eq 42
-  end
-
-  # Method with keyword arguments
-  on :resize, width: 100, height: 200 do
-    it MUST eq [100, 200]
-  end
-
-  # Method chain testing
-  on :split, " " do
-    on :first do
-      it MUST eq "Hello"
-    end
-  end
-end
-```
-
-### `it`
-
-Defines a concrete specification with a requirement level and matcher:
-
-```ruby
-Fix do
-  # Required specifications
-  it MUST eq 42
-  it MUST_NOT be_nil
-
-  # Recommended specifications
-  it SHOULD be_positive
-  it SHOULD_NOT be_empty
-
-  # Optional specifications
-  it MAY start_with "Hello"
-
-  # Multiple specifications in same context
-  on :calculate do
-    it MUST be_an_instance_of Numeric  # Type check
-    it MUST be_positive               # Value check
-    it SHOULD be_within(0.01).of(42)  # Range check
-  end
-end
-```
-
-### Complete Example
-
-Here's how these DSL methods work together in a real specification:
+Here's a comprehensive example showing how to specify a user account system:
 
 ```ruby
 Fix :UserAccount do
@@ -213,23 +173,19 @@ Fix :UserAccount do
 end
 ```
 
-Each DSL method serves a specific purpose in creating clear, maintainable specifications:
-- `let` for defining reusable values and setup
-- `with` for creating specific test contexts
-- `on` for testing method behavior
-- `it` for defining expectations
+This example demonstrates:
+- Using `let` to define test fixtures
+- Context-specific testing with `with`
+- Method behavior testing with `on`
+- Different requirement levels with `MUST`/`MUST_NOT`
+- Testing state changes with the `change` matcher
+- Nested contexts for complex scenarios
 
-Together, they allow you to write specifications that are both readable and comprehensive.
+### Example 2: Duck Specification
 
-## Duck example
-
-Specifications for a `Duck` class:
+Here's how Fix can be used to specify a Duck class:
 
 ```ruby
-# examples/duck/fix.rb
-
-require "fix"
-
 Fix :Duck do
   it SHOULD be_an_instance_of :Duck
 
@@ -248,11 +204,9 @@ Fix :Duck do
 end
 ```
 
-Implementing the `Duck` class:
+The implementation:
 
 ```ruby
-# examples/duck/app.rb
-
 class Duck
   def walks
     "Klop klop!"
@@ -271,43 +225,31 @@ end
 Running the test:
 
 ```ruby
-# examples/duck/test.rb
-
-require_relative "app"
-require_relative "fix"
-
 Fix[:Duck].test { Duck.new }
 ```
 
-Execute:
+## Why Choose Fix?
 
-```sh
-ruby examples/duck/test.rb
-```
+Fix brings several unique advantages to Ruby testing that set it apart from traditional testing frameworks:
 
-Expected output:
+- **Clear Separation of Concerns**: Keep your specifications clean and your examples separate
+- **Semantic Precision**: Express requirements with different levels of necessity
+- **Fast Execution**: Get quick feedback on specification compliance
+- **Pure Specifications**: Write specification documents that focus on behavior, not implementation
+- **Rich Matcher Library**: Comprehensive set of matchers for different testing needs
+- **Modern Ruby**: Takes advantage of modern Ruby features and practices
 
-```txt
-examples/duck/fix.rb:22 Success: expected to eq "Hi, my name is Donald!".
-examples/duck/fix.rb:27 Success: expected "Swoosh..." to be an instance of String.
-examples/duck/fix.rb:46 NoMethodError: undefined method `sings' for <Bob>:Duck.
-examples/duck/fix.rb:31 Success: expected to be 9.
-examples/duck/fix.rb:13 Success: expected to eq "Hi, my name is Picsou!".
-examples/duck/fix.rb:42 Success: undefined method `speaks' for <Bob>:Duck.
-examples/duck/fix.rb:8 Success: expected <Bob> to be an instance of Duck.
-Quaaaaaack!
-examples/duck/fix.rb:50 Success: expected to be nil.
-examples/duck/fix.rb:28 Success: expected to eq "Swoosh...".
-examples/duck/fix.rb:37 Success: expected to be 10.
-examples/duck/fix.rb:18 Success: expected to eq "Hi, my name is Picsou!".
-```
+## Get Started
 
-## Contact
+Ready to write better specifications? Visit our [GitHub repository](https://github.com/fixrb/fix) to start using Fix in your Ruby projects.
 
-- [Home page](https://fixrb.dev/)
-- [Source code](https://github.com/fixrb/fix)
-- [API Documentation](https://rubydoc.info/gems/fix)
-- [Bluesky](https://bsky.app/profile/fixrb.dev)
+## Community & Resources
+
+- [Blog](https://fixrb.dev/) - Related articles
+- [Bluesky](https://bsky.app/profile/fixrb.dev) - Latest updates and discussions
+- [Documentation](https://www.rubydoc.info/gems/fix) - Comprehensive guides and API reference
+- [Source Code](https://github.com/fixrb/fix) - Contribute and report issues
+- [asciinema](https://asciinema.org/~fix) - Watch practical examples in action
 
 ## Versioning
 
@@ -317,11 +259,6 @@ __Fix__ follows [Semantic Versioning 2.0](https://semver.org/).
 
 The [gem](https://rubygems.org/gems/fix) is available as open source under the terms of the [MIT License](https://github.com/fixrb/fix/raw/main/LICENSE.md).
 
----
+## Sponsors
 
-<p>
-  This project is sponsored by:<br />
-  <a href="https://sashite.com/"><img
-    src="https://github.com/fixrb/fix/raw/main/img/sashite.png"
-    alt="Sashité" /></a>
-</p>
+This project is sponsored by [Sashité](https://sashite.com/)
