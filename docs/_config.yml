@@ -15,3 +15,4 @@ minima:
 feed:
   icon: /favicon.png
   logo: /favicon.png
+  posts_limit: 100
