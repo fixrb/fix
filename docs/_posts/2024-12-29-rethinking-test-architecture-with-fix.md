@@ -1,18 +1,17 @@
 ---
 layout: post
-title: "Fix: Rethinking Test Architecture with Clear Specification Separation"
-description: "Discover how Fix's unique approach to testing in Ruby promotes clear separation between specifications and implementation, leading to more maintainable and reusable tests."
-date: 2024-12-29 12:00:00 +0100
+title: "Rethinking Test Architecture with Clear Specification Separation"
+description: "Discover how Fix's unique approach to testing in Ruby promotes clear separation between specifications and implementation, making your test suite more maintainable and reusable."
 author: Cyril Kato
 categories:
+  - framework
   - testing
-  - ruby
 tags:
   - fix
-  - testing
   - ruby
   - specifications
   - architecture
+  - testing framework
 ---
 In the Ruby development world, testing frameworks like RSpec or Minitest have become industry standards. However, Fix proposes a radically different approach that deserves our attention: a clean separation between specifications and their implementation.
 

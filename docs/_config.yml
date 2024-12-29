@@ -2,7 +2,11 @@ title: Fix specing framework
 author:
   name: Cyril Kato
 description: >
-  A modern Ruby testing framework that emphasizes clear separation between specifications and examples. Unlike traditional testing frameworks, Fix focuses on creating pure specification documents that define expected behaviors without mixing in implementation details.
+  description: >
+  Fix is a modern Ruby testing framework built around a key architectural principle:
+  the complete separation between specifications and tests. It allows you to write
+  pure specification documents that define expected behaviors, and then independently
+  challenge any implementation against these specifications.
 remote_theme: jekyll/minima
 plugins:
   - jekyll-feed

@@ -1,9 +1,18 @@
 ---
-author: "Cyril Kato"
-layout: "post"
+layout: post
 title: "Fix 0.7: A Fresh Take on Ruby Testing"
-date: "2015-09-03"
-tags: [testing-frameworks rspec magic-tricks]
+description: "Introducing Fix 0.7, a minimalist Ruby testing framework focused on clear specifications and pure Ruby objects, built in just 148 lines of code."
+date: 2015-09-03 12:00:00 +0100
+author: Cyril Kato
+categories:
+  - framework
+  - release
+tags:
+  - fix
+  - ruby
+  - testing
+  - rspec
+  - release
 ---
 Today marks an exciting milestone in our journey as we announce the release of Fix 0.7! After months of careful development and [multiple iterations](https://speakerdeck.com/cyril/konbanha-tiao-jian-yabiheibiatesuto), we're proud to present a testing framework that brings simplicity and clarity back to Ruby testing.
 
