@@ -76,11 +76,7 @@ This separation brings several major advantages:
 
 Specifications become autonomous documents that can be reused across different implementations. The same calculator specification could be used to test different calculator classes as long as they follow the same interface.
 
-### 2. Clear Intentions
-
-Fix specifications express requirements using semantic language inspired by RFC 2119 (MUST, SHOULD, MAY). This approach makes specifications more precise and more understandable.
-
-### 3. Isolated Testing
+### 2. Isolated Testing
 
 Each test can be executed in complete isolation, which makes debugging easier and improves test code maintainability. The separation between specification and implementation means you can change how you test without changing what you're testing.
 
@@ -112,7 +108,22 @@ Fix[:PaymentSystem].test { StripePayment.new(amount: 100) }
 Fix[:PaymentSystem].test { PaypalPayment.new(amount: 100) }
 ```
 
-In this example, the payment system specification is generic and can be applied to different payment implementations.
+In this example, the payment system specification is generic and can be applied to different payment implementations. By focusing on the interface rather than the implementation details, we create a reusable contract that any payment processor can fulfill.
+
+## Benefits in Practice
+
+This architectural separation provides several practical benefits:
+
+1. **Documentation**: Specifications serve as clear, living documentation of your system's expected behavior
+
+2. **Maintainability**: Changes to test implementation don't require changes to specifications
+
+3. **Flexibility**: The same specifications can verify multiple implementations, making it ideal for:
+   - Testing different versions of a class
+   - Verifying third-party integrations
+   - Ensuring consistency across microservices
+
+4. **Clarity**: By separating what from how, both specifications and tests become more focused and easier to understand
 
 ## Conclusion
 

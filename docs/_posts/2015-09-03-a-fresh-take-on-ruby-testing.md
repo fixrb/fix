@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Fix 0.7: A Fresh Take on Ruby Testing"
+title: "A Fresh Take on Ruby Testing"
 description: "Introducing Fix 0.7, a minimalist Ruby testing framework focused on clear specifications and pure Ruby objects, built in just 148 lines of code."
 date: 2015-09-03 12:00:00 +0100
 author: Cyril Kato
@@ -23,7 +23,6 @@ Fix emerged from a simple observation: testing frameworks shouldn't be more comp
 ### Key Features
 
 - **Pure Specification Documents**: Fix treats specs as living documents that remain logic-free and crystal clear
-- **RFC 2119 Compliance**: Requirements are qualified using standardized terminology (MUST, SHOULD, MAY)
 - **Version-Resistant**: Specifications remain stable across Fix versions, protecting against software erosion
 - **No Magic**: We avoid monkey-patching and other Ruby "[magic tricks](https://blog.arkency.com/2013/06/are-we-abusing-at-exit/)" that can obscure behavior
 - **Authentic Ruby Objects**: Work with pure, unmuted Ruby objects for unambiguous and structured specs
@@ -64,68 +63,48 @@ Surprisingly, RSpec tells us that `App.new` equals 42! While this specific issue
 
 ## Fix in Action
 
-Let's see how Fix handles a real-world example. Consider this Duck class:
+Let's see how Fix handles a real-world test case:
 
 ```ruby
-# duck.rb
-class Duck
-  def walks
-    "Klop klop!"
-  end
-
-  def swims
-    "Swoosh..."
-  end
-
-  def quacks
-    puts "Quaaaaaack!"
-  end
-end
-```
-
-Here's how we specify its behavior with Fix:
-
-```ruby
-# duck_spec.rb
-require_relative "duck"
+# car_spec.rb
 require "fix"
 
-@bird = Duck.new
+Fix :Car do
+  on :new, color: "red" do
+    it { MUST be_an_instance_of Car }
 
-Fix.describe @bird do
-  on :swims do
-    it { MUST eql "Swoosh..." }
-  end
+    on :color do
+      it { MUST eql "red" }
+    end
 
-  on :speaks do
-    it { MUST raise_exception NoMethodError }
-  end
-
-  on :sings do
-    it { MAY eql "♪... ♫..." }
+    on :start do
+      it { MUST change(car, :running?).from(false).to(true) }
+    end
   end
 end
+
+# Running the specification
+Fix[:Car].test { Car }
 ```
 
-Running the specification:
-
-```bash
-$ ruby duck_spec.rb
-..I
-
-1. Info: undefined method `sings' for #<Duck:0x007fb60383b740> (NoMethodError).
-
-Ran 3 tests in 0.00038 seconds
-100% compliant - 1 infos, 0 failures, 0 errors
-```
-
-Notice how Fix provides clear, unambiguous results while maintaining a simple and elegant syntax.
+Notice how Fix:
+- Keeps specifications clear and concise
+- Uses method chaining for natural readability
+- Focuses on behavior rather than implementation details
+- Maintains consistent syntax across different types of tests
 
 ## Looking Forward
 
 As we approach version 1.0.0, our focus remains on stability and refinement rather than adding new features. Fix is ready for production use, and we're excited to see how the Ruby community puts it to work.
 
-### Get Involved
+### Key Areas of Focus
+
+1. **Documentation Enhancement**: Making it easier for newcomers to get started
+2. **Performance Optimization**: Ensuring Fix remains lightweight and fast
+3. **Community Feedback**: Incorporating real-world usage patterns
+4. **Ecosystem Growth**: Building tools and extensions around the core framework
+
+## Get Involved
 
 - Try Fix in your projects: `gem install fix`
 - [Visit our GitHub repository](https://github.com/fixrb/fix)

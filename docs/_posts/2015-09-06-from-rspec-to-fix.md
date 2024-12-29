@@ -39,9 +39,9 @@ One of the most striking differences between Fix and traditional testing framewo
 
 The core philosophy is simple: a testing framework shouldn't be more complex than the code it tests. This dramatic difference in code size (16,619 lines of code) reflects Fix's commitment to minimalism and clarity.
 
-## Comparing Approaches: A Real-World Example
+## A Real-World Comparison
 
-Let's examine how both frameworks handle a real-world testing scenario. Consider this Monster class:
+Let's look at a real-world example that demonstrates the key differences in approach. Consider this Monster class:
 
 ```ruby
 class Monster
@@ -66,7 +66,7 @@ class Monster
 end
 ```
 
-### Traditional RSpec Approach
+### RSpec's Layered Approach
 
 ```ruby
 require_relative "monster"
@@ -101,7 +101,7 @@ RSpec.describe Monster do
 end
 ```
 
-### The Fix Way
+### Fix's Direct Style
 
 ```ruby
 require_relative "monster"
@@ -126,13 +126,45 @@ Fix.describe Monster do
 end
 ```
 
-As we can see, the spec is shorter and easier to read, with a "DRY" approach. Fix allows describing methods with one expression, whether it concerns a class method's name or an instance method's name.
+## Key Differentiators
 
-Additionally, all specifications are derived from the described front object that is populated at the root. Unlike in RSpec, there is no concept of implicit or explicit subjects - there is just one read-only dynamic subject which is deduced from the front object and the described methods.
+1. **Method Chaining**: Fix allows describing methods with one expression, whether for class or instance methods. This leads to more concise and readable code.
 
-Finally, while an RSpec expectation sometimes needs a parameter to handle [equivalence matcher](http://www.rubydoc.info/github/rspec/rspec-expectations/RSpec%2FMatchers%3Aeql), sometimes a block to handle [expect error matcher](http://www.rubydoc.info/github/rspec/rspec-expectations/RSpec%2FMatchers%3Araise_error), Fix's expectations are always written the same way, regardless of the responsibility and structure of matchers.
+2. **Single Source of Truth**: All specifications are derived from the described front object populated at the root. There's no need for explicit or implicit subjects - there's just one read-only dynamic subject deduced from the front object and described methods.
 
-This article has presented some key differences in syntax between these two frameworks. I hope you will enjoy the new test interface proposed by Fix.
+3. **Consistent Syntax**: Fix maintains the same syntax regardless of what's being tested. Whether you're checking a value, expecting an error, or verifying a state change, the syntax remains uniform and predictable.
+
+## Clarity in Practice
+
+Fix encourages a more direct and less ceremonial approach to testing. Compare how both frameworks handle error checking:
+
+RSpec:
+```ruby
+expect { problematic_call }.to raise_exception(ErrorType)
+```
+
+Fix:
+```ruby
+it { MUST raise_exception ErrorType }
+```
+
+Or value comparison:
+
+RSpec:
+```ruby
+expect(value).to eq(expected)
+```
+
+Fix:
+```ruby
+it { MUST eql expected }
+```
+
+This consistency helps reduce cognitive load and makes tests easier to write and understand.
+
+## Conclusion
+
+Fix represents a fresh approach to Ruby testing that prioritizes simplicity and clarity. By reducing complexity and maintaining a consistent syntax, it helps developers focus on what matters: writing clear, maintainable tests that effectively verify their code's behavior.
 
 Want to try Fix for yourself? Get started with:
 
@@ -140,4 +172,4 @@ Want to try Fix for yourself? Get started with:
 gem install fix
 ```
 
-Visit our [documentation](https://fixrb.dev) to learn more about how Fix can improve your testing workflow.
+Visit our [documentation](https://rubydoc.info/gems/fix) to learn more about how Fix can improve your testing workflow.
