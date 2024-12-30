@@ -14,7 +14,7 @@ module Fix
     # This method mean that the definition is an absolute requirement of the
     # specification.
     #
-    # @param matcher [#matches?] The matcher.
+    # @param matcher [#match?] The matcher.
     #
     # @return [Requirement::Required] An absolute requirement level instance.
     #
@@ -25,7 +25,7 @@ module Fix
 
     # This method mean that the definition is an absolute prohibition of the specification.
     #
-    # @param matcher [#matches?] The matcher.
+    # @param matcher [#match?] The matcher.
     #
     # @return [Requirement::Required] An absolute prohibition level instance.
     #
@@ -38,7 +38,7 @@ module Fix
     # circumstances to ignore a particular item, but the full implications must be
     # understood and carefully weighed before choosing a different course.
     #
-    # @param matcher [#matches?] The matcher.
+    # @param matcher [#match?] The matcher.
     #
     # @return [Requirement::Recommended] A recommended requirement level instance.
     #
@@ -52,7 +52,7 @@ module Fix
     # the full implications should be understood and the case carefully weighed
     # before implementing any behavior described with this label.
     #
-    # @param matcher [#matches?] The matcher.
+    # @param matcher [#match?] The matcher.
     #
     # @return [Requirement::Recommended] A not recommended requirement level
     #   instance.
@@ -73,7 +73,7 @@ module Fix
     # implementation which does not include the option (except, of course, for the
     # feature the option provides).
     #
-    # @param matcher [#matches?] The matcher.
+    # @param matcher [#match?] The matcher.
     #
     # @return [Requirement::Optional] An optional requirement level instance.
     #

@@ -95,13 +95,20 @@ module Fix
     #
     #   Fix { it MUST be 42 }
     #
+    #   Fix do
+    #     it { MUST be 42 }
+    #   end
+    #
     # @api public
-    def self.it(requirement)
+    def self.it(requirement = nil, &block)
+      raise ::ArgumentError, "Must provide either requirement or block, not both" if requirement && block
+      raise ::ArgumentError, "Must provide either requirement or block" unless requirement || block
+
       location = caller_locations(1, 1).fetch(0)
       location = [location.path, location.lineno].join(":")
 
-      define_method(:"test_#{requirement.object_id}") do
-        [location, requirement, self.class.challenges]
+      define_method(:"test_#{(requirement || block).object_id}") do
+        [location, requirement || singleton_class.class_eval(&block), self.class.challenges]
       end
     end
 

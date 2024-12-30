@@ -11,12 +11,12 @@ module Fix
     #
     # @example
     #   matcher = eq("foo")
-    #   matcher.matches? { "foo" } # => true
-    #   matcher.matches? { "bar" } # => false
+    #   matcher.match? { "foo" } # => true
+    #   matcher.match? { "bar" } # => false
     #
     # @param expected [#eql?] An expected equivalent object.
     #
-    # @return [#matches?] An equivalence matcher.
+    # @return [#match?] An equivalence matcher.
     #
     # @api public
     def eq(expected)
@@ -30,12 +30,12 @@ module Fix
     # @example
     #   object = "foo"
     #   matcher = be(object)
-    #   matcher.matches? { object } # => true
-    #   matcher.matches? { "foo" } # => false
+    #   matcher.match? { object } # => true
+    #   matcher.match? { "foo" } # => false
     #
     # @param expected [#equal?] The expected identical object.
     #
-    # @return [#matches?] An identity matcher.
+    # @return [#match?] An identity matcher.
     #
     # @api public
     def be(expected)
@@ -48,12 +48,12 @@ module Fix
     #
     # @example
     #   matcher = be_within(1).of(41)
-    #   matcher.matches? { 42 } # => true
-    #   matcher.matches? { 43 } # => false
+    #   matcher.match? { 42 } # => true
+    #   matcher.match? { 43 } # => false
     #
     # @param delta [Numeric] A numeric value.
     #
-    # @return [#matches?] A comparison matcher.
+    # @return [#match?] A comparison matcher.
     #
     # @api public
     def be_within(delta)
@@ -64,12 +64,12 @@ module Fix
     #
     # @example
     #   matcher = match(/^foo$/)
-    #   matcher.matches? { "foo" } # => true
-    #   matcher.matches? { "bar" } # => false
+    #   matcher.match? { "foo" } # => true
+    #   matcher.match? { "bar" } # => false
     #
     # @param expected [#match] A regular expression.
     #
-    # @return [#matches?] A regular expression matcher.
+    # @return [#match?] A regular expression matcher.
     #
     # @api public
     def match(expected)
@@ -80,12 +80,12 @@ module Fix
     #
     # @example
     #   matcher = raise_exception(NameError)
-    #   matcher.matches? { Boom } # => true
-    #   matcher.matches? { true } # => false
+    #   matcher.match? { Boom } # => true
+    #   matcher.match? { true } # => false
     #
     # @param expected [Exception, #to_s] The expected exception name.
     #
-    # @return [#matches?] An error matcher.
+    # @return [#match?] An error matcher.
     #
     # @api public
     def raise_exception(expected)
@@ -96,12 +96,12 @@ module Fix
     #
     # @example
     #   matcher = be_true
-    #   matcher.matches? { true } # => true
-    #   matcher.matches? { false } # => false
-    #   matcher.matches? { nil } # => false
-    #   matcher.matches? { 4 } # => false
+    #   matcher.match? { true } # => true
+    #   matcher.match? { false } # => false
+    #   matcher.match? { nil } # => false
+    #   matcher.match? { 4 } # => false
     #
-    # @return [#matches?] A `true` matcher.
+    # @return [#match?] A `true` matcher.
     #
     # @api public
     def be_true
@@ -112,12 +112,12 @@ module Fix
     #
     # @example
     #   matcher = be_false
-    #   matcher.matches? { false } # => true
-    #   matcher.matches? { true } # => false
-    #   matcher.matches? { nil } # => false
-    #   matcher.matches? { 4 } # => false
+    #   matcher.match? { false } # => true
+    #   matcher.match? { true } # => false
+    #   matcher.match? { nil } # => false
+    #   matcher.match? { 4 } # => false
     #
-    # @return [#matches?] A `false` matcher.
+    # @return [#match?] A `false` matcher.
     #
     # @api public
     def be_false
@@ -128,12 +128,12 @@ module Fix
     #
     # @example
     #   matcher = be_nil
-    #   matcher.matches? { nil } # => true
-    #   matcher.matches? { false } # => false
-    #   matcher.matches? { true } # => false
-    #   matcher.matches? { 4 } # => false
+    #   matcher.match? { nil } # => true
+    #   matcher.match? { false } # => false
+    #   matcher.match? { true } # => false
+    #   matcher.match? { 4 } # => false
     #
-    # @return [#matches?] A `nil` matcher.
+    # @return [#match?] A `nil` matcher.
     #
     # @api public
     def be_nil
@@ -144,12 +144,12 @@ module Fix
     #
     # @example
     #   matcher = be_an_instance_of(String)
-    #   matcher.matches? { "foo" } # => true
-    #   matcher.matches? { 4 } # => false
+    #   matcher.match? { "foo" } # => true
+    #   matcher.match? { 4 } # => false
     #
     # @param expected [Class, #to_s] The expected class name.
     #
-    # @return [#matches?] A type/class matcher.
+    # @return [#match?] A type/class matcher.
     #
     # @api public
     def be_an_instance_of(expected)
@@ -161,28 +161,28 @@ module Fix
     # @example
     #   object = []
     #   matcher = change(object, :length).by(1)
-    #   matcher.matches? { object << 1 } # => true
+    #   matcher.match? { object << 1 } # => true
     #
     #   object = []
     #   matcher = change(object, :length).by_at_least(1)
-    #   matcher.matches? { object << 1 } # => true
+    #   matcher.match? { object << 1 } # => true
     #
     #   object = []
     #   matcher = change(object, :length).by_at_most(1)
-    #   matcher.matches? { object << 1 } # => true
+    #   matcher.match? { object << 1 } # => true
     #
     #   object = "foo"
     #   matcher = change(object, :to_s).from("foo").to("FOO")
-    #   matcher.matches? { object.upcase! } # => true
+    #   matcher.match? { object.upcase! } # => true
     #
     #   object = "foo"
     #   matcher = change(object, :to_s).to("FOO")
-    #   matcher.matches? { object.upcase! } # => true
+    #   matcher.match? { object.upcase! } # => true
     #
     # @param object [#object_id]  An object.
     # @param method [Symbol]      The name of a method.
     #
-    # @return [#matches?] A change matcher.
+    # @return [#match?] A change matcher.
     #
     # @api public
     def change(object, method, ...)
@@ -193,13 +193,13 @@ module Fix
     #
     # @example
     #   matcher = satisfy { |value| value == 42 }
-    #   matcher.matches? { 42 } # => true
+    #   matcher.match? { 42 } # => true
     #
     # @yield [value] A block that defines the satisfaction criteria
     # @yieldparam value The value to test
     # @yieldreturn [Boolean] true if the value satisfies the criteria
     #
-    # @return [#matches?] A satisfy matcher.
+    # @return [#match?] A satisfy matcher.
     #
     # @api public
     def satisfy(&)
@@ -212,8 +212,8 @@ module Fix
     #
     # @example Empty predicate matcher
     #   matcher = be_empty
-    #   matcher.matches? { [] } # => true
-    #   matcher.matches? { [4] } # => false
+    #   matcher.match? { [] } # => true
+    #   matcher.match? { [4] } # => false
     def method_missing(name, ...)
       return super unless predicate_matcher_name?(name)
 

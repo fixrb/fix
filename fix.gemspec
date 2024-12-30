@@ -22,6 +22,6 @@ Gem::Specification.new do |spec|
   }
 
   spec.add_dependency "defi",     "~> 3.0.0"
-  spec.add_dependency "matchi",   "~> 3.3.2"
-  spec.add_dependency "spectus",  "~> 5.0.0"
+  spec.add_dependency "matchi",   "~> 4.0.0"
+  spec.add_dependency "spectus",  "~> 5.0.1"
 end
