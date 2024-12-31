@@ -14,7 +14,7 @@ Fix is a modern Ruby testing framework that emphasizes clear separation between 
 Add to your Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta11"
+gem "fix", ">= 1.0.0.beta12"
 ```
 
 Then execute:
@@ -224,6 +224,67 @@ Running the test:
 
 ```ruby
 Fix[:Duck].test { Duck.new }
+```
+
+## Available Matchers
+
+Fix includes a comprehensive set of matchers through its integration with the [Matchi library](https://github.com/fixrb/matchi):
+
+### Basic Comparison Matchers
+- `eq(expected)` - Tests equality using `eql?`
+- `be(expected)` - Tests object identity using `equal?`
+
+### Type Checking Matchers
+- `be_an_instance_of(class)` - Verifies exact class match
+- `be_a_kind_of(class)` - Checks class inheritance and module inclusion
+
+### Change Testing Matchers
+- `change(object, method)` - Base matcher for state changes
+  - `.by(n)` - Expects exact change by n
+  - `.by_at_least(n)` - Expects minimum change by n
+  - `.by_at_most(n)` - Expects maximum change by n
+  - `.from(old).to(new)` - Expects change from old to new value
+  - `.to(new)` - Expects change to new value
+
+### Numeric Matchers
+- `be_within(delta).of(value)` - Tests if a value is within ±delta of expected value
+
+### Pattern Matchers
+- `match(regex)` - Tests string against regular expression pattern
+- `satisfy { |value| ... }` - Custom matching with block
+
+### State Matchers
+- `be_true` - Tests for true
+- `be_false` - Tests for false
+- `be_nil` - Tests for nil
+
+### Exception Matchers
+- `raise_exception(class)` - Tests if code raises specified exception
+
+### Dynamic Predicate Matchers
+- `be_*` - Dynamically matches `object.*?` methods (e.g., `be_empty` calls `empty?`)
+- `have_*` - Dynamically matches `object.has_*?` methods (e.g., `have_key` calls `has_key?`)
+
+Example usage:
+
+```ruby
+Fix :Calculator do
+  it MUST be_an_instance_of Calculator
+
+  on :add, 2, 3 do
+    it MUST eq 5
+    it MUST be_within(0.001).of(5.0)
+  end
+
+  on :divide, 1, 0 do
+    it MUST raise_exception ZeroDivisionError
+  end
+
+  with numbers: [1, 2, 3] do
+    it MUST_NOT be_empty
+    it MUST satisfy { |result| result.all? { |n| n.positive? } }
+  end
+end
 ```
 
 ## Why Choose Fix?
