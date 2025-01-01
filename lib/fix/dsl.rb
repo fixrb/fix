@@ -26,7 +26,7 @@ module Fix
     # @yield The block that defines the property's value
     # @yieldreturn [Object] The value to be returned by the property
     #
-    # @return [Symbol] A private method that define the block content.
+    # @return [Symbol] A private method that defines the block content.
     #
     # @api public
     def self.let(name, &)
@@ -45,9 +45,11 @@ module Fix
     #     end
     #   end
     #
-    # @param kwargs [Hash] The list of propreties.
+    # @param kwargs [Hash] The list of properties to define in this context
     # @yield The block that defines the specs for this context
     # @yieldreturn [void]
+    #
+    # @return [Class] A new class representing this context
     #
     # @api public
     def self.with(**kwargs, &)
@@ -69,15 +71,21 @@ module Fix
     #     end
     #   end
     #
-    # @param method_name [String, Symbol] The method to send to the subject.
-    # @param block [Proc] The block to define the specs.
+    # @param method_name [String, Symbol] The method to send to the subject
+    # @param args [Array] Positional arguments to pass to the method
+    # @param kwargs [Hash] Keyword arguments to pass to the method
+    # @yield The block containing the specifications for this context
+    # @yieldreturn [void]
+    #
+    # @return [Class] A new class representing this context
     #
     # @api public
     def self.on(method_name, *args, **kwargs, &block)
       klass = ::Class.new(self)
       klass.const_get(:CONTEXTS) << klass
 
-      const_set(:"Child#{block.object_id}", klass)
+      const_name = :"MethodContext_#{block.object_id}"
+      const_set(const_name, klass)
 
       klass.define_singleton_method(:challenges) do
         challenge = ::Defi::Method.new(method_name, *args, **kwargs)
@@ -99,6 +107,14 @@ module Fix
     #     it { MUST be 42 }
     #   end
     #
+    # @param requirement [Object, nil] The requirement to test
+    # @yield A block defining the requirement if not provided directly
+    # @yieldreturn [Object] The requirement definition
+    #
+    # @return [Symbol] Name of the generated test method
+    #
+    # @raise [ArgumentError] If neither or both requirement and block are provided
+    #
     # @api public
     def self.it(requirement = nil, &block)
       raise ::ArgumentError, "Must provide either requirement or block, not both" if requirement && block
@@ -107,7 +123,8 @@ module Fix
       location = caller_locations(1, 1).fetch(0)
       location = [location.path, location.lineno].join(":")
 
-      define_method(:"test_#{(requirement || block).object_id}") do
+      test_method_name = :"test_#{(requirement || block).object_id}"
+      define_method(test_method_name) do
         [location, requirement || singleton_class.class_eval(&block), self.class.challenges]
       end
     end

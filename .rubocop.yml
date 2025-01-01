@@ -1,6 +1,6 @@
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.1
 
   Exclude:
     - '**/*.md'
@@ -54,3 +54,9 @@ Naming/FileName:
 Style/ClassAndModuleChildren:
   Exclude:
     - README.md
+
+Naming/BlockForwarding:
+  Enabled: false
+
+Style/ArgumentsForwarding:
+  Enabled: false

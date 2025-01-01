@@ -1,21 +1,48 @@
-title: Fix specing framework
+title: "Fix: Happy Path to Ruby Testing"
 author:
   name: Cyril Kato
+  url: "https://github.com/cyril"
+
 description: >
   Fix is a modern Ruby testing framework built around a key architectural principle:
   the complete separation between specifications and tests. It allows you to write
   pure specification documents that define expected behaviors, and then independently
   challenge any implementation against these specifications.
+
 remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
 minima:
   skin: auto
   social_links:
-    - { platform: github,     user_url: "https://github.com/fixrb/fix" }
-    - { platform: x,          user_url: "https://x.com/fix_rb" }
+    - { platform: github,    user_url: "https://github.com/fixrb/fix" }
+    - { platform: x,         user_url: "https://x.com/fix_rb" }
+    - { platform: bsky,      user_url: "https://bsky.app/profile/fixrb.dev" }
+    - { platform: rss,       user_url: "/feed.xml" }
+
+# Feed configuration
 feed:
   icon: /favicon.png
   logo: /favicon.png
   posts_limit: 100
+
+# SEO
+twitter:
+  username: fix_rb
+  card: summary
+
+social:
+  name: Fix Framework
+  links:
+    - https://github.com/fixrb/fix
+    - https://x.com/fix_rb
+    - https://bsky.app/profile/fixrb.dev
+
+# GitHub Pages specific
+github:
+  is_project_page: true
+  repository_url: "https://github.com/fixrb/fix"

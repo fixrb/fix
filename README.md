@@ -11,10 +11,16 @@ Fix is a modern Ruby testing framework that emphasizes clear separation between 
 
 ## Installation
 
+### Prerequisites
+
+- Ruby >= 3.1.0
+
+### Setup
+
 Add to your Gemfile:
 
 ```ruby
-gem "fix", ">= 1.0.0.beta12"
+gem "fix"
 ```
 
 Then execute:
@@ -26,7 +32,7 @@ bundle install
 Or install it yourself:
 
 ```sh
-gem install fix --pre
+gem install fix
 ```
 
 ## Core Principles
@@ -171,13 +177,36 @@ Fix :UserAccount do
 end
 ```
 
-This example demonstrates:
-- Using `let` to define test fixtures
-- Context-specific testing with `with`
-- Method behavior testing with `on`
-- Different requirement levels with `MUST`/`MUST_NOT`
-- Testing state changes with the `change` matcher
-- Nested contexts for complex scenarios
+The implementation might look like this:
+
+```ruby
+class User
+  attr_reader :role, :password_hash
+
+  def initialize(role:)
+    @role = role
+    @password_hash = nil
+  end
+
+  def admin?
+    role == "admin"
+  end
+
+  def can_access?(resource)
+    return true if admin?
+    false
+  end
+
+  def full_name
+    "#{@first_name} #{@last_name}"
+  end
+
+  def update_password(new_password)
+    @password_hash = Digest::SHA256.hexdigest(new_password)
+    true
+  end
+end
+```
 
 ### Example 2: Duck Specification
 
@@ -225,47 +254,140 @@ Running the test:
 ```ruby
 Fix[:Duck].test { Duck.new }
 ```
-
 ## Available Matchers
 
 Fix includes a comprehensive set of matchers through its integration with the [Matchi library](https://github.com/fixrb/matchi):
 
-### Basic Comparison Matchers
+<details>
+<summary><strong>Basic Comparison Matchers</strong></summary>
+
 - `eq(expected)` - Tests equality using `eql?`
+  ```ruby
+  it MUST eq(42)                   # Passes if value.eql?(42)
+  it MUST eq("hello")              # Passes if value.eql?("hello")
+  ```
+- `eql(expected)` - Alias for eq
 - `be(expected)` - Tests object identity using `equal?`
+  ```ruby
+  string = "test"
+  it MUST be(string)               # Passes only if it's exactly the same object
+  ```
+- `equal(expected)` - Alias for be
+</details>
 
-### Type Checking Matchers
+<details>
+<summary><strong>Type Checking Matchers</strong></summary>
+
 - `be_an_instance_of(class)` - Verifies exact class match
+  ```ruby
+  it MUST be_an_instance_of(Array) # Passes if value.instance_of?(Array)
+  it MUST be_an_instance_of(User)  # Passes if value.instance_of?(User)
+  ```
 - `be_a_kind_of(class)` - Checks class inheritance and module inclusion
+  ```ruby
+  it MUST be_a_kind_of(Enumerable) # Passes if value.kind_of?(Enumerable)
+  it MUST be_a_kind_of(Animal)     # Passes if value inherits from Animal
+  ```
+</details>
 
-### Change Testing Matchers
+<details>
+<summary><strong>Change Testing Matchers</strong></summary>
+
 - `change(object, method)` - Base matcher for state changes
   - `.by(n)` - Expects exact change by n
+    ```ruby
+    it MUST change(user, :points).by(5)          # Exactly +5 points
+    ```
   - `.by_at_least(n)` - Expects minimum change by n
+    ```ruby
+    it MUST change(counter, :value).by_at_least(10)  # At least +10
+    ```
   - `.by_at_most(n)` - Expects maximum change by n
+    ```ruby
+    it MUST change(account, :balance).by_at_most(100) # No more than +100
+    ```
   - `.from(old).to(new)` - Expects change from old to new value
+    ```ruby
+    it MUST change(user, :status).from("pending").to("active")
+    ```
   - `.to(new)` - Expects change to new value
+    ```ruby
+    it MUST change(post, :title).to("Updated")
+    ```
+</details>
 
-### Numeric Matchers
+<details>
+<summary><strong>Numeric Matchers</strong></summary>
+
 - `be_within(delta).of(value)` - Tests if a value is within ±delta of expected value
+  ```ruby
+  it MUST be_within(0.1).of(3.14)  # Passes if value is between 3.04 and 3.24
+  it MUST be_within(5).of(100)     # Passes if value is between 95 and 105
+  ```
+</details>
 
-### Pattern Matchers
+<details>
+<summary><strong>Pattern Matchers</strong></summary>
+
 - `match(regex)` - Tests string against regular expression pattern
+  ```ruby
+  it MUST match(/^\d{3}-\d{2}-\d{4}$/)  # SSN format
+  it MUST match(/^[A-Z][a-z]+$/)        # Capitalized word
+  ```
 - `satisfy { |value| ... }` - Custom matching with block
+  ```ruby
+  it MUST satisfy { |num| num.even? && num > 0 }
+  it MUST satisfy { |user| user.valid? && user.active? }
+  ```
+</details>
 
-### State Matchers
-- `be_true` - Tests for true
-- `be_false` - Tests for false
-- `be_nil` - Tests for nil
+<details>
+<summary><strong>Exception Matchers</strong></summary>
 
-### Exception Matchers
 - `raise_exception(class)` - Tests if code raises specified exception
+  ```ruby
+  it MUST raise_exception(ArgumentError)
+  it MUST raise_exception(CustomError, "specific message")
+  ```
+</details>
 
-### Dynamic Predicate Matchers
-- `be_*` - Dynamically matches `object.*?` methods (e.g., `be_empty` calls `empty?`)
-- `have_*` - Dynamically matches `object.has_*?` methods (e.g., `have_key` calls `has_key?`)
+<details>
+<summary><strong>State Matchers</strong></summary>
 
-Example usage:
+- `be_true` - Tests for true
+  ```ruby
+  it MUST be_true          # Only passes for true, not truthy values
+  ```
+- `be_false` - Tests for false
+  ```ruby
+  it MUST be_false         # Only passes for false, not falsey values
+  ```
+- `be_nil` - Tests for nil
+  ```ruby
+  it MUST be_nil           # Passes only for nil
+  ```
+</details>
+
+<details>
+<summary><strong>Dynamic Predicate Matchers</strong></summary>
+
+- `be_*` - Dynamically matches `object.*?` method
+  ```ruby
+  it MUST be_empty         # Calls empty?
+  it MUST be_valid         # Calls valid?
+  it MUST be_frozen        # Calls frozen?
+  ```
+- `have_*` - Dynamically matches `object.has_*?` method
+  ```ruby
+  it MUST have_key(:id)    # Calls has_key?
+  it MUST have_errors      # Calls has_errors?
+  it MUST have_permission  # Calls has_permission?
+  ```
+</details>
+
+### Complete Example
+
+Here's an example using various matchers together:
 
 ```ruby
 Fix :Calculator do
@@ -283,6 +405,13 @@ Fix :Calculator do
   with numbers: [1, 2, 3] do
     it MUST_NOT be_empty
     it MUST satisfy { |result| result.all? { |n| n.positive? } }
+  end
+
+  with string_input: "123" do
+    on :parse do
+      it MUST be_a_kind_of Numeric
+      it MUST satisfy { |n| n > 0 }
+    end
   end
 end
 ```

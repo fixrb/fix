@@ -27,7 +27,7 @@ module Fix
     #
     # @param contexts [Array<::Fix::Dsl>] The list of contexts document.
     def initialize(*contexts)
-      @specs = Doc.specs(*contexts).shuffle
+      @specs = Doc.extract_specifications(*contexts).shuffle
     end
 
     # Run the test suite against the provided subject.

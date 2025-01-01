@@ -1,21 +1,21 @@
 PATH
   remote: .
   specs:
-    fix (1.0.0.beta12)
-      defi (~> 3.0.0)
-      matchi (~> 4.1.0)
-      spectus (~> 5.0.1)
+    fix (0.19)
+      defi (~> 3.0.1)
+      matchi (~> 4.1.1)
+      spectus (~> 5.0.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    defi (3.0.0)
+    defi (3.0.1)
     docile (1.4.1)
-    expresenter (1.5.0)
+    expresenter (1.5.1)
     json (2.9.1)
     language_server-protocol (3.17.0.3)
-    matchi (4.1.0)
+    matchi (4.1.1)
     parallel (1.26.3)
     parser (3.3.6.0)
       ast (~> 2.4.1)
@@ -52,12 +52,11 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
-    spectus (5.0.1)
-      expresenter (~> 1.5.0)
-      matchi (~> 4.0)
-      test_tube (~> 4.0.0)
-    test_tube (4.0.0)
-      defi (~> 3.0.0)
+    spectus (5.0.2)
+      expresenter (~> 1.5.1)
+      test_tube (~> 4.0.1)
+    test_tube (4.0.1)
+      defi (~> 3.0.1)
     unicode-display_width (3.1.3)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
