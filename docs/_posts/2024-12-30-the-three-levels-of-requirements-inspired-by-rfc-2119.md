@@ -103,7 +103,7 @@ end
 
 ## Historical Evolution: From RSpec to Fix
 
-This semantic approach contrasts with RSpec's history. Originally, RSpec used the `should` keyword as its main interface:
+This semantic approach contrasts with RSpec's history. Originally, [RSpec used the `should` keyword](https://github.com/rspec/rspec-expectations/blob/ba31727e856de42abb5a2e6566855f0831e1a619/Should.md) as its main interface:
 
 ```ruby
 # Old RSpec style
