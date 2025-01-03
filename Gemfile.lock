@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fix (0.20)
+    fix (0.21)
       defi (~> 3.0.1)
       matchi (~> 4.1.1)
       spectus (~> 5.0.2)

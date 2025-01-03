@@ -1,108 +1,110 @@
 # frozen_string_literal: true
 
 require_relative "doc"
+require_relative "dsl"
 require_relative "run"
 require_relative "error/missing_subject_block"
 
 module Fix
-  # Collection of specifications that can be executed as a test suite.
-  #
-  # The Set class is a central component in Fix's architecture that handles:
-  # - Loading and organizing test specifications
-  # - Managing test execution and isolation
+  # A Set represents a collection of test specifications that can be executed as a test suite.
+  # It manages the lifecycle of specifications, including:
+  # - Building and loading specifications from contexts
+  # - Executing specifications in isolation using process forking
   # - Reporting test results
-  # - Handling process management for test isolation
+  # - Managing test execution flow and exit status
   #
-  # It supports both named specifications (loaded via Fix[name]) and anonymous
-  # specifications (created directly via Fix blocks).
-  #
-  # @example Running a simple named specification
-  #   Fix[:Calculator].test { Calculator.new }
-  #
-  # @example Running a complex specification with multiple contexts
-  #   Fix[:UserSystem] do
-  #     with(role: "admin") do
-  #       on :access?, :settings do
-  #         it MUST be_true
-  #       end
+  # @example Creating and running a simple test set
+  #   set = Fix::Set.build(:Calculator) do
+  #     on(:add, 2, 3) do
+  #       it MUST eq 5
   #     end
-  #
-  #     with(role: "guest") do
-  #       on :access?, :settings do
-  #         it MUST be_false
-  #       end
-  #     end
-  #   end.test { UserSystem.new(role:) }
-  #
-  # @example Using match? for conditional testing
-  #   if Fix[:EmailValidator].match? { email }
-  #     puts "Email is valid"
   #   end
+  #   set.test { Calculator.new }
+  #
+  # @example Loading and running a registered test set
+  #   set = Fix::Set.load(:Calculator)
+  #   set.match? { Calculator.new } #=> true
   #
   # @api private
   class Set
-    # List of specifications to be tested.
-    # Each specification is an array containing:
-    # - The test environment
-    # - The source location (file:line)
-    # - The requirement (MUST, SHOULD, or MAY)
-    # - The challenges to apply
+    # Builds a new Set from a specification block.
     #
-    # @return [Array] List of specifications
-    attr_reader :expected
-
-    class << self
-      # Loads specifications from a registered constant name.
-      #
-      # This method retrieves previously registered specifications and creates
-      # a new Set instance ready for testing. It's typically used in conjunction
-      # with Fix[name] syntax.
-      #
-      # @param name [String, Symbol] The constant name of the specifications
-      # @return [Set] A new Set instance containing the loaded specifications
-      # @raise [Fix::Error::SpecificationNotFound] If specification doesn't exist
-      #
-      # @example Loading a named specification
-      #   Fix::Set.load(:Calculator)
-      #
-      # @example Loading and testing in one go
-      #   Fix::Set.load(:EmailValidator).test { email }
-      #
-      # @api public
-      def load(name)
-        new(*Doc.fetch(name))
-      end
+    # This method:
+    # 1. Creates a new DSL class for the specification
+    # 2. Evaluates the specification block in this context
+    # 3. Optionally registers the specification under a name
+    # 4. Returns a Set instance ready for testing
+    #
+    # @param name [Symbol, nil] Optional name to register the specification under
+    # @yield Block containing the specification definition using Fix DSL
+    # @return [Fix::Set] A new specification set ready for testing
+    #
+    # @example Building a named specification
+    #   Fix::Set.build(:Calculator) do
+    #     on(:add, 2, 3) { it MUST eq 5 }
+    #   end
+    #
+    # @example Building an anonymous specification
+    #   Fix::Set.build(nil) do
+    #     it MUST be_positive
+    #   end
+    #
+    # @api private
+    def self.build(name, &block)
+      klass = ::Class.new(Dsl)
+      klass.const_set(:CONTEXTS, [klass])
+      klass.instance_eval(&block)
+      Doc.const_set(name, klass) unless name.nil?
+      new(*klass.const_get(:CONTEXTS))
     end
 
-    # Initialize a new Set with the given contexts.
+    # Loads a previously registered specification set by name.
     #
-    # @param contexts [Array<Fix::Dsl>] List of specification contexts
+    # @param name [Symbol] The name of the registered specification
+    # @return [Fix::Set] The loaded specification set
+    # @raise [NameError] If the specification name is not found
     #
-    # @example Creating a set with a single context
-    #   Fix::Set.new(calculator_context)
+    # @example Loading a registered specification
+    #   Fix::Set.load(:Calculator)  #=> #<Fix::Set:...>
+    #
+    # @api private
+    def self.load(name)
+      new(*Doc.fetch(name))
+    end
+
+    # Initializes a new Set with given test contexts.
+    #
+    # The contexts are processed to extract test specifications and
+    # randomized to ensure test isolation and catch order dependencies.
+    #
+    # @param contexts [Array<Fix::Dsl>] List of specification contexts to include
     #
     # @example Creating a set with multiple contexts
     #   Fix::Set.new(base_context, admin_context, guest_context)
     def initialize(*contexts)
-      @expected = randomize_specs(Doc.extract_specifications(*contexts))
+      @expected = Doc.extract_specifications(*contexts).shuffle
     end
 
-    # Checks if the subject matches all specifications without exiting.
+    # Verifies if a subject matches all specifications without exiting.
     #
-    # Unlike #test, this method:
-    # - Returns a boolean instead of exiting
-    # - Can be used in conditional logic
+    # This method is useful for:
+    # - Conditional testing where exit on failure is not desired
+    # - Integration into larger test suites
+    # - Programmatic test result handling
     #
-    # @yield The block of code to be tested
-    # @yieldreturn [Object] The result of the code being tested
+    # @yield Block that returns the subject to test
+    # @yieldreturn [Object] The subject to test against specifications
     # @return [Boolean] true if all tests pass, false otherwise
+    # @raise [Error::MissingSubjectBlock] If no subject block is provided
     #
-    # @example Basic usage
-    #   set.match? { Calculator.new } #=> true
+    # @example Basic matching
+    #   set.match? { Calculator.new }  #=> true
     #
-    # @example Conditional usage
+    # @example Conditional testing
     #   if set.match? { user_input }
-    #     save_to_database(user_input)
+    #     process_valid_input(user_input)
+    #   else
+    #     handle_invalid_input
     #   end
     #
     # @api public
@@ -112,33 +114,41 @@ module Fix
       expected.all? { |spec| run_spec(*spec, &subject) }
     end
 
-    # Runs the test suite against the provided subject.
+    # Executes the complete test suite against a subject.
     #
-    # This method:
+    # This method provides a comprehensive test run that:
     # - Executes all specifications in random order
-    # - Runs each test in isolation using process forking
+    # - Runs each test in isolation via process forking
     # - Reports results for each specification
-    # - Exits with failure if any test fails
+    # - Exits with appropriate status code
     #
-    # @yield The block of code to be tested
-    # @yieldreturn [Object] The result of the code being tested
+    # @yield Block that returns the subject to test
+    # @yieldreturn [Object] The subject to test against specifications
     # @return [Boolean] true if all tests pass
-    # @raise [SystemExit] When any test fails (exit code: 1)
+    # @raise [SystemExit] Exits with status 1 if any test fails
+    # @raise [Error::MissingSubjectBlock] If no subject block is provided
     #
-    # @example Basic usage
+    # @example Basic test execution
     #   set.test { Calculator.new }
     #
-    # @example Testing with parameters
-    #   set.test { Game.new(south_variant:, north_variant:) }
+    # @example Testing with dependencies
+    #   set.test {
+    #     calc = Calculator.new
+    #     calc.precision = :high
+    #     calc
+    #   }
     #
     # @api public
     def test(&subject)
       match?(&subject) || exit_with_failure
     end
 
-    # Returns a string representing the matcher.
+    # Returns a string representation of the test set.
     #
-    # @return [String] a human-readable description of the matcher
+    # @return [String] Human-readable description of the test set
+    #
+    # @example
+    #   set.to_s #=> "fix [<specification list>]"
     #
     # @api public
     def to_s
@@ -147,62 +157,66 @@ module Fix
 
     private
 
-    # Randomizes the order of specifications for better isolation
+    # List of specifications to be tested.
+    # Each specification is an array containing:
+    # - [0] environment: Fix::Dsl instance for test context
+    # - [1] location: String indicating source file and line
+    # - [2] requirement: Test requirement (MUST, SHOULD, or MAY)
+    # - [3] challenges: Array of test challenges to execute
     #
-    # @param specifications [Array] The specifications to randomize
-    # @return [Array] Randomized specifications
-    def randomize_specs(specifications)
-      specifications.shuffle
-    end
+    # @return [Array<Array>] List of specification arrays
+    attr_reader :expected
 
-    # Runs a single specification in a forked process
+    # Executes a single specification in an isolated process.
     #
-    # @param env [Fix::Dsl] The test environment
-    # @param location [String] The source location of the spec
-    # @param requirement [Object] The test requirement
-    # @param challenges [Array] The test challenges
-    # @yield The subject block to test against
-    # @return [Boolean] true if spec passed
+    # @param env [Fix::Dsl] Test environment instance
+    # @param location [String] Source location (file:line)
+    # @param requirement [Object] Test requirement
+    # @param challenges [Array] Test challenges
+    # @yield Block returning the subject to test
+    # @return [Boolean] true if specification passed
     def run_spec(env, location, requirement, challenges, &subject)
       child_pid = ::Process.fork { execute_spec(env, location, requirement, challenges, &subject) }
       _pid, process_status = ::Process.wait2(child_pid)
       process_status.success?
     end
 
-    # Executes a specification in its own process
+    # Executes a specification in the current process.
     #
-    # @param env [Fix::Dsl] The test environment
-    # @param location [String] The source location of the spec
-    # @param requirement [Object] The test requirement
-    # @param challenges [Array] The test challenges
-    # @yield The subject block to test against
+    # @param env [Fix::Dsl] Test environment instance
+    # @param location [String] Source location (file:line)
+    # @param requirement [Object] Test requirement
+    # @param challenges [Array] Test challenges
+    # @yield Block returning the subject to test
+    # @return [void]
     def execute_spec(env, location, requirement, challenges, &subject)
       result = Run.new(env, requirement, *challenges).test(&subject)
       report_result(location, result)
       exit_with_status(result.passed?)
     end
 
-    # Reports the result of a specification
+    # Reports the result of a specification execution.
     #
-    # @param location [String] The source location of the spec
-    # @param result [Object] The test result
+    # @param location [String] Source location (file:line)
+    # @param result [Object] Test execution result
+    # @return [void]
     def report_result(location, result)
       puts "#{location} #{result.colored_string}"
     end
 
-    # Exits the process with a failure status
+    # Exits the process with a failure status.
     #
     # @return [void]
-    # @raise [SystemExit] Always
+    # @raise [SystemExit] Always exits with status 1
     def exit_with_failure
       ::Kernel.exit(false)
     end
 
-    # Exits the process with the given status
+    # Exits the process with the given status.
     #
-    # @param status [Boolean] The exit status
+    # @param status [Boolean] Exit status to use
     # @return [void]
-    # @raise [SystemExit] Always
+    # @raise [SystemExit] Always exits with provided status
     def exit_with_status(status)
       ::Kernel.exit(status)
     end
