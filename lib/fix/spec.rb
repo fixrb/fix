@@ -6,46 +6,46 @@ require_relative "run"
 require_relative "error/missing_subject_block"
 
 module Fix
-  # A Set represents a collection of test specifications that can be executed as a test suite.
+  # A Spec represents a test specification that can be executed as a test suite.
   # It manages the lifecycle of specifications, including:
   # - Building and loading specifications from contexts
   # - Executing specifications in isolation using process forking
   # - Reporting test results
   # - Managing test execution flow and exit status
   #
-  # @example Creating and running a simple test set
-  #   set = Fix::Set.build(:Calculator) do
+  # @example Creating and running a simple specification
+  #   spec = Fix::Spec.build(:Calculator) do
   #     on(:add, 2, 3) do
   #       it MUST eq 5
   #     end
   #   end
-  #   set.test { Calculator.new }
+  #   spec.test { Calculator.new }
   #
-  # @example Loading and running a registered test set
-  #   set = Fix::Set.load(:Calculator)
-  #   set.match? { Calculator.new } #=> true
+  # @example Loading and running a registered specification
+  #   spec = Fix::Spec.load(:Calculator)
+  #   spec.match? { Calculator.new } #=> true
   #
   # @api private
-  class Set
-    # Builds a new Set from a specification block.
+  class Spec
+    # Builds a new Spec from a specification block.
     #
     # This method:
     # 1. Creates a new DSL class for the specification
     # 2. Evaluates the specification block in this context
     # 3. Optionally registers the specification under a name
-    # 4. Returns a Set instance ready for testing
+    # 4. Returns a Spec instance ready for testing
     #
     # @param name [Symbol, nil] Optional name to register the specification under
     # @yield Block containing the specification definition using Fix DSL
-    # @return [Fix::Set] A new specification set ready for testing
+    # @return [Fix::Spec] A new specification ready for testing
     #
     # @example Building a named specification
-    #   Fix::Set.build(:Calculator) do
+    #   Fix::Spec.build(:Calculator) do
     #     on(:add, 2, 3) { it MUST eq 5 }
     #   end
     #
     # @example Building an anonymous specification
-    #   Fix::Set.build(nil) do
+    #   Fix::Spec.build(nil) do
     #     it MUST be_positive
     #   end
     #
@@ -58,29 +58,29 @@ module Fix
       new(*klass.const_get(:CONTEXTS))
     end
 
-    # Loads a previously registered specification set by name.
+    # Loads a previously registered specification by name.
     #
     # @param name [Symbol] The name of the registered specification
-    # @return [Fix::Set] The loaded specification set
+    # @return [Fix::Spec] The loaded specification
     # @raise [NameError] If the specification name is not found
     #
     # @example Loading a registered specification
-    #   Fix::Set.load(:Calculator)  #=> #<Fix::Set:...>
+    #   Fix::Spec.load(:Calculator)  #=> #<Fix::Spec:...>
     #
     # @api private
     def self.load(name)
       new(*Doc.fetch(name))
     end
 
-    # Initializes a new Set with given test contexts.
+    # Initializes a new Spec with given test contexts.
     #
     # The contexts are processed to extract test specifications and
     # randomized to ensure test isolation and catch order dependencies.
     #
     # @param contexts [Array<Fix::Dsl>] List of specification contexts to include
     #
-    # @example Creating a set with multiple contexts
-    #   Fix::Set.new(base_context, admin_context, guest_context)
+    # @example Creating a specification with multiple contexts
+    #   Fix::Spec.new(base_context, admin_context, guest_context)
     def initialize(*contexts)
       @expected = Doc.extract_specifications(*contexts).shuffle
     end
@@ -98,10 +98,10 @@ module Fix
     # @raise [Error::MissingSubjectBlock] If no subject block is provided
     #
     # @example Basic matching
-    #   set.match? { Calculator.new }  #=> true
+    #   spec.match? { Calculator.new }  #=> true
     #
     # @example Conditional testing
-    #   if set.match? { user_input }
+    #   if spec.match? { user_input }
     #     process_valid_input(user_input)
     #   else
     #     handle_invalid_input
@@ -129,10 +129,10 @@ module Fix
     # @raise [Error::MissingSubjectBlock] If no subject block is provided
     #
     # @example Basic test execution
-    #   set.test { Calculator.new }
+    #   spec.test { Calculator.new }
     #
     # @example Testing with dependencies
-    #   set.test {
+    #   spec.test {
     #     calc = Calculator.new
     #     calc.precision = :high
     #     calc
@@ -143,12 +143,12 @@ module Fix
       match?(&subject) || exit_with_failure
     end
 
-    # Returns a string representation of the test set.
+    # Returns a string representation of the specification.
     #
-    # @return [String] Human-readable description of the test set
+    # @return [String] Human-readable description of the specification
     #
     # @example
-    #   set.to_s #=> "fix [<specification list>]"
+    #   spec.to_s #=> "fix [<specification list>]"
     #
     # @api public
     def to_s

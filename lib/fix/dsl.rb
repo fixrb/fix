@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "defi/method"
+require "pathname"
+require "securerandom"
 
 require_relative "matcher"
 require_relative "requirement"
@@ -12,6 +14,16 @@ module Fix
   class Dsl
     extend Matcher
     extend Requirement
+
+    class << self
+      private
+
+      # Generates a unique identifier using SecureRandom
+      # @return [String] A unique hex string
+      def generate_unique_id
+        ::SecureRandom.hex(4)
+      end
+    end
 
     # Sets a user-defined property.
     #
@@ -84,7 +96,7 @@ module Fix
       klass = ::Class.new(self)
       klass.const_get(:CONTEXTS) << klass
 
-      const_name = :"MethodContext_#{block.object_id}"
+      const_name = "C#{generate_unique_id}"
       const_set(const_name, klass)
 
       klass.define_singleton_method(:challenges) do
@@ -121,11 +133,13 @@ module Fix
       raise ::ArgumentError, "Must provide either requirement or block" unless requirement || block
 
       location = caller_locations(1, 1).fetch(0)
-      location = [location.path, location.lineno].join(":")
+      # Convert absolute path to relative path
+      relative_path = relative_path_from_pwd(location.path)
+      location_string = [relative_path, location.lineno].join(":")
 
-      test_method_name = :"test_#{(requirement || block).object_id}"
+      test_method_name = :"m#{generate_unique_id}"
       define_method(test_method_name) do
-        [location, requirement || singleton_class.class_eval(&block), self.class.challenges]
+        [location_string, requirement || singleton_class.class_eval(&block), self.class.challenges]
       end
     end
 
@@ -134,6 +148,16 @@ module Fix
     # @return [Array<Defi::Method>] A list of challenges.
     def self.challenges
       []
+    end
+
+    # Convert an absolute path to a path relative to the current working directory
+    #
+    # @param absolute_path [String] The absolute path to convert
+    # @return [String] The relative path from the current working directory
+    def self.relative_path_from_pwd(absolute_path)
+      ::Pathname.new(absolute_path).relative_path_from(::Pathname.pwd)
+    rescue ArgumentError => _e
+      ::Pathname.pwd
     end
   end
 end

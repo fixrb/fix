@@ -3,7 +3,7 @@
 require_relative "fix/doc"
 require_relative "fix/error/missing_specification_block"
 require_relative "fix/error/specification_not_found"
-require_relative "fix/set"
+require_relative "fix/spec"
 require_relative "kernel"
 
 # The Fix framework namespace provides core functionality for managing and running test specifications.
@@ -20,7 +20,6 @@ require_relative "kernel"
 # - Value Testing: be_within(delta).of(value), match(regex), satisfy { |value| ... }
 # - Exceptions: raise_exception(class)
 # - State Testing: be_true, be_false, be_nil
-# - Predicate Matchers: be_*, have_*  (e.g., be_empty, have_key)
 #
 # @example Creating and running a named specification with various matchers
 #   Fix :Calculator do
@@ -49,14 +48,6 @@ require_relative "kernel"
 #     end
 #   end
 #
-# @example Using predicate matchers
-#   Fix :Collection do
-#     with items: [] do
-#       it MUST be_empty          # Tests empty?
-#       it MUST_NOT have_errors   # Tests has_errors?
-#     end
-#   end
-#
 # @example Complete specification with multiple matchers
 #   Fix :Product do
 #     let(:price) { 42.99 }
@@ -78,19 +69,19 @@ require_relative "kernel"
 #     end
 #   end
 #
-# @see Fix::Set For managing collections of specifications
+# @see Fix::Spec For managing and executing test specifications
 # @see Fix::Doc For storing and retrieving specifications
 # @see Fix::Dsl For the domain-specific language used in specifications
 # @see Fix::Matcher For the complete list of available matchers
 #
 # @api public
 module Fix
-  # Creates a new specification set, optionally registering it under a name.
+  # Creates a new specification, optionally registering it under a name.
   #
   # @param name [Symbol, nil] Optional name to register the specification under.
   #   If nil, creates an anonymous specification for immediate use.
   # @yieldreturn [void] Block containing the specification definition using Fix DSL
-  # @return [Fix::Set] A new specification set ready for testing
+  # @return [Fix::Spec] A new specification ready for testing
   # @raise [Fix::Error::MissingSpecificationBlock] If no block is provided
   #
   # @example Create a named specification
@@ -111,13 +102,13 @@ module Fix
   def self.spec(name = nil, &block)
     raise Error::MissingSpecificationBlock if block.nil?
 
-    Set.build(name, &block)
+    Spec.build(name, &block)
   end
 
   # Retrieves a previously registered specification by name.
   #
   # @param name [Symbol] The constant name of the specification to retrieve
-  # @return [Fix::Set] The loaded specification set ready for testing
+  # @return [Fix::Spec] The loaded specification ready for testing
   # @raise [Fix::Error::SpecificationNotFound] If the named specification doesn't exist
   #
   # @example
@@ -134,14 +125,14 @@ module Fix
   #   Fix[:EmailValidator].test { MyEmailValidator }
   #
   # @see #spec For creating new specifications
-  # @see Fix::Set#test For running tests against a specification
+  # @see Fix::Spec#test For running tests against a specification
   # @see Fix::Matcher For available matchers
   #
   # @api public
   def self.[](name)
     raise Error::SpecificationNotFound, name unless key?(name)
 
-    Set.load(name)
+    Spec.load(name)
   end
 
   # Lists all defined specification names.

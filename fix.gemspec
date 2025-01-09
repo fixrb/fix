@@ -8,10 +8,7 @@ Gem::Specification.new do |spec|
   spec.summary               = "Happy Path to Ruby Testing"
 
   spec.description           = <<~DESC
-    Fix is a modern Ruby testing framework built around a key architectural principle:
-    the complete separation between specifications and tests. It allows you to write
-    pure specification documents that define expected behaviors, and then independently
-    challenge any implementation against these specifications.
+    Fix is a modern Ruby testing framework built around a key architectural principle: the complete separation between specifications and tests. It allows you to write pure specification documents that define expected behaviors, and then independently challenge any implementation against these specifications.
   DESC
 
   spec.homepage              = "https://fixrb.dev/"
@@ -22,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.metadata = {
     "bug_tracker_uri"       => "https://github.com/fixrb/fix/issues",
-    "changelog_uri"         => "https://github.com/fixrb/fix/blob/main/CHANGELOG.md",
     "documentation_uri"     => "https://rubydoc.info/gems/fix",
     "homepage_uri"          => "https://fixrb.dev",
     "source_code_uri"       => "https://github.com/fixrb/fix",
@@ -30,6 +26,6 @@ Gem::Specification.new do |spec|
   }
 
   spec.add_dependency "defi",     "~> 3.0.1"
-  spec.add_dependency "matchi",   "~> 4.1.1"
+  spec.add_dependency "matchi",   "~> 4.2.0"
   spec.add_dependency "spectus",  "~> 5.0.2"
 end
