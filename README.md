@@ -369,19 +369,72 @@ Fix includes a comprehensive set of matchers through its integration with the [M
 </details>
 
 <details>
-<summary><strong>Dynamic Predicate Matchers</strong></summary>
+<summary><strong>Specification Matchers</strong></summary>
 
-- `be_*` - Dynamically matches `object.*?` method
+- `fix(name = nil) { ... }` - Tests against shared specifications
   ```ruby
-  it MUST be_empty         # Calls empty?
-  it MUST be_valid         # Calls valid?
-  it MUST be_frozen        # Calls frozen?
-  ```
-- `have_*` - Dynamically matches `object.has_*?` method
-  ```ruby
-  it MUST have_key(:id)    # Calls has_key?
-  it MUST have_errors      # Calls has_errors?
-  it MUST have_permission  # Calls has_permission?
+  # Define a shared specification for any serializable object
+  Fix :Serializable do
+    it MUST respond_to(:to_json)
+    it MUST respond_to(:to_yaml)
+
+    on :to_json do
+      it MUST be_a_kind_of(String)
+      it MUST match(/^\{.+\}$/)
+    end
+  end
+
+  # Use the shared spec in different contexts
+  Fix :User do
+    it MUST fix(:Serializable)  # User must be serializable
+
+    # Add User-specific requirements
+    it MUST have_key(:email)
+  end
+
+  Fix :Product do
+    it MUST fix(:Serializable)  # Product must also be serializable
+
+    # Add Product-specific requirements
+    it MUST have_key(:price)
+  end
+
+  # Compose with multiple shared specifications
+  Fix :AdminUser do
+    # Reuse both user and permission specifications
+    it MUST fix(:User)
+    it MUST fix(:HasPermissions)
+
+    # Add admin-specific behavior
+    with role: :admin do
+      it MUST be_admin
+    end
+  end
+
+  # Use inline for more specific shared behaviors
+  Fix :ApiResponse do
+    # Shared error response specification
+    let(:error_spec) do
+      fix do
+        it MUST have_key(:error)
+        it MUST have_key(:code)
+
+        on :code do
+          it MUST be_a_kind_of(Integer)
+        end
+      end
+    end
+
+    # Test different response types
+    with status: :error do
+      it MUST satisfy(error_spec)
+    end
+
+    with status: :validation_error do
+      it MUST satisfy(error_spec)
+      it MUST have_key(:fields)  # Additional requirement
+    end
+  end
   ```
 </details>
 

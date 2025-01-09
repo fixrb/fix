@@ -81,10 +81,6 @@ module Fix
     # @example Test state changes to avoid
     #   it SHOULD_NOT change(object, :state)
     #
-    # @example Test predicate conditions to avoid
-    #   it SHOULD_NOT be_empty
-    #   it SHOULD_NOT have_errors
-    #
     # @param matcher [#match?] The matcher that defines the discouraged condition
     # @return [::Spectus::Requirement::Recommended] A discouraged requirement level instance
     #
@@ -102,9 +98,6 @@ module Fix
     #
     # @example Test optional state
     #   it MAY be_frozen
-    #
-    # @example Test optional predicates
-    #   it MAY have_attachments
     #
     # @param matcher [#match?] The matcher that defines the optional condition
     # @return [::Spectus::Requirement::Optional] An optional requirement level instance

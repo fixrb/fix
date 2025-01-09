@@ -15,7 +15,7 @@ module Kernel
   # This rule is disabled because Fix is intentionally capitalized to act as
   # both a namespace and a method name, following Ruby conventions for DSLs.
 
-  # Defines a new test specification or creates an anonymous specification set.
+  # Defines a new test specification or creates an anonymous specification.
   # When a name is provided, the specification is registered globally and can be
   # referenced later using Fix[name]. Anonymous specifications are executed
   # immediately and cannot be referenced later.
@@ -34,7 +34,6 @@ module Kernel
   #                 satisfy { |value| ... }
   # - Exceptions: raise_exception(class)
   # - State Testing: be_true, be_false, be_nil
-  # - Predicate Matchers: be_* (e.g., be_empty), have_* (e.g., have_key)
   #
   # @example Creating a named specification with multiple contexts and matchers
   #   Fix :Calculator do
@@ -74,22 +73,13 @@ module Kernel
   #     end
   #   end
   #
-  # @example Using predicates and custom matchers
-  #   Fix :Collection do
-  #     with items: [] do
-  #       it MUST be_empty
-  #       it MUST_NOT have_errors
-  #       it SHOULD satisfy { |c| c.valid? && c.initialized? }
-  #     end
-  #   end
-  #
   # @param name [Symbol, nil] Optional name to register the specification under
   # @yield Block containing the specification definition using Fix DSL
-  # @return [Fix::Set] A specification set ready for testing
+  # @return [Fix::Spec] A specification ready for testing
   # @raise [Fix::Error::MissingSpecificationBlock] If no block is provided
   # @raise [Fix::Error::InvalidSpecificationName] If name is not a valid constant name
   #
-  # @see Fix::Set For managing collections of specifications
+  # @see Fix::Spec For managing and executing test specifications
   # @see Fix::Dsl For the domain-specific language used in specifications
   # @see Fix::Matcher For the complete list of available matchers
   # @see https://tools.ietf.org/html/rfc2119 For details about requirement levels
