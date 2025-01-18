@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "fix/doc"
 require_relative "fix/error/missing_specification_block"
 require_relative "fix/error/specification_not_found"
 require_relative "fix/spec"
@@ -69,8 +68,7 @@ require_relative "kernel"
 #     end
 #   end
 #
-# @see Fix::Spec For managing and executing test specifications
-# @see Fix::Doc For storing and retrieving specifications
+# @see Fix::Spec For storing and retrieving specifications, and for managing and executing test specifications
 # @see Fix::Dsl For the domain-specific language used in specifications
 # @see Fix::Matcher For the complete list of available matchers
 #
@@ -147,7 +145,7 @@ module Fix
   #
   # @api public
   def self.keys
-    Doc.constants.sort
+    Spec.constants.sort
   end
 
   # Checks if a specification is registered under the given name.

@@ -373,8 +373,8 @@ module Fix
     # @see Fix::Spec The Fix testing framework
     #
     # @api public
-    def fix(name = nil, &block)
-      ::Fix::Matcher::Fix.new(name, &block)
+    def fix(name)
+      ::Fix::Matcher::Fix.new(name)
     end
   end
 end

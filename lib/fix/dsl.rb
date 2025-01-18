@@ -15,16 +15,6 @@ module Fix
     extend Matcher
     extend Requirement
 
-    class << self
-      private
-
-      # Generates a unique identifier using SecureRandom
-      # @return [String] A unique hex string
-      def generate_unique_id
-        ::SecureRandom.hex(4)
-      end
-    end
-
     # Sets a user-defined property.
     #
     # @example
@@ -41,8 +31,13 @@ module Fix
     # @return [Symbol] A private method that defines the block content.
     #
     # @api public
-    def self.let(name, &)
-      private define_method(name, &)
+    def self.let(name, &block)
+      raise ::ArgumentError, "name must be a Symbol" unless name.is_a?(Symbol)
+      raise ::ArgumentError, "block must be provided" unless block_given?
+
+      private define_method(name, &block)
+
+      nil
     end
 
     # Defines an example group with user-defined properties that describes a
@@ -64,12 +59,14 @@ module Fix
     # @return [Class] A new class representing this context
     #
     # @api public
-    def self.with(**kwargs, &)
-      klass = ::Class.new(self)
-      klass.const_get(:CONTEXTS) << klass
-      kwargs.each { |name, value| klass.let(name) { value } }
-      klass.instance_eval(&)
-      klass
+    def self.with(**kwargs, &block)
+      new_class = ::Class.new(self)
+      new_class_name = "C#{::SecureRandom.alphanumeric}"
+      const_set(new_class_name, new_class)
+      kwargs.each { |name, value| new_class.let(name) { value } }
+      new_class.class_eval(&block)
+
+      nil
     end
 
     # Defines an example group that describes a unit to be tested.
@@ -93,19 +90,18 @@ module Fix
     #
     # @api public
     def self.on(method_name, *args, **kwargs, &block)
-      klass = ::Class.new(self)
-      klass.const_get(:CONTEXTS) << klass
+      new_class = ::Class.new(self)
+      name = "C#{::SecureRandom.alphanumeric}"
+      const_set(name, new_class)
 
-      const_name = "C#{generate_unique_id}"
-      const_set(const_name, klass)
-
-      klass.define_singleton_method(:challenges) do
+      new_class.define_singleton_method(:challenges) do
         challenge = ::Defi::Method.new(method_name, *args, **kwargs)
         super() + [challenge]
       end
 
-      klass.instance_eval(&block)
-      klass
+      new_class.class_eval(&block)
+
+      nil
     end
 
     # Defines a concrete spec definition.
@@ -119,35 +115,19 @@ module Fix
     #     it { MUST be 42 }
     #   end
     #
-    # @param requirement [Object, nil] The requirement to test
-    # @yield A block defining the requirement if not provided directly
-    # @yieldreturn [Object] The requirement definition
-    #
-    # @return [Symbol] Name of the generated test method
-    #
-    # @raise [ArgumentError] If neither or both requirement and block are provided
-    #
-    # @api public
-    def self.it(requirement = nil, &block)
-      raise ::ArgumentError, "Must provide either requirement or block, not both" if requirement && block
-      raise ::ArgumentError, "Must provide either requirement or block" unless requirement || block
-
+    def self.it(definition)
       location = caller_locations(1, 1).fetch(0)
-      # Convert absolute path to relative path
-      relative_path = relative_path_from_pwd(location.path)
-      location_string = [relative_path, location.lineno].join(":")
+      location = [relative_path_from_pwd(location.path), location.lineno].join(":")
+      test_method_name = :"m_#{::SecureRandom.hex(4)}"
 
-      test_method_name = :"m#{generate_unique_id}"
       define_method(test_method_name) do
-        [location_string, requirement || singleton_class.class_eval(&block), self.class.challenges]
+        [
+          definition,
+          location
+        ]
       end
-    end
 
-    # The list of challenges to be addressed to the object to be tested.
-    #
-    # @return [Array<Defi::Method>] A list of challenges.
-    def self.challenges
-      []
+      nil
     end
 
     # Convert an absolute path to a path relative to the current working directory

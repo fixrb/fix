@@ -55,10 +55,8 @@ module Fix
       #
       # @api public
       #
-      # @param name [Symbol, nil] Name of a registered Fix specification
-      # @param block [Proc, nil] Block containing an anonymous specification
+      # @param name [Symbol] Name of a registered Fix specification
       #
-      # @raise [ArgumentError] If neither or both name and block are provided
       # @raise [KeyError] If the named specification doesn't exist in registry
       #
       # @example With named specification
@@ -66,30 +64,11 @@ module Fix
       #   matcher = Fix.new(:Validatable)
       #   matcher.match? { User.new }
       #
-      # @example With anonymous specification
-      #   # Test against inline requirements
-      #   matcher = Fix.new {
-      #     it MUST be_positive
-      #     it MUST be_even
-      #   }
-      #   matcher.match? { 42 }
-      #
       # @example Failed initialization
-      #   # Raises ArgumentError
-      #   Fix.new(:Name) { it MUST be_true } # Can't provide both
-      #   Fix.new # Can't provide neither
-      def initialize(name = nil, &block)
-        raise ::ArgumentError, "a name or a block must be provided" if name.nil? && block.nil?
-        raise ::ArgumentError, "a name or a block must be provided" if !name.nil? && !block.nil?
-
-        @expected = if name.nil?
-                      puts "just block"
-                      ::Fix::Spec.build(nil, &block)
-                    else
-                      puts "just name #{name.inspect}"
-                      # ::Fix::Spec.load(name)
-                      Fix(name)
-                    end
+      #   # Raises KeyError
+      #   Fix.new(:NonExistentSpec) # Specification doesn't exist
+      def initialize(name)
+        @expected = ::Fix::Spec.load(name)
       end
 
       # Verifies if an object satisfies the Fix specification.
@@ -126,10 +105,10 @@ module Fix
       #   matcher.match? { admin }    # Tests all composed requirements
       #
       # @raise [ArgumentError] If no block is provided
-      def match?
+      def match?(&block)
         raise ::ArgumentError, "a block must be provided" unless block_given?
 
-        @expected.match?(yield)
+        @expected.match?(&block)
       end
 
       # Provides a string representation of the matcher.

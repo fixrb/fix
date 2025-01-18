@@ -43,6 +43,9 @@ Metrics/BlockLength:
     - examples/**/*
     - fix.gemspec
 
+Metrics/MethodLength:
+  Max: 13
+
 Metrics/ParameterLists:
   Max: 6
 
