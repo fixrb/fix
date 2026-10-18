@@ -486,7 +486,7 @@ Ready to write better specifications? Visit our [GitHub repository](https://gith
 
 ## Community & Resources
 
-- [Blog](https://fixrb.dev/) - Related articles
+- [Blog](https://fixrb.dev/blog/) - Related articles
 - [Bluesky](https://bsky.app/profile/fixrb.dev) - Latest updates and discussions
 - [Documentation](https://www.rubydoc.info/gems/fix) - Comprehensive guides and API reference
 - [Source Code](https://github.com/fixrb/fix) - Contribute and report issues
