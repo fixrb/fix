@@ -1,170 +1,52 @@
 # frozen_string_literal: true
 
-require_relative "fix/doc"
-require_relative "fix/error/missing_specification_block"
-require_relative "fix/error/specification_not_found"
 require_relative "fix/spec"
 require_relative "kernel"
 
-# The Fix framework namespace provides core functionality for managing and running test specifications.
-# Fix offers a unique approach to testing by clearly separating specifications from their implementations.
+# Specifications with the MUST, SHOULD and MAY of RFC 2119. A specification
+# says what a value must, should or may do, in a document free of logic;
+# any subject is then tested against it, each context in a process of its
+# own.
 #
-# Fix supports two primary modes of operation:
-# 1. Named specifications that can be stored and referenced later
-# 2. Anonymous specifications for immediate one-time testing
-#
-# Available matchers through the Matchi library include:
-# - Basic Comparison: eq, eql, be, equal
-# - Type Checking: be_an_instance_of, be_a_kind_of
-# - State & Changes: change(object, method).by(n), by_at_least(n), by_at_most(n), from(old).to(new), to(new)
-# - Value Testing: be_within(delta).of(value), match(regex), satisfy { |value| ... }
-# - Exceptions: raise_exception(class)
-# - State Testing: be_true, be_false, be_nil
-#
-# @example Creating and running a named specification with various matchers
-#   Fix :Calculator do
-#     on(:add, 0.1, 0.2) do
-#       it SHOULD be 0.3                     # Technically true but fails due to floating point precision
-#       it MUST be_an_instance_of(Float)     # Type checking
-#       it MUST be_within(0.0001).of(0.3)    # Proper floating point comparison
-#     end
-#
-#     on(:divide, 1, 0) do
-#       it MUST raise_exception ZeroDivisionError  # Exception testing
-#     end
+# @example
+#   Fix :Duck do
+#     on(:swims) { it MUST eq "Swoosh..." }
+#     on(:sings) { it MAY eq "♪... ♫..." }
 #   end
 #
-#   Fix[:Calculator].test { Calculator.new }
-#
-# @example Using state change matchers
-#   Fix :UserAccount do
-#     on(:deposit, 100) do
-#       it MUST change(account, :balance).by(100)
-#       it SHOULD change(account, :updated_at)
-#     end
-#
-#     on(:update_status, :premium) do
-#       it MUST change(account, :status).from(:basic).to(:premium)
-#     end
-#   end
-#
-# @example Complete specification with multiple matchers
-#   Fix :Product do
-#     let(:price) { 42.99 }
-#
-#     it MUST be_an_instance_of Product     # Type checking
-#     it MUST_NOT be_nil                    # Nil checking
-#
-#     on(:price) do
-#       it MUST be_within(0.01).of(42.99)   # Floating point comparison
-#     end
-#
-#     with category: "electronics" do
-#       it MUST satisfy { |p| p.valid? }    # Custom validation
-#
-#       on(:save) do
-#         it MUST change(product, :updated_at)  # State change
-#         it SHOULD_NOT raise_exception         # Exception checking
-#       end
-#     end
-#   end
-#
-# @see Fix::Spec For managing and executing test specifications
-# @see Fix::Doc For storing and retrieving specifications
-# @see Fix::Dsl For the domain-specific language used in specifications
-# @see Fix::Matcher For the complete list of available matchers
-#
-# @api public
+#   Fix[:Duck].test { Duck.new } # => true
 module Fix
-  # Creates a new specification, optionally registering it under a name.
+  @specs = {}.freeze
+
+  # Builds a specification, and registers it under its name once it is
+  # built: a block that raises registers nothing.
   #
-  # @param name [Symbol, nil] Optional name to register the specification under.
-  #   If nil, creates an anonymous specification for immediate use.
-  # @yieldreturn [void] Block containing the specification definition using Fix DSL
-  # @return [Fix::Spec] A new specification ready for testing
-  # @raise [Fix::Error::MissingSpecificationBlock] If no block is provided
-  #
-  # @example Create a named specification
-  #   Fix :StringValidator do
-  #     on(:validate, "hello@example.com") do
-  #       it MUST be_valid_email
-  #       it MUST satisfy { |result| result.errors.empty? }
-  #     end
-  #   end
-  #
-  # @example Create an anonymous specification
-  #   Fix do
-  #     it MUST be_positive
-  #     it MUST be_within(0.1).of(42.0)
-  #   end.test { 42 }
-  #
-  # @api public
+  # @param name [Symbol, nil] the name, or nil for an anonymous specification
+  # @yield the document, written with {Fix::Dsl}
+  # @return [Fix::Spec]
+  # @raise [ArgumentError] without a block, with a name that is not a Symbol
+  #   or that is already registered, or for a mistake in a word of the
+  #   document
+  # @raise [NameError] for a let named in an expectation
+  # @raise [KeyError] for a `fix(:Name)` not registered yet
   def self.spec(name = nil, &block)
-    raise Error::MissingSpecificationBlock if block.nil?
+    raise ::ArgumentError, "a block must be given" unless block
+    raise ::ArgumentError, "the name must be a Symbol" unless name.nil? || ::Symbol === name
 
-    Spec.build(name, &block)
+    spec = Spec.new(name:, nodes: Dsl.build(&block))
+    return spec if name.nil?
+    raise ::ArgumentError, "#{name.inspect} is already a specification" if @specs.key?(name)
+
+    @specs = @specs.merge(name => spec).freeze
+    spec
   end
 
-  # Retrieves a previously registered specification by name.
-  #
-  # @param name [Symbol] The constant name of the specification to retrieve
-  # @return [Fix::Spec] The loaded specification ready for testing
-  # @raise [Fix::Error::SpecificationNotFound] If the named specification doesn't exist
-  #
-  # @example
-  #   # Define a specification with multiple matchers
-  #   Fix :EmailValidator do
-  #     on(:validate, "test@example.com") do
-  #       it MUST be_valid
-  #       it MUST_NOT raise_exception
-  #       it SHOULD satisfy { |result| result.score > 0.8 }
-  #     end
-  #   end
-  #
-  #   # Later, retrieve and use it
-  #   Fix[:EmailValidator].test { MyEmailValidator }
-  #
-  # @see #spec For creating new specifications
-  # @see Fix::Spec#test For running tests against a specification
-  # @see Fix::Matcher For available matchers
-  #
-  # @api public
+  # @param name [Symbol] the name of a registered specification
+  # @return [Fix::Spec]
+  # @raise [KeyError] when no specification has that name
   def self.[](name)
-    raise Error::SpecificationNotFound, name unless key?(name)
-
-    Spec.load(name)
-  end
-
-  # Lists all defined specification names.
-  #
-  # @return [Array<Symbol>] Sorted array of registered specification names
-  #
-  # @example
-  #   Fix :First do; end
-  #   Fix :Second do; end
-  #
-  #   Fix.keys #=> [:First, :Second]
-  #
-  # @api public
-  def self.keys
-    Doc.constants.sort
-  end
-
-  # Checks if a specification is registered under the given name.
-  #
-  # @param name [Symbol] The name to check for
-  # @return [Boolean] true if a specification exists with this name, false otherwise
-  #
-  # @example
-  #   Fix :Example do
-  #     it MUST be_an_instance_of(Example)
-  #   end
-  #
-  #   Fix.key?(:Example)  #=> true
-  #   Fix.key?(:Missing)  #=> false
-  #
-  # @api public
-  def self.key?(name)
-    keys.include?(name)
+    @specs.fetch(name) do
+      raise ::KeyError.new("no specification named #{name.inspect}", receiver: @specs, key: name)
+    end
   end
 end

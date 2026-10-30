@@ -4,8 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "bundler"
 gem "rake"
+gem "rubocop"
 gem "rubocop-md"
 gem "rubocop-performance"
 gem "rubocop-rake"

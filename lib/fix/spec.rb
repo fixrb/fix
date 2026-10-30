@@ -1,224 +1,167 @@
 # frozen_string_literal: true
 
-require_relative "doc"
+require "aw"
+require "defi"
+
 require_relative "dsl"
-require_relative "run"
-require_relative "error/missing_subject_block"
+require_relative "result"
 
 module Fix
-  # A Spec represents a test specification that can be executed as a test suite.
-  # It manages the lifecycle of specifications, including:
-  # - Building and loading specifications from contexts
-  # - Executing specifications in isolation using process forking
-  # - Reporting test results
-  # - Managing test execution flow and exit status
+  # The lib directories of fix and of the gems it runs, each found by a
+  # method or a module its root file defines, not by the name of a file,
+  # which another file could bear: their frames are left out of a backtrace
+  # printed by {Spec#test}.
+  LIBRARIES = ([
+    ::Aw.method(:fork!).source_location,
+    ::Object.const_source_location("Defi"),
+    ::Object.const_source_location("Matchi"),
+    ::Spectus.method(:must).source_location
+  ].map { |location| "#{::File.dirname(location.fetch(0))}/" } << "#{::File.expand_path("..", __dir__)}/").freeze
+  private_constant :LIBRARIES
+
+  # A specification: its name and its contexts, built once by {Fix.spec} and
+  # never changed. Tested against a subject with {#run} or {#test}, it is
+  # also a matcher: {#match?} tests a value, as `it MUST fix(:Name)` does.
   #
-  # @example Creating and running a simple specification
-  #   spec = Fix::Spec.build(:Calculator) do
-  #     on(:add, 2, 3) do
-  #       it MUST eq 5
-  #     end
-  #   end
-  #   spec.test { Calculator.new }
-  #
-  # @example Loading and running a registered specification
-  #   spec = Fix::Spec.load(:Calculator)
-  #   spec.match? { Calculator.new } #=> true
-  #
-  # @api private
-  class Spec
-    # Builds a new Spec from a specification block.
+  # @!attribute [r] name
+  #   @return [Symbol, nil] the name, nil for an anonymous specification
+  # @!attribute [r] nodes
+  #   @return [Array<Fix::Node>] the contexts, each before its children
+  #   @api private
+  Spec = ::Data.define(:name, :nodes) do
+    # Tests a subject against every expectation, each context in a child
+    # process, and gives the results. The block builds the subject: it runs
+    # once per expectation, where the lets live.
     #
-    # This method:
-    # 1. Creates a new DSL class for the specification
-    # 2. Evaluates the specification block in this context
-    # 3. Optionally registers the specification under a name
-    # 4. Returns a Spec instance ready for testing
-    #
-    # @param name [Symbol, nil] Optional name to register the specification under
-    # @yield Block containing the specification definition using Fix DSL
-    # @return [Fix::Spec] A new specification ready for testing
-    #
-    # @example Building a named specification
-    #   Fix::Spec.build(:Calculator) do
-    #     on(:add, 2, 3) { it MUST eq 5 }
-    #   end
-    #
-    # @example Building an anonymous specification
-    #   Fix::Spec.build(nil) do
-    #     it MUST be_positive
-    #   end
-    #
-    # @api private
-    def self.build(name, &block)
-      klass = ::Class.new(Dsl)
-      klass.const_set(:CONTEXTS, [klass])
-      klass.instance_eval(&block)
-      Doc.const_set(name, klass) unless name.nil?
-      new(*klass.const_get(:CONTEXTS))
+    # @param fork [Boolean] whether each context runs in a child process;
+    #   `false` for a debugger only
+    # @yieldreturn [Object] the subject
+    # @return [Array<Fix::Result>] in the order of the contexts, then of
+    #   their expectations
+    # @raise [ArgumentError] without a block
+    # @raise [NotImplementedError] when this Ruby cannot fork
+    # @raise [Aw::ChildError] when a child died or delivered no result
+    # @raise [TypeError] when the `to_s` of a matcher is not a String; what a
+    #   child raised outside an expectation is raised here again
+    def run(fork: true, &subject)
+      raise ::ArgumentError, "a block must be given" unless subject
+
+      nodes.flat_map { |node| results(node, fork, subject) }
     end
 
-    # Loads a previously registered specification by name.
+    # Like {#run}, writing each result on the standard output as its
+    # context ends, one line each, with the backtrace of an error below.
     #
-    # @param name [Symbol] The name of the registered specification
-    # @return [Fix::Spec] The loaded specification
-    # @raise [NameError] If the specification name is not found
-    #
-    # @example Loading a registered specification
-    #   Fix::Spec.load(:Calculator)  #=> #<Fix::Spec:...>
-    #
-    # @api private
-    def self.load(name)
-      new(*Doc.fetch(name))
+    # @param fork [Boolean] as for {#run}
+    # @yieldreturn [Object] the subject
+    # @return [Boolean] whether every expectation is met
+    # @raise (see #run)
+    def test(fork: true, &subject) # rubocop:disable Naming/PredicateMethod
+      raise ::ArgumentError, "a block must be given" unless subject
+
+      nodes.map do |node|
+        results(node, fork, subject).each { |result| $stdout.puts(lines(result)) }.all?(&:passed?)
+      end.all?
     end
 
-    # Initializes a new Spec with given test contexts.
+    # Tests a value, as a matcher does: the block is called once, and its
+    # value is the subject of every expectation.
     #
-    # The contexts are processed to extract test specifications and
-    # randomized to ensure test isolation and catch order dependencies.
-    #
-    # @param contexts [Array<Fix::Dsl>] List of specification contexts to include
-    #
-    # @example Creating a specification with multiple contexts
-    #   Fix::Spec.new(base_context, admin_context, guest_context)
-    def initialize(*contexts)
-      @expected = Doc.extract_specifications(*contexts).shuffle
+    # @yieldreturn [Object] the value
+    # @return [Boolean] whether every expectation is met
+    # @raise (see #run)
+    def match?
+      raise ::ArgumentError, "a block must be given" unless block_given?
+
+      value = yield
+      run { value }.all?(&:passed?)
     end
 
-    # Verifies if a subject matches all specifications without exiting.
-    #
-    # This method is useful for:
-    # - Conditional testing where exit on failure is not desired
-    # - Integration into larger test suites
-    # - Programmatic test result handling
-    #
-    # @yield Block that returns the subject to test
-    # @yieldreturn [Object] The subject to test against specifications
-    # @return [Boolean] true if all tests pass, false otherwise
-    # @raise [Error::MissingSubjectBlock] If no subject block is provided
-    #
-    # @example Basic matching
-    #   spec.match? { Calculator.new }  #=> true
-    #
-    # @example Conditional testing
-    #   if spec.match? { user_input }
-    #     process_valid_input(user_input)
-    #   else
-    #     handle_invalid_input
-    #   end
-    #
-    # @api public
-    def match?(&subject)
-      raise Error::MissingSubjectBlock unless subject
-
-      expected.all? { |spec| run_spec(*spec, &subject) }
-    end
-
-    # Executes the complete test suite against a subject.
-    #
-    # This method provides a comprehensive test run that:
-    # - Executes all specifications in random order
-    # - Runs each test in isolation via process forking
-    # - Reports results for each specification
-    # - Exits with appropriate status code
-    #
-    # @yield Block that returns the subject to test
-    # @yieldreturn [Object] The subject to test against specifications
-    # @return [Boolean] true if all tests pass
-    # @raise [SystemExit] Exits with status 1 if any test fails
-    # @raise [Error::MissingSubjectBlock] If no subject block is provided
-    #
-    # @example Basic test execution
-    #   spec.test { Calculator.new }
-    #
-    # @example Testing with dependencies
-    #   spec.test {
-    #     calc = Calculator.new
-    #     calc.precision = :high
-    #     calc
-    #   }
-    #
-    # @api public
-    def test(&subject)
-      match?(&subject) || exit_with_failure
-    end
-
-    # Returns a string representation of the specification.
-    #
-    # @return [String] Human-readable description of the specification
-    #
-    # @example
-    #   spec.to_s #=> "fix [<specification list>]"
-    #
-    # @api public
+    # @return [String] `fix NAME`, or `fix an anonymous specification`
     def to_s
-      "fix #{expected.inspect}"
+      "fix #{name || "an anonymous specification"}"
     end
+
+    alias_method :inspect, :to_s
 
     private
 
-    # List of specifications to be tested.
-    # Each specification is an array containing:
-    # - [0] environment: Fix::Dsl instance for test context
-    # - [1] location: String indicating source file and line
-    # - [2] requirement: Test requirement (MUST, SHOULD, or MAY)
-    # - [3] challenges: Array of test challenges to execute
-    #
-    # @return [Array<Array>] List of specification arrays
-    attr_reader :expected
+    # The results of a context, from a child process or not.
+    def results(node, fork, subject)
+      return [] if node.expectations.empty?
 
-    # Executes a single specification in an isolated process.
-    #
-    # @param env [Fix::Dsl] Test environment instance
-    # @param location [String] Source location (file:line)
-    # @param requirement [Object] Test requirement
-    # @param challenges [Array] Test challenges
-    # @yield Block returning the subject to test
-    # @return [Boolean] true if specification passed
-    def run_spec(env, location, requirement, challenges, &subject)
-      child_pid = ::Process.fork { execute_spec(env, location, requirement, challenges, &subject) }
-      _pid, process_status = ::Process.wait2(child_pid)
-      process_status.success?
+      work = -> { examine(node, subject) }
+      spectus = fork ? ::Aw.fork!(&work) : work.call
+      node.expectations.zip(spectus).map do |expectation, result|
+        Result.new(location: expectation.location, chain: node.chain, result:)
+      end
     end
 
-    # Executes a specification in the current process.
-    #
-    # @param env [Fix::Dsl] Test environment instance
-    # @param location [String] Source location (file:line)
-    # @param requirement [Object] Test requirement
-    # @param challenges [Array] Test challenges
-    # @yield Block returning the subject to test
-    # @return [void]
-    def execute_spec(env, location, requirement, challenges, &subject)
-      result = Run.new(env, requirement, *challenges).test(&subject)
-      report_result(location, result)
-      exit_with_status(result.passed?)
+    # The results of the expectations of a context, in the process that works
+    # on them. A process the subject forked and let run on, instead of ending
+    # it with exit!, is not that one: it leaves here without a word.
+    def examine(node, subject)
+      pid = ::Process.pid
+      node.expectations.map do |expectation|
+        result = judge(node, expectation, subject)
+        ::Process.exit! unless ::Process.pid == pid
+
+        result
+      end
     end
 
-    # Reports the result of a specification execution.
-    #
-    # @param location [String] Source location (file:line)
-    # @param result [Object] Test execution result
-    # @return [void]
-    def report_result(location, result)
-      puts "#{location} #{result.colored_string}"
+    # One expectation, in a new environment: the subject is built, the
+    # chain is sent, and the requirement judges what came out. A method of
+    # the chain missing on its receiver makes a MAY an info, as a method
+    # missing on the actual value does for Spectus, when the error that
+    # came out is a NoMethodError by its class name: an exception of a
+    # subclass, which Ruby does not raise for a missing method, stays an
+    # error.
+    def judge(node, expectation, subject)
+      environment = Environment.new(node.lets)
+      missing = false
+      result = expectation.requirement.call do
+        value, missing = actual(node, environment, subject)
+        value.call
+      end
+      omission = missing && expectation.requirement.level.equal?(:MAY) && result.error_class == "NoMethodError"
+      omission ? result.with(outcome: :info) : result
     end
 
-    # Exits the process with a failure status.
-    #
-    # @return [void]
-    # @raise [SystemExit] Always exits with status 1
-    def exit_with_failure
-      ::Kernel.exit(false)
+    # The subject through the chain: a value, and whether the chain stopped
+    # on a method missing on its receiver.
+    def actual(node, environment, subject)
+      object = environment.instance_exec(&subject)
+      node.challenges.each do |challenge|
+        value = challenge.to(object)
+        return [value, missing?(value.object, object, challenge)] if value.raised?
+
+        object = value.object
+      end
+      [::Defi::Value.new(object, false), false]
     end
 
-    # Exits the process with the given status.
-    #
-    # @param status [Boolean] Exit status to use
-    # @return [void]
-    # @raise [SystemExit] Always exits with provided status
-    def exit_with_status(status)
-      ::Kernel.exit(status)
+    # Whether an exception is a NoMethodError for the method of the
+    # challenge on the very object it was sent to, read as NameError and
+    # BasicObject do, whatever the objects say. A NoMethodError built by
+    # hand without a receiver raises ArgumentError when asked for it: it
+    # names no object, so the method is not missing on one.
+    def missing?(exception, object, challenge)
+      return false unless ::NoMethodError === exception
+
+      receiver = ::NameError.instance_method(:receiver).bind_call(exception)
+      ::BasicObject.instance_method(:equal?).bind_call(receiver, object) &&
+        challenge.name.equal?(::NameError.instance_method(:name).bind_call(exception))
+    rescue ::ArgumentError
+      false
+    end
+
+    # The line of a result, then the frames of an error that are not ours,
+    # each on one line too.
+    def lines(result)
+      frames = result.outcome == :error ? (result.result.backtrace || []) : []
+      frames = frames.reject { |frame| frame.start_with?(*LIBRARIES) }
+      [result.to_s] + frames.map { |frame| "  #{frame.gsub(/\R/) { "\\n" }}" }
     end
   end
 end

@@ -1,163 +1,174 @@
 # frozen_string_literal: true
 
-require "defi/method"
-require "pathname"
-require "securerandom"
+require "defi"
+require "spectus"
 
+require_relative "environment"
+require_relative "level"
 require_relative "matcher"
-require_relative "requirement"
+require_relative "node"
 
 module Fix
-  # Abstract class for handling the domain-specific language.
+  # The language of a specification. The block of `Fix :Name do … end` runs
+  # on an instance of this class, thrown away afterwards, whose four words
+  # build the contexts of the specification: `let`, `with`, `on` and `it`.
+  # The matchers ({Fix::Matcher}) and the levels ({Fix::Level}) are words of
+  # it too.
   #
-  # @api private
+  # A gem may add a word that composes these four: fix-its adds `its`.
   class Dsl
-    extend Matcher
-    extend Requirement
+    include Level
+    include Matcher
 
-    class << self
-      private
+    # The four words.
+    WORDS = %i[let with on it].freeze
+    private_constant :WORDS
 
-      # Generates a unique identifier using SecureRandom
-      # @return [String] A unique hex string
-      def generate_unique_id
-        ::SecureRandom.hex(4)
-      end
+    # @yield the document of a specification
+    # @return [Array<Fix::Node>] its contexts, each before its children
+    def self.build(&)
+      dsl = new({}.freeze, [].freeze, "")
+      dsl.instance_exec(&)
+      dsl.nodes.freeze
     end
 
-    # Sets a user-defined property.
-    #
-    # @example
-    #   require "fix"
-    #
-    #   Fix do
-    #     let(:name) { "Bob" }
-    #   end
-    #
-    # @param name [String, Symbol] The name of the property.
-    # @yield The block that defines the property's value
-    # @yieldreturn [Object] The value to be returned by the property
-    #
-    # @return [Symbol] A private method that defines the block content.
-    #
-    # @api public
-    def self.let(name, &)
-      private define_method(name, &)
+    # @param lets [Hash{Symbol => Proc}] the lets inherited, frozen
+    # @param challenges [Array<Defi::Challenge>] the chain inherited, frozen
+    # @param chain [String] its text
+    # @param own [Array<Symbol>] the lets this context declares already,
+    #   those a `with` gave it
+    # @api private
+    def initialize(lets, challenges, chain, own = [])
+      @lets = lets
+      @challenges = challenges
+      @chain = chain
+      @own = own
+      @expectations = []
+      @children = []
     end
 
-    # Defines an example group with user-defined properties that describes a
-    # unit to be tested.
-    #
-    # @example
-    #   require "fix"
-    #
-    #   Fix do
-    #     with password: "secret" do
-    #       it MUST be true
-    #     end
-    #   end
-    #
-    # @param kwargs [Hash] The list of properties to define in this context
-    # @yield The block that defines the specs for this context
-    # @yieldreturn [void]
-    #
-    # @return [Class] A new class representing this context
-    #
-    # @api public
-    def self.with(**kwargs, &)
-      klass = ::Class.new(self)
-      klass.const_get(:CONTEXTS) << klass
-      kwargs.each { |name, value| klass.let(name) { value } }
-      klass.instance_eval(&)
-      klass
+    # @return [Array<Fix::Node>] this context, then its children, as they
+    #   stand
+    def nodes
+      node = Node.new(lets: @lets, challenges: @challenges, chain: @chain, expectations: @expectations.dup.freeze)
+      [node] + @children
     end
 
-    # Defines an example group that describes a unit to be tested.
+    # A parameter of the subject: its block runs where the subject is built,
+    # once per expectation, and may call other lets. A let is not visible
+    # from an expectation.
     #
-    # @example
-    #   require "fix"
-    #
-    #   Fix do
-    #     on :+, 2 do
-    #       it MUST be 42
-    #     end
-    #   end
-    #
-    # @param method_name [String, Symbol] The method to send to the subject
-    # @param args [Array] Positional arguments to pass to the method
-    # @param kwargs [Hash] Keyword arguments to pass to the method
-    # @yield The block containing the specifications for this context
-    # @yieldreturn [void]
-    #
-    # @return [Class] A new class representing this context
-    #
-    # @api public
-    def self.on(method_name, *args, **kwargs, &block)
-      klass = ::Class.new(self)
-      klass.const_get(:CONTEXTS) << klass
+    # @param name [Symbol] its name, which is not a method of the environment
+    #   nor a word of the language, and not a let of this context already
+    # @yieldreturn [Object] its value
+    # @return [nil]
+    # @raise [ArgumentError] otherwise, or without a block
+    def let(name, &block)
+      raise ::ArgumentError, "a block must be given" unless block
 
-      const_name = "C#{generate_unique_id}"
-      const_set(const_name, klass)
+      free!(name)
+      raise ::ArgumentError, "#{name} is already a let of this context" if @own.include?(name)
 
-      klass.define_singleton_method(:challenges) do
-        challenge = ::Defi::Method.new(method_name, *args, **kwargs)
-        super() + [challenge]
-      end
-
-      klass.instance_eval(&block)
-      klass
+      @own << name
+      @lets = @lets.merge(name => block).freeze
+      nil
     end
 
-    # Defines a concrete spec definition.
+    # A context where lets take the values given: the objects themselves,
+    # shared by the expectations of the context, which declares these lets.
     #
-    # @example
-    #   require "fix"
-    #
-    #   Fix { it MUST be 42 }
-    #
-    #   Fix do
-    #     it { MUST be 42 }
-    #   end
-    #
-    # @param requirement [Object, nil] The requirement to test
-    # @yield A block defining the requirement if not provided directly
-    # @yieldreturn [Object] The requirement definition
-    #
-    # @return [Symbol] Name of the generated test method
-    #
-    # @raise [ArgumentError] If neither or both requirement and block are provided
-    #
-    # @api public
-    def self.it(requirement = nil, &block)
-      raise ::ArgumentError, "Must provide either requirement or block, not both" if requirement && block
-      raise ::ArgumentError, "Must provide either requirement or block" unless requirement || block
+    # @param values [Hash{Symbol => Object}] the lets, by name
+    # @yield the context
+    # @return [nil]
+    # @raise [ArgumentError] for a name a let could not take, without a value
+    #   or without a block
+    def with(**values, &block)
+      raise ::ArgumentError, "a block must be given" unless block
+      raise ::ArgumentError, "a with gives a value to a let: with(name: 1)" if values.empty?
 
-      location = caller_locations(1, 1).fetch(0)
-      # Convert absolute path to relative path
-      relative_path = relative_path_from_pwd(location.path)
-      location_string = [relative_path, location.lineno].join(":")
-
-      test_method_name = :"m#{generate_unique_id}"
-      define_method(test_method_name) do
-        [location_string, requirement || singleton_class.class_eval(&block), self.class.challenges]
-      end
+      values.each_key { |name| free!(name) }
+      lets = @lets.merge(values.transform_values { |value| -> { value } }).freeze
+      context(lets, @challenges, @chain, values.keys, &block)
     end
 
-    # The list of challenges to be addressed to the object to be tested.
+    # A context about what a method of the subject returns, or raises: the
+    # method is sent, with its arguments, to the value of the context above.
+    # No block can be given to the method: the block is the context.
     #
-    # @return [Array<Defi::Method>] A list of challenges.
-    def self.challenges
-      []
+    # @param name [Symbol] the method, followed by its positional and keyword
+    #   arguments, as they would be written after it
+    # @yield the context
+    # @return [nil]
+    # @raise [ArgumentError] when the name is not a Symbol, or without a block
+    def on(name, *, **, &block)
+      raise ::ArgumentError, "a block must be given" unless block
+
+      challenge = ::Defi::Challenge.new(name, *, **)
+      context(@lets, (@challenges + [challenge]).freeze, text("#{@chain}#{challenge}"), &block)
     end
 
-    # Convert an absolute path to a path relative to the current working directory
+    # An expectation: a requirement, built here and now with a level and a
+    # matcher, at the line of the call.
     #
-    # @param absolute_path [String] The absolute path to convert
-    # @return [String] The relative path from the current working directory
-    def self.relative_path_from_pwd(absolute_path)
-      ::Pathname.new(absolute_path).relative_path_from(::Pathname.pwd)
-    rescue ArgumentError => _e
-      ::Pathname.pwd
+    # @param requirement [Spectus::Requirement] `MUST eq(1)`, say
+    # @param location [Thread::Backtrace::Location, nil] where the expectation
+    #   is written, for a word that composes `it`; the caller of `it` otherwise
+    # @return [nil]
+    # @raise [ArgumentError] without a requirement, or with a block
+    # @raise [TypeError] when the `to_s` of the matcher is not a String
+    def it(requirement = nil, location: nil, &block)
+      raise ::ArgumentError, "it takes a requirement, not a block: it MUST eq(1)" if block
+      raise ::ArgumentError, "it takes a requirement: it MUST eq(1)" unless ::Spectus::Requirement === requirement
+      raise ::TypeError, "the to_s of the matcher must be a String" unless ::String === requirement.matcher.to_s
+
+      location ||= caller_locations(1, 1).fetch(0)
+      @expectations << Expectation.new(location: locate(location), requirement:)
+      nil
+    end
+
+    private
+
+    # A let named in an expectation is a mistake with a remedy.
+    def method_missing(name, ...)
+      return super unless @lets.key?(name)
+
+      raise ::NameError.new("#{name} is a let, visible in the subject block and in other lets only", name)
+    end
+
+    def respond_to_missing?(_name, _include_private = false)
+      false
+    end
+
+    # A child context, whose nodes follow this one's.
+    def context(lets, challenges, chain, own = [], &)
+      child = Dsl.new(lets, challenges, chain, own)
+      child.instance_exec(&)
+      @children.concat(child.nodes)
+      nil
+    end
+
+    # A name a let can take: a Symbol that is not a method of the environment,
+    # public or private, nor a public word of the language, so that nothing
+    # is redefined in silence.
+    def free!(name)
+      raise ::ArgumentError, "the name of a let must be a Symbol" unless ::Symbol === name
+      raise ::ArgumentError, "#{name} is a word of the specification language" if WORDS.include?(name)
+
+      owner = [Environment, Dsl].find { |klass| klass.method_defined?(name) }
+      owner ||= Environment if Environment.private_method_defined?(name)
+      raise ::ArgumentError, "#{name} is already a method of #{owner.instance_method(name).owner}" if owner
+    end
+
+    # `file:line`, the file relative to the current directory when it is
+    # under it.
+    def locate(location)
+      path = ::File.absolute_path(location.path).delete_prefix(::File.join(::Dir.pwd, ""))
+      text("#{path}:#{location.lineno}")
+    end
+
+    # A text of a result, valid UTF-8 and frozen, as those of Spectus.
+    def text(string)
+      string.encode(::Encoding::UTF_8, invalid: :replace, undef: :replace).freeze
     end
   end
 end
