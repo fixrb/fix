@@ -1,31 +1,25 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name                  = "fix"
-  spec.version               = File.read("VERSION.semver").chomp
-  spec.author                = "Cyril Kato"
-  spec.email                 = "contact@cyril.email"
-  spec.summary               = "Happy Path to Ruby Testing"
+  spec.name                   = "fix"
+  spec.version                = File.read(File.join(__dir__, "VERSION.semver")).chomp
+  spec.author                 = "Cyril Kato"
+  spec.email                  = "contact@cyril.email"
+  spec.summary                = "Specifications with the MUST, SHOULD and MAY of RFC 2119, tested against a subject"
+  spec.description            = "A specification says what a value MUST, SHOULD or MAY do, in a document free of " \
+                                "logic; any subject is then tested against it, each context in a process of its own."
+  spec.homepage               = "https://fixrb.dev/gems/fix/"
+  spec.license                = "MIT"
+  spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*.rb", base: __dir__]
+  spec.required_ruby_version  = ">= 3.3.0"
 
-  spec.description           = <<~DESC
-    Fix is a modern Ruby testing framework built around a key architectural principle: the complete separation between specifications and tests. It allows you to write pure specification documents that define expected behaviors, and then independently challenge any implementation against these specifications.
-  DESC
+  spec.metadata["bug_tracker_uri"]       = "https://github.com/fixrb/fix/issues"
+  spec.metadata["documentation_uri"]     = "https://rubydoc.info/gems/fix"
+  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["source_code_uri"]       = "https://github.com/fixrb/fix"
 
-  spec.homepage              = "https://fixrb.dev/"
-  spec.license               = "MIT"
-  spec.files                 = Dir["LICENSE.md", "README.md", "lib/**/*"]
-
-  spec.required_ruby_version = ">= 3.1.0"
-
-  spec.metadata = {
-    "bug_tracker_uri"       => "https://github.com/fixrb/fix/issues",
-    "documentation_uri"     => "https://rubydoc.info/gems/fix",
-    "homepage_uri"          => "https://fixrb.dev",
-    "source_code_uri"       => "https://github.com/fixrb/fix",
-    "rubygems_mfa_required" => "true"
-  }
-
-  spec.add_dependency "defi",     "~> 3.0.1"
-  spec.add_dependency "matchi",   "~> 4.2.0"
-  spec.add_dependency "spectus",  "~> 5.0.2"
+  spec.add_dependency "aw",      "~> 1.0"
+  spec.add_dependency "defi",    "~> 4.0"
+  spec.add_dependency "matchi",  "~> 6.0"
+  spec.add_dependency "spectus", "~> 6.0"
 end
