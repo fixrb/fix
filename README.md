@@ -51,7 +51,9 @@ duck_fix.rb:15: Success: expected "Swoosh..." to eq "Swoosh..."
 duck_fix.rb:19: Info: NoMethodError: undefined method 'speak' for an instance of Duck
 ```
 
-`Fix :Duck do … end` builds the specification and registers it under its name; `Fix[:Duck]` finds it again. `test` builds a new subject with the block for every expectation, sends it the methods of the `on` around it, judges what comes out, writes one line per expectation, the backtrace of an error below it, and returns whether all of them pass (`true` when there is nothing to test). `exit` turns that into the status of the process: 0 when the specification is met, 1 otherwise; a file with several specifications tests them all first, as `exit([Fix[:A].test { … }, Fix[:B].test { … }].all?)` does. Keep the parentheses: `exit Fix[:Duck].test do … end` gives the block to `exit`, and `test` raises `ArgumentError` for want of one.
+`Fix :Duck do … end` builds the specification and registers it under its name; `Fix[:Duck]` finds it again. `test` builds a new subject with the block for every expectation, sends it the methods of the `on` around it, judges what comes out, writes one line per expectation, the backtrace of an error below it, and returns whether all of them pass (`true` when there is nothing to test). `exit` turns that into the status of the process: 0 when the specification is met, 1 otherwise.
+
+Keep the parentheses: `exit Fix[:Duck].test do … end` gives the block to `exit`, and `test` raises `ArgumentError` for want of one. A file with several specifications tests them all before it exits, as `exit([Fix[:A].test { … }, Fix[:B].test { … }].all?)` does.
 
 ## Writing a specification
 
@@ -92,7 +94,7 @@ example.rb:12: Success: expected 2 to eq 2
 example.rb:17: Success: expected [2, 4] to eq [2, 4]
 ```
 
-The method is sent without a block: the block of `on` is the context. A method that needs one is called in the subject block, or tested with `satisfy`. A method that raises ends the chain there, and the expectation judges the exception: an error for most matchers, what `raise_exception` is for. A `BasicObject` has no `public_send`: an `on` sent to it is an error. There is no helper for a predicate: `on(:empty?) { it MUST be_true }` asks the question.
+A method that raises ends the chain there, and the expectation judges the exception: an error for most matchers, what `raise_exception` is for. There is no helper for a predicate: `on(:empty?) { it MUST be_true }` asks the question. The method is sent without a block, since the block of `on` is the context: a method that needs one is called in the subject block, or tested with `satisfy`. A `BasicObject` has no `public_send`, so an `on` sent to it is an error.
 
 ### `let` and `with`
 
@@ -119,9 +121,9 @@ example.rb:6: Success: expected "Hello, Bob!" to eq "Hello, Bob!"
 example.rb:9: Success: expected "Hello, Alice!" to eq "Hello, Alice!"
 ```
 
-The block of `test` runs on a fresh object for every expectation, where the lets of its context are methods: it sees them, and sees `Kernel` and the methods of the top level as any code does, but not the instance variables of the file. The value of a `with` is the object given, shared by the expectations of its context: `with items: []` gives the same array to each of them, where `let(:items) { [] }` gives a new one to each. A `with` declares the lets it names, so a name no `let` declared is a new parameter, not a mistake.
+The block of `test` runs on a fresh object for every expectation, where the lets of its context are methods: it sees them, and sees `Kernel` and the methods of the top level as any code does, but not the instance variables of the file. The value of a `with` is the object given, shared by the expectations of its context: `with items: []` gives the same array to each of them, where `let(:items) { [] }` gives a new one to each.
 
-A let is visible from the subject and from the other lets only. Named in an expectation, where it would be read before any subject exists, it raises `NameError` at load, with the remedy: `name is a let, visible in the subject block and in other lets only`. Its name cannot be a method of the object the subject is built on, public or private, nor a word of the language, so that nothing is redefined in silence: `let(:format)`, `let(:p)` or `let(:it)` raise `ArgumentError` at load, naming the owner (`format is already a method of Kernel`). A `with` has the same rule. A context may declare a name once, inherits the lets declared above it in the contexts around it, and may give a new value to one of them.
+A let is visible from the subject and from the other lets only. Named in an expectation, where it would be read before any subject exists, it raises `NameError` at load, with the remedy: `name is a let, visible in the subject block and in other lets only`. Its name cannot be a method of the object the subject is built on, public or private, nor a word of the language, so that nothing is redefined in silence: `let(:format)`, `let(:p)` or `let(:it)` raise `ArgumentError` at load, naming the owner (`format is already a method of Kernel`). A `with` has the same rule, and declares the lets it names: a name no `let` declared is a new parameter, not a mistake. A context may declare a name once, inherits the lets declared above it in the contexts around it, and may give a new value to one of them.
 
 ### `it`
 
@@ -165,13 +167,17 @@ example.rb:10: Success: expected 7 to be a kind of Numeric
 example.rb:11: Success: expected 7 to fix Positive
 ```
 
-A failed `fix` says that the specification is not met, not which of its expectations failed: test the specification on its own for that. In Ruby 3.4 and later, a bare `it` in a block is the parameter of the block; `it` with a requirement is the method of Fix, as before. On Ruby 3.3 that bare `it` is the method of Fix: a `satisfy` meant for both names its parameter, `satisfy { |value| … }`.
+A failed `fix` says that the specification is not met, not which of its expectations failed: test the specification on its own for that.
 
-The block runs on an instance of `Fix::Dsl`. A gem may add a word to it that composes `on` and `it`, giving `it` the `location:` of its own caller, what `caller_locations(1, 1).first` gives, an object with `path` and `lineno`, so that the result points at the line of the specification: fix-its adds `its`.
+In Ruby 3.4 and later, a bare `it` in a block is the parameter of the block, while `it` with a requirement is the word of Fix, as before; on Ruby 3.3 the bare `it` is the word of Fix too. A `satisfy` meant for both names its parameter: `satisfy { |value| … }`.
+
+The document runs on an instance of `Fix::Dsl`, and a gem may add a word to it that composes `on` and `it`: fix-its adds `its`. Such a word gives `it` the `location:` of its own caller, what `caller_locations(1, 1).first` gives, an object with `path` and `lineno`, so that the result points at the line of the specification.
 
 ### Loading
 
-The specification is built when its block runs, before any subject exists, and nothing in it waits for a test: a name that is not a Symbol, a name already registered, a `let`, a `with` or an `on` without a block, a `with` without a value, an `it` with a block or without a requirement, a matcher without `match?` or whose `to_s` is not a `String`, raise then. A block that raises registers nothing, `Fix[:Name]` raises `KeyError` for a name it does not know, and `fix(:Name)` finds its specification then: write it first. The registry is written by the thread that loads the file, read afterwards, and never emptied: a runner runs each file in a process of its own. `Fix.spec(:Name) { … }` is the method `Fix` calls; without a name, both give a specification that is not registered.
+The specification is built when its block runs, before any subject exists, and nothing in it waits for a test: a name that is not a Symbol, a name already registered, a `let`, a `with` or an `on` without a block, a `with` without a value, an `it` with a block or without a requirement, a matcher without `match?` or whose `to_s` is not a `String`, raise then. A block that raises registers nothing. `Fix[:Name]` raises `KeyError` for a name it does not know, and `fix(:Name)` finds its specification then: write it first.
+
+`Fix.spec(:Name) { … }` is the method `Fix` calls; without a name, both give a specification that is not registered. The registry is written by the thread that loads the file, read afterwards, and never emptied: a runner runs each file in a process of its own.
 
 ## Outcomes
 
@@ -234,7 +240,9 @@ account_fix.rb:30: Error: ArgumentError: insufficient funds
 
 ## Results
 
-`test` writes on `$stdout`, for each expectation, one line: its location in the file, the outcome, and the summary of Spectus, `expected ACTUAL to DESCRIPTION`, with `not` for a negation, or `CLASS: MESSAGE`, a line break in either written `\n` (a backslash stays as it is: the line is for reading, not for reading back). Below an error come the frames of its backtrace that are not in Fix, Aw, Defi, Matchi or Spectus, indented by two spaces. Nothing else is written: no letter, no colour, no count; what the subject writes on the standard output comes out as it is, before the lines of its context, so a text left without a line break joins the first of them. That grammar, `LOCATION: OUTCOME: SUMMARY` then indented continuation lines, is what a runner reads: the location up to the first `:LINE: OUTCOME: ` of the line, the outcome one of the five words. What the subject writes is beyond its reach; the status of the process is not.
+`test` writes on `$stdout`, for each expectation, one line: its location in the file, the outcome, and the summary of Spectus, `expected ACTUAL to DESCRIPTION`, with `not` for a negation, or `CLASS: MESSAGE`. A line break in either is written `\n`; a backslash stays as it is, the line being for reading, not for reading back. Below an error come the frames of its backtrace that are not in Fix, Aw, Defi, Matchi or Spectus, indented by two spaces. Nothing else is written: no letter, no colour, no count. What the subject writes on the standard output comes out as it is, before the lines of its context, so a text left without a line break joins the first of them.
+
+That grammar, `LOCATION: OUTCOME: SUMMARY` then indented continuation lines, is what a runner reads: the location up to the first `:LINE: OUTCOME: ` of the line, the outcome one of the five words. What the subject writes is beyond the runner's reach; the status of the process is not.
 
 `run` gives the same results as data, an `Array` of `Fix::Result` in the order of the contexts, a context before those inside it, and of the expectations within a context:
 
@@ -269,9 +277,9 @@ Fix[:Size].match? { "abc" } # => true
 
 Each context with expectations runs in a child process, forked from the one that tests: a subject that leaves something behind cannot touch the next context, and what it raises, an `exit` included, is an error of its expectation alone. The contexts run one after the other, a context before those inside it, and `test` writes the results of a context when its child returns them.
 
-Nothing is rescued around a child. An `Interrupt`, or a signal the child could trap, is raised again in the parent and stops the run; so does a child that died, was killed or left by `exit!`, or that a `break`, a `return` or a `throw` in the subject block left without a result, which gives `Aw::ChildError`, the results of the other expectations of its context lost with it. Fix never writes a result that did not come from an expectation. A subject that forks ends its child with `exit!`, as test code does: a child that runs on into Fix instead, by an `exit` or by nothing at all, is ended by Fix without a result. The children a `fix` matcher forks are inside a matcher: what they raise is an error of that expectation. On a Ruby without `fork`, a context with expectations raises `NotImplementedError`.
+Nothing is rescued around a child, and Fix never writes a result that did not come from an expectation. An `Interrupt`, or a signal the child could trap, is raised again in the parent and stops the run. So does `Aw::ChildError`, for a child that died, was killed or left by `exit!`, or that a `break`, a `return` or a `throw` in the subject block left without a result: the results of the other expectations of its context are lost with it. The children a `fix` matcher forks are inside a matcher, so what they raise is an error of that expectation. On a Ruby without `fork`, a context with expectations raises `NotImplementedError`.
 
-Each child starts as a copy of the parent, with its memory, its signal handlers and its open files: a `Random` seeded in the file gives every context the same sequence, while Ruby reseeds `Kernel#rand` in each child; what a subject writes to an IO other than the standard output and error is lost at `exit!` unless it flushes, and no `at_exit` handler runs there, so what SimpleCov measures in a child is lost (`fork: false` measures, as does storing the result before `exit!`, as the tests of Fix do). A `Timeout` or a signal in the parent ends the child at once, but not the children of that child, those a `fix` matcher forks or a subject's own, which run on until their work ends. A specification that requires itself at run time, through `satisfy` say, forks without end, and at the process limit a fork waits for a free slot rather than failing. The cost of a context is one fork of the testing process, a few milliseconds.
+Each child starts as a copy of the parent, with its memory, its signal handlers and its open files, and ends with `exit!`, which runs no `at_exit` handler. Hence a `Random` seeded in the file gives every context the same sequence, while Ruby reseeds `Kernel#rand` in each child; what a subject writes to an IO other than the standard output and error is lost unless it flushes; and what SimpleCov measures in a child is lost, unless the result is stored before `exit!`, as the tests of Fix do, or the run uses `fork: false`. A subject that forks ends its child with `exit!`, as test code does: a child that runs on into Fix instead, by an `exit` or by nothing at all, is ended by Fix without a result. A `Timeout` or a signal in the parent ends the child at once, but not the children of that child, those a `fix` matcher forks or a subject's own, which run on until their work ends. A specification that requires itself at run time, through `satisfy` say, forks without end, and at the process limit a fork waits for a free slot rather than failing. The cost of a context is one fork of the testing process, a few milliseconds.
 
 `test(fork: false) { … }` and `run(fork: false) { … }` run the contexts in the process itself, for a debugger: an `exit!` of the subject then ends the process, what one context leaves behind reaches the next, and a `fix` matcher still forks.
 

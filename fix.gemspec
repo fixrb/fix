@@ -5,9 +5,10 @@ Gem::Specification.new do |spec|
   spec.version                = File.read(File.join(__dir__, "VERSION.semver")).chomp
   spec.author                 = "Cyril Kato"
   spec.email                  = "contact@cyril.email"
-  spec.summary                = "Specifications with the MUST, SHOULD and MAY of RFC 2119, tested against a subject"
-  spec.description            = "A specification says what a value MUST, SHOULD or MAY do, in a document free of " \
-                                "logic; any subject is then tested against it, each context in a process of its own."
+  spec.summary                = "Specifications in the words of RFC 2119, tested against a subject"
+  spec.description            = "A specification says what a subject MUST, SHOULD or MAY do, and nothing about how " \
+                                "it is made. Any subject is then tested against it, each context in a child " \
+                                "process, and every expectation gets a result."
   spec.homepage               = "https://fixrb.dev/gems/fix/"
   spec.license                = "MIT"
   spec.files                  = Dir["LICENSE.md", "README.md", "lib/**/*.rb", base: __dir__]
