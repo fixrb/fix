@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["source_code_uri"]       = "https://github.com/fixrb/fix"
 
-  spec.add_dependency "aw",      "~> 1.0"
+  spec.add_dependency "aw",      "~> 1.0", ">= 1.0.1"
   spec.add_dependency "defi",    "~> 4.0"
   spec.add_dependency "matchi",  "~> 6.0"
   spec.add_dependency "spectus", "~> 6.0"
