@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fix (1.0.0)
+    fix (1.0.1)
       aw (~> 1.0, >= 1.0.1)
       defi (~> 4.0)
       matchi (~> 6.0)
@@ -11,7 +11,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.3)
-    aw (1.0.1)
+    aw (1.0.2)
     defi (4.0.1)
     json (3.1.0)
     kramdown (2.5.2)
@@ -86,10 +86,10 @@ DEPENDENCIES
 
 CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  aw (1.0.1) sha256=002e10e4c8a45a3a271d7bf56a319adaa183d3b8f899a69a095782404bcddb26
+  aw (1.0.2) sha256=51f563fdf4d5909429a31355099880b4f1818594f0155bca22751a83a9523b41
   bundler (4.0.23) sha256=407ba8a1d928f412847f819aa5f8b6aef7c59fb51feb517112af8a165487287b
   defi (4.0.1) sha256=7802713291e5ebdf88de607a860caf49422c9e153b682ed1fe02889f1811be05
-  fix (1.0.0)
+  fix (1.0.1)
   json (3.1.0) sha256=3ce7ccf8fde58960177a3a756c31f292a4c1e1dedee884547096a5b0604e3bd8
   kramdown (2.5.2) sha256=1ba542204c66b6f9111ff00dcc26075b95b220b07f2905d8261740c82f7f02fa
   kramdown-parser-gfm (1.1.0) sha256=fb39745516427d2988543bf01fc4cf0ab1149476382393e0e9c48592f6581729

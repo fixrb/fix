@@ -283,6 +283,11 @@ Each child starts as a copy of the parent, with its memory, its signal handlers 
 
 `test(fork: false) { … }` and `run(fork: false) { … }` run the contexts in the process itself, for a debugger: an `exit!` of the subject then ends the process, what one context leaves behind reaches the next, and a `fix` matcher still forks.
 
+## Changes in 1.0.1
+
+- Requires aw 1.0.1: a `Timeout` or a trappable signal in the parent asks the child to leave with `TERM` and kills it half a second later, so that the children a `fix` matcher forks are reaped with it; 1.0.0 accepted aw 1.0.0, which killed the child at once and left them running.
+- Documentation: `let(:it)` names the word of the language it collides with, not an owner.
+
 ## Versioning
 
 Fix follows [Semantic Versioning 2.0](https://semver.org/).
