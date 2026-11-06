@@ -6,6 +6,8 @@
 
 Fix writes a specification: what a subject MUST, SHOULD or MAY do, with the words of [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), and nothing about how the subject is made. The specification is then tested against a subject, each context in a child process, and every expectation gets a result.
 
+The [guide](https://fixrb.dev/gems/fix/v1/) teaches Fix one page at a time, from a first specification to the tests of a project; [fixrb.dev](https://fixrb.dev/gems/fix/) tells what a specification is for, and answers the [questions](https://fixrb.dev/gems/fix/v1/questions/) that come up.
+
 ## Installation
 
 ```ruby
