@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["bug_tracker_uri"]       = "https://github.com/fixrb/fix/issues"
   spec.metadata["changelog_uri"]         = "https://github.com/fixrb/fix#changes-in-101"
-  spec.metadata["documentation_uri"]     = "https://rubydoc.info/gems/fix"
+  spec.metadata["documentation_uri"]     = "https://gemdocs.org/gems/#{spec.name}/#{spec.version}/"
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.metadata["source_code_uri"]       = "https://github.com/fixrb/fix"
 

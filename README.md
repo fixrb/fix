@@ -1,7 +1,7 @@
 # Fix
 
 [![Version](https://img.shields.io/github/v/tag/fixrb/fix?label=Version&logo=github)](https://github.com/fixrb/fix/tags)
-[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://rubydoc.info/github/fixrb/fix/main)
+[![Yard documentation](https://img.shields.io/badge/Yard-documentation-blue.svg?logo=github)](https://gemdocs.org/gems/fix/latest/)
 [![License](https://img.shields.io/github/license/fixrb/fix?label=License&logo=github)](https://github.com/fixrb/fix/raw/main/LICENSE.md)
 
 Fix writes a specification: what a subject MUST, SHOULD or MAY do, with the words of [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), and nothing about how the subject is made. The specification is then tested against a subject, each context in a child process, and every expectation gets a result.
